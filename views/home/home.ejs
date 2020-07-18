@@ -1,28 +1,33 @@
 <!DOCTYPE html>
 <html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <head>
     <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
         .grid-container {
             display: grid;
             grid-template-columns: auto auto;
-            background-color: #2196F3;
+            background-color: rgba(255, 255, 255, 0.8);
             padding: 10px;
         }
         .grid-item {
             background-color: rgba(255, 255, 255, 0.8);
-            border: 10px solid #2196F3;
             padding: 20px;
             font-size: 30px;
             text-align: center;
+            width: auto;
         }
         .card {
             box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            background-color: deepskyblue;
             transition: 0.3s;
-            width: 40%;
             border-radius: 5px;
         }
         .card:hover {
-            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+            box-shadow: 0 16px 24px 0 rgba(0,0,0,0.2);
         }
         .container {
             padding: 2px 16px;
@@ -62,6 +67,22 @@
             <div class="container">
                 <h4><b>Belt Testing</b></h4>
                 <p>Add a student for belt testing</p>
+            </div>
+        </div>
+    </div>
+    <div class="grid-item">
+        <div class="card">
+            <div class="container">
+                <h4><b>Class Information</b></h4>
+                <p>View class details</p>
+            </div>
+        </div>
+    </div>
+    <div class="grid-item">
+        <div class="card">
+            <div class="container">
+                <h4><b>Student Lookup</b></h4>
+                <p>Lookup and edit student information</p>
             </div>
         </div>
     </div>
