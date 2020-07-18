@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .grid-container {
+            display: grid;
+            grid-template-columns: auto auto;
+            background-color: #2196F3;
+            padding: 10px;
+        }
+        .grid-item {
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 10px solid #2196F3;
+            padding: 20px;
+            font-size: 30px;
+            text-align: center;
+        }
+        .card {
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            transition: 0.3s;
+            width: 40%;
+            border-radius: 5px;
+        }
+        .card:hover {
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+        }
+        .container {
+            padding: 2px 16px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="grid-container">
+    <div class="grid-item">
+        <div class="card">
+            <div class="container">
+                <h4><b>Add a Student</b></h4>
+                <p>Add a student to EMA</p>
+            </div>
+        </div>
+    </div>
+    <div class="grid-item">
+        <div class="card">
+            <div class="container">
+                <h4><b>Check-In a Student</b></h4>
+                <p>Check-in a student for a class</p>
+            </div>
+        </div>
+    </div>
+    <div class="grid-item">
+        <div class="card">
+            <div class="container">
+                <h4><b>Reports</b></h4>
+                <p>Generate reports for attendance and belt tests</p>
+            </div>
+        </div>
+    </div>
+    <div class="grid-item">
+        <div class="card">
+            <div class="container">
+                <h4><b>Belt Testing</b></h4>
+                <p>Add a student for belt testing</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+
