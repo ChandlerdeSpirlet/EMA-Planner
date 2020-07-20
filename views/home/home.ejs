@@ -3,31 +3,44 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <head>
     <style>
+        h1 {
+            text-align: center;
+            font-size: 48px;
+            text-shadow: 1px 2px 2px darkgrey;
+        }
+        h3 {
+            text-align: center;
+            font-size: 30px;
+
+        }
         body {
             font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: rgba(255, 255, 255, 0.8);
+            background-color: #2d58e3;
         }
         .grid-container {
             display: grid;
-            grid-template-columns: auto auto;
-            background-color: rgba(255, 255, 255, 0.8);
-            padding: 10px;
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 20px;
+            grid-column-gap: 20px;
+            background-color: #2d58e3;
+            grid-template-rows: 200px;
         }
         .grid-item {
-            background-color: rgba(255, 255, 255, 0.8);
+            background-color: #2d58e3;
             padding: 20px;
             font-size: 30px;
             text-align: center;
             width: auto;
         }
         .card {
-            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-            background-color: deepskyblue;
+            box-shadow: 5px 10px 8px black;
+            background-color: lightgray;
             transition: 0.3s;
             border-radius: 5px;
         }
         .card:hover {
-            box-shadow: 0 16px 24px 0 rgba(0,0,0,0.2);
+            box-shadow: 5px 10px 18px darkgray;
+            background-color: #3a36f7;
         }
         .container {
             padding: 2px 16px;
@@ -36,7 +49,9 @@
     </style>
 </head>
 <body>
-
+<h1>Exclusive Martial Arts</h1>
+<h3>Students Today: 100</h3>
+<h3>Students This Week: 100</h3>
 <div class="grid-container">
     <div class="grid-item">
         <div class="card">
