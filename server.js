@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 app.set('view engine', 'ejs');
 var expressValidator = require('express-validator');
-//app.use(expressValidator());
+app.use(expressValidator());
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended:true}));
 var flash = require('express-flash');

@@ -151,7 +151,7 @@
         <div class="inner-wrap">
             <label>First Name <input type="text" name="field1" value="<%= first_name %>"/></label>
             <label>Last Name <input type="text" name="field2" value="<%= last_name %>"/></label>
-            <label>Address <textarea name="field3"></textarea> value="<%= addr_1 %>"</label>
+            <label>Address <textarea name="field3"> value="<%= addr_1 %>"</textarea> </label>
             <label>City <input type="text" name="field4" value="<%= city %>"/></label>
             <label>Zip Code <input type="number" name="field5" value="<%= zip %>"/></label>
         </div>
@@ -164,7 +164,7 @@
 
         <div class="section"><span>3</span>Karate Info</div>
         <div class="inner-wrap">
-            <label for="belt_color">Belt Color </label>
+            <label>Belt Color
             <select id="belt_color" name="field8">
                 <optgroup label="Little Dragons">
                     <option value="Dragons White">White</option>
@@ -193,8 +193,9 @@
                     <option value="High Brown">High Brown</option>
                 </optgroup>
             </select>
+            </label>
             <label>Belt Size <input type="number" name="field9" value="<%= belt_size %>"/></label>
-            <label>Card Number <input type="number" name="field10" value="<%= barcode %>"/></label>
+            <label>Attendance Card Number <input type="number" name="field10" value="<%= barcode %>"/></label>
         </div>
         <div class="button-section">
             <input type="submit" name="Enroll" />
