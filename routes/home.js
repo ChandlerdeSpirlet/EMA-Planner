@@ -1,7 +1,6 @@
 var express = require('express');
 var app = express();
 var path = require('path');
-var exp_val = require('express-validator');
 var session = require("express-session");
 const fastcsv = require("fast-csv");
 var fs = require('fs');
@@ -24,7 +23,6 @@ app.use(
     })
 )
 app.use(bodyParser.json())
-app.use(exp_val());
 app.use(express.static(path.join(__dirname, 'store')));
 
 app.get('/', function(req, res){

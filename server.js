@@ -1,7 +1,6 @@
 var express = require('express');
 var app = express();
 app.set('view engine', 'ejs');
-var exp_val = require('express-validator');
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended:true}));
 var flash = require('express-flash');
@@ -13,7 +12,6 @@ app.use(session({
     cookie: {maxAge: 8 * 60 * 1000}
 }));
 app.use(flash());
-app.use(exp_val());
 var index = require('./routes/index');
 var home = require('./routes/home');
 app.use('/', index);
