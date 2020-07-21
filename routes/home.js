@@ -64,5 +64,6 @@ app.post('/add_student', function(req, res){
         belt_size: req.sanitize('belt_size').trim()
     }
     console.log(item);
-    res.redirect('home');
+    console.log(item.email);
+    res.redirect('/');
 });
