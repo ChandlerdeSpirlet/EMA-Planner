@@ -6,11 +6,14 @@ const fastcsv = require("fast-csv");
 var fs = require('fs');
 var nodemailer = require('nodemailer');
 const bodyParser = require('body-parser');
+const expressSanitizer = require('express-sanitizer');
 //var db = require('../database');
 const cors = require('cors');
 app.use(cors());
 
 module.exports = app;
+
+app.use(expressSanitizer());
 app.use(session({
     secret: 'EMA_Planner',
     resave: false,
