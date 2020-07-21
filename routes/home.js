@@ -52,7 +52,7 @@ app.get('/add_student', function(req, res){
 
 app.post('/add_student', function(req, res){
     var item = {
-        first_name: req.sanitize('first_name'),
+        first_name: req.sanitize(),
         last_name: req.sanitize('last_name'),
         barcode: req.sanitize('barcode').trim(),
         addr_1: req.sanitize('addr_1'),
