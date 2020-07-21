@@ -9,7 +9,7 @@ var nodemailer = require('nodemailer');
 const bodyParser = require('body-parser');
 //var db = require('../database');
 const cors = require('cors');
-app.use(cors())
+app.use(cors());
 
 module.exports = app;
 app.use(session({
