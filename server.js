@@ -18,8 +18,8 @@ var index = require('./routes/index');
 var home = require('./routes/home');
 app.use('/', index);
 app.use('/home', home);
-var port = process.env.PORT;
-//var port = 5000;
+//var port = process.env.PORT;
+var port = 5000;
 app.listen(port, function(){
 
 });

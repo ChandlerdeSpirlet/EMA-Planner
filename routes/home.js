@@ -26,7 +26,24 @@ app.use(
 app.use(bodyParser.json())
 //app.use(exp_val());
 app.use(express.static(path.join(__dirname, 'store')));
+
 app.get('/', function(req, res){
     res.render('home/home', {
+        classes_today: '',
+        classes_weekly: ''
+    })
+});
+
+app.get('/add_student', function(req, res){
+    res.render('home/add_student', {
+        barcode: '',
+        first_name: '',
+        last_name: '',
+        addr_1: '',
+        addr_2: '',
+        city: '',
+        zip: '',
+        belt_color: '',
+        belt_size: ''
     })
 });

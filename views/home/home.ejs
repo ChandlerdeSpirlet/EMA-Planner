@@ -18,6 +18,14 @@
             font-family: -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: #004CE5;
         }
+        a:link {
+            color: black;
+            text-decoration: none;
+        }
+        a:visited {
+            color: black;
+            text-decoration: none;
+        }
         .grid-container {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -52,17 +60,17 @@
 </head>
 <body>
 <h1>Exclusive Martial Arts</h1>
-<h3>Students Today: 100</h3>
-<h3>Students This Week: 100</h3>
+<h3>Students Today: <%= classes_today %></h3>
+<h3>Students This Week: <%= classes_weekly %></h3>
 <div class="grid-container">
-    <div class="grid-item">
+    <a href="/home/add_student"><div class="grid-item">
         <div class="card">
             <div class="container">
                 <h4><b>Add a Student</b></h4>
                 <p>Add a student to EMA</p>
             </div>
         </div>
-    </div>
+    </div></a>
     <div class="grid-item">
         <div class="card">
             <div class="container">
