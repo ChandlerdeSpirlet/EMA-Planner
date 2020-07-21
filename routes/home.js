@@ -26,7 +26,7 @@ app.use(
     })
 )
 app.use(bodyParser.json())
-app.use(express.static(path.join(__dirname, 'store')));
+app.use(express.static(path.join(__dirname, 'home')));
 
 app.get('/', function(req, res){
     res.render('home/home', {
