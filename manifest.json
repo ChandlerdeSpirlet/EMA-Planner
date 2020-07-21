@@ -1,0 +1,122 @@
+{
+    "dir": "ltr",
+    "lang": "English",
+    "name": "EMA Attendance",
+    "short_name": "EMA Planner",
+    "scope": "/app/routes",
+    "display": "standalone",
+    "start_url": "https://ema-planner.herokuapp.com/",
+    "background_color": "transparent",
+    "theme_color": "transparent",
+    "description": "",
+    "orientation": "landscape",
+    "related_applications": [],
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "/images/0623deb6-5e39-611c-7904-79dcf1995e0e.webPlatform.png",
+            "sizes": "44x44",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/69fa4559-2ea6-bf0f-ca8e-e758fd6f3c0d.webPlatform.png",
+            "sizes": "48x48",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/02f7c6f4-223c-28f8-9288-359c44f2d8ea.webPlatform.png",
+            "sizes": "1240x600",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/b1972709-ba78-8956-750b-990e7622a60b.webPlatform.png",
+            "sizes": "300x300",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/47f1296b-280e-453d-7d83-fc3f3b1576cc.webPlatform.png",
+            "sizes": "150x150",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/b6d00c50-b170-4b91-689e-74f6e9bfcc99.webPlatform.png",
+            "sizes": "88x88",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/18b45df9-1ecb-01c0-d190-061273f2254b.webPlatform.png",
+            "sizes": "24x24",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/550af22f-13d1-ddc6-62f4-338d7dcc44e1.webPlatform.png",
+            "sizes": "50x50",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/a33b3125-020f-3014-ac5f-398c287fd01d.webPlatform.png",
+            "sizes": "620x300",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/414fdd87-8042-6f64-9c0b-b83a7afe7891.webPlatform.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/0ac4fbfc-2d75-6484-5a81-476387a806cc.webPlatform.png",
+            "sizes": "144x144",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/b929f3f8-fe29-20a8-8fc4-f39137b3aced.webPlatform.png",
+            "sizes": "96x96",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/fac535b6-65f4-a8e9-9816-fba50c4d10c0.webPlatform.png",
+            "sizes": "72x72",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/2f06628a-063c-9640-a8c5-bbcd4fd5dae0.webPlatform.png",
+            "sizes": "36x36",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/024bf944-1b67-fb66-9e44-41d99bd71dd6.webPlatform.png",
+            "sizes": "1024x1024",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/d6633d78-861c-d04d-fed8-a4a5a7e155f6.webPlatform.png",
+            "sizes": "180x180",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/77ed4f31-479b-d4db-c832-0d3b29b3404c.webPlatform.png",
+            "sizes": "152x152",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/ceeb149e-63c1-0a32-4a09-ac55af4b393f.webPlatform.png",
+            "sizes": "120x120",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/b930ad88-bfb0-99b3-ed76-0090d5886f4e.webPlatform.png",
+            "sizes": "76x76",
+            "type": "image/png"
+        }
+    ],
+    "url": "https://ema-planner.herokuapp.com",
+    "screenshots": [
+        {
+            "src": "Assets/screenshot1.png",
+            "sizes": "1280x800",
+            "type": "image/png",
+            "fileName": "Assets/screenshot1.png",
+            "generated": true
+        }
+    ]
+}
