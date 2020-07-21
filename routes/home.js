@@ -40,10 +40,28 @@ app.get('/add_student', function(req, res){
         first_name: '',
         last_name: '',
         addr_1: '',
-        addr_2: '',
         city: '',
         zip: '',
+        email: '',
+        phone: '',
         belt_color: '',
         belt_size: ''
     })
+});
+
+app.post('/add_student', function(req, res){
+    var item = {
+        first_name: req.sanitize('first_name'),
+        last_name: req.sanitize('last_name'),
+        barcode: req.sanitize('barcode').trim(),
+        addr_1: req.sanitize('addr_1'),
+        city: req.sanitize('city').trim(),
+        zip: req.sanitize('zip').trim(),
+        email: req.sanitize('email').trim(),
+        phone: req.sanitize('phone').trim(),
+        belt_color: req.sanitize('belt_color'),
+        belt_size: req.sanitize('belt_size').trim()
+    }
+    console.log(item);
+    res.redirect('home');
 });

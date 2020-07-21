@@ -146,20 +146,20 @@
 <h1>Exclusive Martial Arts</h1>
 <div class="form-style-10">
     <h1>New Student<span>Enroll a new student.</span></h1>
-    <form>
+    <form action="/home/add_student" method="post">
         <div class="section"><span>1</span>Name & Address</div>
         <div class="inner-wrap">
-            <label>First Name <input type="text" name="field1" /></label>
-            <label>Last Name <input type="text" name="field2" /></label>
-            <label>Address <textarea name="field3"></textarea></label>
-            <label>City <input type="text" name="field4" /></label>
-            <label>Zip Code <input type="number" name="field5" /></label>
+            <label>First Name <input type="text" name="field1" value="<%= first_name %>"/></label>
+            <label>Last Name <input type="text" name="field2" value="<%= last_name %>"/></label>
+            <label>Address <textarea name="field3"></textarea> value="<%= addr_1 %>"</label>
+            <label>City <input type="text" name="field4" value="<%= city %>"/></label>
+            <label>Zip Code <input type="number" name="field5" value="<%= zip %>"/></label>
         </div>
 
         <div class="section"><span>2</span>Email & Phone</div>
         <div class="inner-wrap">
-            <label>Email Address <input type="email" name="field6" /></label>
-            <label>Phone Number <input type="text" name="field7" /></label>
+            <label>Email Address <input type="email" name="field6" value="<%= email %>"/></label>
+            <label>Phone Number <input type="text" name="field7" value="<%= phone %>"/></label>
         </div>
 
         <div class="section"><span>3</span>Karate Info</div>
@@ -193,8 +193,8 @@
                     <option value="High Brown">High Brown</option>
                 </optgroup>
             </select>
-            <label>Belt Size <input type="number" name="field9" /></label>
-            <label>Card Number <input type="number" name="field10" /></label>
+            <label>Belt Size <input type="number" name="field9" value="<%= belt_size %>"/></label>
+            <label>Card Number <input type="number" name="field10" value="<%= barcode %>"/></label>
         </div>
         <div class="button-section">
             <input type="submit" name="Enroll" />
