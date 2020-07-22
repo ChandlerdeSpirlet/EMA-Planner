@@ -54,19 +54,20 @@ app.get('/add_student', function(req, res){
 
 app.post('/add_student', function(req, res){
     var item = {
-        first_name: req.body.sanitize('first_name'),
-        last_name: req.sanitize('last_name'),
-        barcode: req.sanitize('barcode').trim(),
-        addr_1: req.sanitize('addr_1'),
-        city: req.sanitize('city').trim(),
-        zip: req.sanitize('zip').trim(),
-        email: req.body.sanitize('email').trim(),
-        phone: req.sanitize('phone').trim(),
-        belt_color: req.sanitize('belt_color'),
-        belt_size: req.sanitize('belt_size').trim()
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
+        barcode: req.body.barcode,
+        addr_1: req.body.addr_1,
+        city: req.body.city,
+        zip: req.body.zip,
+        email: req.body.email,
+        phone: req.body.phone,
+        belt_color: req.body.belt_color,
+        belt_size: req.body.belt_size
     }
     console.log(req.body.last_name + ' lastname');
     console.log(item);
-    console.log(item.email);
+    console.log(item.email.sanitize().trim());
+    console.log(item.body.zip.trim());
     res.redirect('/');
 });
