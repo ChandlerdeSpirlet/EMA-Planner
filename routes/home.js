@@ -74,7 +74,6 @@ app.post('/add_student', function(req, res){
         belt_size: req.body.belt_size
     }
     console.log(req.body.last_name + ' lastname');
-    console.log(item);
     console.log(item.first_name + 'first_name');
     console.log(item.email.sanitize().trim());
     console.log(item.body.zip.trim());
