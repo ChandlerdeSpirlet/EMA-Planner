@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var path = require('path');
 var session = require("express-session");
+var exp_val = require('express-validator');
 const fastcsv = require("fast-csv");
 var fs = require('fs');
 var nodemailer = require('nodemailer');
@@ -26,6 +27,7 @@ app.use(
     })
 )
 app.use(bodyParser.json())
+app.use(exp_val());
 app.use(express.static(path.join(__dirname, 'home')));
 
 app.get('/', function(req, res){
