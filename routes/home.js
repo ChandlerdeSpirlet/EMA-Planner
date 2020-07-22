@@ -8,7 +8,7 @@ var fs = require('fs');
 var nodemailer = require('nodemailer');
 const bodyParser = require('body-parser');
 
-//var db = require('../database');
+var db = require('../database');
 const cors = require('cors');
 app.use(cors());
 
@@ -62,20 +62,25 @@ app.get('/add_student', function(req, res){
 
 app.post('/add_student', function(req, res){
     var item = {
-        first_name: req.sanitize('first_name'),
-        last_name: req.body.last_name,
-        barcode: req.body.barcode,
-        addr_1: req.body.addr_1,
-        city: req.body.city,
-        zip: req.body.zip,
-        email: req.body.email,
-        phone: req.body.phone,
-        belt_color: req.body.belt_color,
-        belt_size: req.body.belt_size
+        first_name: req.sanitize('first_name').trim(),
+        last_name: req.sanitize('last_name').trim(),
+        barcode: req.sanitize('barcode').trim(),
+        addr_1: req.sanitize('addr_1').trim(),
+        city: req.sanitize('city').trim(),
+        zip: req.sanitize('zip').trim(),
+        email: req.sanitize('email').trim(),
+        phone: req.sanitize('phone').trim(),
+        belt_color: req.sanitize('belt_color').trim(),
+        belt_size: req.sanitize('belt_size').trim()
     }
-    console.log(req.body.last_name + ' lastname');
-    console.log(item.first_name + 'first_name');
-    console.log(item.email.sanitize().trim());
-    console.log(item.body.zip.trim());
-    res.redirect('/');
+    var query = 'insert into student list (barcode, first_name, last_name, addr_1, zip_code, city, belt_color, belt_size, email, phone_number) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);';
+    db.query(query, [item.barcode, item.first_name, item.last_name, item.addr_1, item.zip, item.city, item.belt_color, item.belt_size, item.email, item.phone])
+        .then(function(rows){
+            req.flash('success', 'Successfully added student.');
+            res.redirect('/');
+        })
+        .catch(function(err){
+            req.flash('error', 'Student not enrolled.' + 'ERROR: ' + err);
+            res.redirect('/');
+        })
 });
