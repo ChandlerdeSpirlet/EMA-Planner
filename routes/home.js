@@ -10,10 +10,13 @@ const bodyParser = require('body-parser');
 const nunjucks = require('nunjucks');
 
 const STRIPE_API = require('../api/stripe-functions.js');
-app.use('../styles', express.static('styles'));
+app.use('../../styles/', express.static('styles'));
 
+app.set('view engine', 'html');
+app.engine('html', nunjucks.render);
+nunjucks.configure('views', {noCache: true});
 
-var db = require('../database');
+//var db = require('../database');
 const cors = require('cors');
 app.use(cors());
 
@@ -93,30 +96,30 @@ app.post('/add_student', function(req, res){
 
 app.get('/adminView', function(req, res){
     STRIPE_API.getAllProductsAndPlans().then(products => {
-        res.render('home/adminView', {products: products});
+        res.render('home/adminView.html', {products: products});
     });
 });
 
 app.get('/createProduct', (req, res) => {
-    res.render('home/createProduct');
+    res.render('home/createProduct.html');
 });
 
 app.post('/createProduct', (req, res) => {
     STRIPE_API.createProduct(req.body).then(() => {
-        res.render('home/createProduct', {success: true});
+        res.render('home/createProduct.html', {success: true});
     });
 });
 
 app.post('/createPlan', (req, res) => {
-    res.render('home/createPlan', {
+    res.render('home/createPlan.html', {
         productID: req.body.productID,
         productName: req.body.productName
     });
 });
 
-app.post('/createPlanForReal', (req, res){
+app.post('/createPlanForReal', (req, res) => {
     STRIPE_API.createPlan(req.body).then(() => {
-        res.render('home/createPlan', {success: true});
+        res.render('home/createPlan.html', {success: true});
     });
 });
 
@@ -126,7 +129,7 @@ app.get('/customerView', (req, res) => {
             return product.plans.length > 0;
         });
 
-        res.render('home/customerView', {products: products});
+        res.render('home/customerView.html', {products: products});
     });
 });
 
@@ -143,7 +146,7 @@ app.post('/signUp', (req, res) => {
         interval_count: req.body.planIntervalCount
     }
 
-    res.render('home/signUp', {product: product, plan: plan});
+    res.render('home/signUp.html', {product: product, plan: plan});
 });
 
 app.post('/processPayment', (req, res) => {
@@ -160,8 +163,8 @@ app.post('/processPayment', (req, res) => {
     }
 
     STRIPE_API.createCustomerAndSubscription(req.body).then(() => {
-        res.render('home/signUp', {product: product, plan: plan, success: true});
+        res.render('home/signUp.html', {product: product, plan: plan, success: true});
     }).catch(err => {
-        res.render('home/signUp', {product: product, plan: plan, error: true});
+        res.render('home/signUp.html', {product: product, plan: plan, error: true});
     });
 });

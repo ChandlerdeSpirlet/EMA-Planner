@@ -1,0 +1,40 @@
+{% set title = 'Admin View' %}
+{% set admin = true %}
+{% extends 'home/base.html' %}
+
+{% block content %}
+    <div class="admin-view">
+        <div class="admin-view-title">
+            <h2>Products</h2>
+            <a href="/home/createProduct"><button class="btn">+ New Product</button></a>
+        </div>
+        {% for product in products %}
+            <form action="/home/createPlan" method="POST">
+                <input type="hidden" value="{{ product.id }}" name="productID"/>
+                <input type="hidden" value="{{ product.name }}" name="productName"/>
+
+                <div class="admin-view-product">
+                    <div class="admin-view-product-title">
+                        <h4 class="admin-view-product-name">{{ product.name }}</h4>
+                        <input class="btn btn-small" type="submit" value="+ New Plan">
+                    </div>
+                    {% for plan in product.plans %}
+                        <div class="admin-view-plan">
+                            <p>{{ plan.nickname }} &mdash; {{ plan.amount }} / 
+                                {% if (plan.interval_count > 1) %}
+                                    {{ plan.interval_count }} {{ plan.interval }}s
+                                {% else %}
+                                    {{ plan.interval }}
+                                {% endif %}
+                            </p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </form>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+<script>
+    
+</script>

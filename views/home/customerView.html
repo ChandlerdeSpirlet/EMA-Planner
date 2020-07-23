@@ -1,0 +1,37 @@
+{% set title = 'Customer View' %}
+{% set admin = false %}
+{% extends 'home/base.html' %}
+
+{% block content %}
+
+<div class="customer-view">
+    {% for product in products %}
+        <div class="customer-view-products">
+            <h2>{{ product.name }} </h2>
+            <div class="customer-view-plans">
+                {% for plan in product.plans %}
+                    <div class="customer-view-plan">
+                        <form action="/home/signUp" method="POST">
+                            <input hidden value="{{ product.name }}" name="productName"/>
+                            <input hidden value="{{ plan.id }}" name="planId"/>
+                            <input hidden value="{{ plan.nickname }}" name="planName"/>
+                            <input hidden value="{{ plan.amount }}" name="planAmount"/>
+                            <input hidden value="{{ plan.interval }}" name="planInterval"/>
+                            <input hidden value="{{ plan.interval_count }}" name="planIntervalCount"/>
+                            <h3>{{ plan.nickname }} &mdash; {{plan.amount }} / 
+                                {% if (plan.interval_count > 1) %}
+                                    {{ plan.interval_count }} {{ plan.interval }}
+                                {% else %}
+                                    {{ plan.interval }}
+                                {% endif %}
+                            </h3>
+                            <input class="btn" type="submit" value="Sign Up"/>
+                        </form>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

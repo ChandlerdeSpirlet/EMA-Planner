@@ -1,20 +1,20 @@
-<% set title = 'Create Product' %>
-<% set admin = true %>
-<% extends 'base.ejs' %>
+{% set title = 'Create Product' %}
+{% set admin = true %}
+{% extends 'home/base.html' %}
 
-<% block content %>
+{% block content %}
 
 <div class="create-product">
     <h2>Create New Product</h2>
-    <% if (success) { %>
+    {% if success %}
         <div class="success-message">
             <p></p>
         </div>
-    <% } else if (error) { %>
+    {% elif error %}
         <div class="error-message">
             <p></p>
         </div>
-    <% } else { %>
+    {% else %}
         <div class="create-product-container">
             <form action="/home/createProduct" method="POST">
                 <div>
@@ -32,7 +32,7 @@
                 </div>
             </form>
         </div>
-    <% } %>
+    {% endif %}
 </div>
 
-<% endblock %>
+{% endblock %}
