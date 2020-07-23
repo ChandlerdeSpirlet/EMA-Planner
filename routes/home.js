@@ -16,7 +16,7 @@ app.set('view engine', 'html');
 app.engine('html', nunjucks.render);
 nunjucks.configure('views', {noCache: true});
 
-//var db = require('../database');
+var db = require('../database');
 const cors = require('cors');
 app.use(cors());
 
