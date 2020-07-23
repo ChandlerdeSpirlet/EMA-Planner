@@ -236,7 +236,7 @@
     </style>
     <head>
         <title>Stripe Access | {{ title }}</title>
-        <link rel="stylesheet" type="text/css" href="/styles/app.css">
+        <link rel="stylesheet" type="text/css" href="../styles/app.css">
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <script src="https://js.stripe.com/v3/"></script>
         {% if admin %}
@@ -248,9 +248,9 @@
     <body>
         <div class="app-container">
             <div class="app-header">
-                <a href="home/adminView.html"><p class="{% if admin %} active {% endif %}">ADMIN VIEW</p></a>
+                <a href="/adminView"><p class="{% if admin %} active {% endif %}">ADMIN VIEW</p></a>
                 <span>|</span>
-                <a href="home/customerView.html"><p class="{% if not admin %} active {% endif %}">CUSTOMER VIEW</a>
+                <a href="/customerView"><p class="{% if not admin %} active {% endif %}">CUSTOMER VIEW</a>
             </div>
             {% block content %}
             {% endblock %}
