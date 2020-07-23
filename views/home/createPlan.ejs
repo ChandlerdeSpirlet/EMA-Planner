@@ -1,0 +1,64 @@
+<% set title = 'Create Plan' %>
+<% set admin = true %>
+<% extends 'base.ejs' %>
+
+<% block content %>
+
+<div class="create-plan">
+    <h2><% productName %>: Create New Plan</h2>
+    <% if (success) { %>
+        <div class="success-message">
+            <p></p>
+        </div>
+    <% } else if (error) { %>
+        <div class="error-message">
+            <p></p>
+        </div>
+    <% } else { %> 
+        <div class="create-plan-container">
+            <form action="/home/createPlanForReal" method="POST">
+                <input type="hidden" value="<% productID %>" name="productID"/>
+
+                <div>
+                    <label>Name</label>
+                    <input placeholder="Your Plan's Name" name="planName"/>
+                </div>
+
+                <div>
+                    <label>Price</label>
+                    <div class="label-input-container">
+                        <input class="label-left-input" id="plan-price" placeholder="Your Plan's Price" name="planPrice"/>
+                        <span class="label-currency">$</span>
+                    </div>
+                </div>
+
+                <div>
+                    <label>Interval</label>
+                    <input placeholder="Interval Type" name="planInterval"/>
+                </div>
+
+                <div>
+                    <label>Interval Number</label>
+                    <input placeholder="Interval Number" name="planIntervalNumber"/>
+                </div>
+
+                <div>
+                    <input class="btn" type="submit" value="Create Plan">
+                </div>
+            </form>
+        </div>
+    <% } %>
+</div>
+
+<script>
+    var priceInput = document.getElementById('plan-price');
+
+    priceInput.addEventListener('input', function(evt){
+        var price = evt.target.value;
+        var decimalPlaces = price.split('.');
+        if (decimalPlaces.length === 2 && decimalPlaces[1].length >2) {
+            this.value = (Math.round(parseFloat(price) * 100) / 100).toFixed(2);
+        }
+    });
+</script>
+<% endblock %>

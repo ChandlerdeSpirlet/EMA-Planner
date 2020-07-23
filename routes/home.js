@@ -10,7 +10,7 @@ const bodyParser = require('body-parser');
 const nunjucks = require('nunjucks');
 
 const STRIPE_API = require('../api/stripe-functions.js');
-
+app.use('../styles', express.static('styles'));
 
 
 var db = require('../database');
@@ -46,15 +46,6 @@ app.get('/', function(req, res){
     }
 });
 
-app.get('/customerView', function(req, res){
-    STRIPE_API.getAllProductsAndPlans().then(products => {
-        products = products.filter(product => {
-            return product.plans.length > 0;
-        });
-
-        res.render('home/customerView', {products: products});
-    });
-});
 
 app.get('/add_student', function(req, res){
     if (req.headers['x-forwarded-proto'] != 'https'){
@@ -98,4 +89,79 @@ app.post('/add_student', function(req, res){
             req.flash('error', 'Student not enrolled.' + 'ERROR: ' + err);
             res.redirect('/');
         })
+});
+
+app.get('/adminView', function(req, res){
+    STRIPE_API.getAllProductsAndPlans().then(products => {
+        res.render('home/adminView', {products: products});
+    });
+});
+
+app.get('/createProduct', (req, res) => {
+    res.render('home/createProduct');
+});
+
+app.post('/createProduct', (req, res) => {
+    STRIPE_API.createProduct(req.body).then(() => {
+        res.render('home/createProduct', {success: true});
+    });
+});
+
+app.post('/createPlan', (req, res) => {
+    res.render('home/createPlan', {
+        productID: req.body.productID,
+        productName: req.body.productName
+    });
+});
+
+app.post('/createPlanForReal', (req, res){
+    STRIPE_API.createPlan(req.body).then(() => {
+        res.render('home/createPlan', {success: true});
+    });
+});
+
+app.get('/customerView', (req, res) => {
+    STRIPE_API.getAllProductsAndPlans().then(products => {
+        products = products.filter(product => {
+            return product.plans.length > 0;
+        });
+
+        res.render('home/customerView', {products: products});
+    });
+});
+
+app.post('/signUp', (req, res) => {
+    var product = {
+        name: req.body.productName
+    };
+
+    var plan = {
+        id: req.body.planID,
+        name: req.body.planName,
+        amount: req.body.planAmount,
+        interval: req.body.planInterval,
+        interval_count: req.body.planIntervalCount
+    }
+
+    res.render('home/signUp', {product: product, plan: plan});
+});
+
+app.post('/processPayment', (req, res) => {
+    var product = {
+        name: req.body.productName
+    };
+    
+    var plan = {
+        id: req.body.planID,
+        name: req.body.planName,
+        amount: req.body.planAmount,
+        interval: req.body.planInterval,
+        interval_count: req.body.planIntervalCount
+    }
+
+    STRIPE_API.createCustomerAndSubscription(req.body).then(() => {
+        res.render('home/signUp', {product: product, plan: plan, success: true});
+    }).catch(err => {
+        res.render('home/signUp', {product: product, plan: plan, error: true});
+    });
 });

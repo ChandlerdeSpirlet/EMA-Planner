@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Stripe Access | <% title %></title>
+        <link rel="stylesheet" type="text/css" href="/styles/app.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <script src="https://js.stripe.com/v3/"></script>
+        <% if (admin) { %>
+            <link rel="stylesheet" type="text/css" href="/styles/adminView.css">
+        <% } else { %>
+            <link rel="stylesheet" type="text/css" href="/styles/customerView.css">
+        <% } %>
+    </head>
+    <body>
+        <div class="app-container">
+            <div class="app-header">
+                <a href="/"><p class="<% if (admin) { %> active <% } %>">ADMIN VIEW</p></a>
+                <span>|</span>
+                <a href="/customerView"><p class="<% if (!admin) { %> active <% } %>">CUSTOMER VIEW</a>
+            </div>
+            <% block content %>
+            <% endblock %>
+        </div>
+    </body>
+</html>

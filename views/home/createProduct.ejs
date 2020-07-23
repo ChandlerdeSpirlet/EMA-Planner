@@ -1,0 +1,38 @@
+<% set title = 'Create Product' %>
+<% set admin = true %>
+<% extends 'base.ejs' %>
+
+<% block content %>
+
+<div class="create-product">
+    <h2>Create New Product</h2>
+    <% if (success) { %>
+        <div class="success-message">
+            <p></p>
+        </div>
+    <% } else if (error) { %>
+        <div class="error-message">
+            <p></p>
+        </div>
+    <% } else { %>
+        <div class="create-product-container">
+            <form action="/home/createProduct" method="POST">
+                <div>
+                    <label>Product Name</label>
+                    <input class="signup-text" placeholder="Product Name" name="productName"/>
+                </div>
+
+                <div>
+                    <label>Product Type</label>
+                    <input class="signup-text" placeholder="Product Type" name="productType"/>
+                </div>
+
+                <div>
+                    <input class="btn" type="submit" value="Create Product">
+                </div>
+            </form>
+        </div>
+    <% } %>
+</div>
+
+<% endblock %>
