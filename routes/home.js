@@ -7,6 +7,11 @@ const fastcsv = require("fast-csv");
 var fs = require('fs');
 var nodemailer = require('nodemailer');
 const bodyParser = require('body-parser');
+const nunjucks = require('nunjucks');
+
+const STRIPE_API = require('../api/stripe-functions.js');
+
+
 
 var db = require('../database');
 const cors = require('cors');
@@ -39,6 +44,16 @@ app.get('/', function(req, res){
             classes_weekly: ''
         })
     }
+});
+
+app.get('/customerView', function(req, res){
+    STRIPE_API.getAllProductsAndPlans().then(products => {
+        products = products.filter(product => {
+            return product.plans.length > 0;
+        });
+
+        res.render('home/customerView', {products: products});
+    });
 });
 
 app.get('/add_student', function(req, res){
