@@ -1,6 +1,6 @@
 require('dotenv').config();
-//const stripe = require('stripe')(process.env.STRIPE_API_KEY);
-const stripe = require('stripe')('sk_test_51H75ScKv0edLDEqJEL6q5HTs0dJN28eeyehpgMBEdEc4BT26iod0kUZpE3zcL0QrwZtwV7kCFTbS7bfb8Ehs6lys00Ut3Az4SN');
+const stripe = require('stripe')(process.env.STRIPE_API_KEY);
+//const stripe = require('stripe')('');
 const UTILS = require('../utils/format-numbers.js');
 
 function getAllProductsAndPlans() {
