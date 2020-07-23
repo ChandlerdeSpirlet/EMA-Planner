@@ -248,9 +248,9 @@
     <body>
         <div class="app-container">
             <div class="app-header">
-                <a href="/adminView.html"><p class="{% if admin %} active {% endif %}">ADMIN VIEW</p></a>
+                <a href="home/adminView.html"><p class="{% if admin %} active {% endif %}">ADMIN VIEW</p></a>
                 <span>|</span>
-                <a href="/customerView.html"><p class="{% if not admin %} active {% endif %}">CUSTOMER VIEW</a>
+                <a href="home/customerView.html"><p class="{% if not admin %} active {% endif %}">CUSTOMER VIEW</a>
             </div>
             {% block content %}
             {% endblock %}
