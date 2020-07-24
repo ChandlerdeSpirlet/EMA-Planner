@@ -4,8 +4,8 @@ const nunjucks = require('nunjucks');
 const session = require('express-session');
 
 const app = express();
-//const port = process.env.PORT;
-const port = 5000;
+const port = process.env.PORT;
+//const port = 5000;
 const router = express.Router();
 
 const STRIPE_API = require('./api/stripe-functions.js');
@@ -18,7 +18,7 @@ app.use(express.static(__dirname));
 app.use(bodyParser());
 app.use('/', router);
 
-//const db = require('./database');
+const db = require('./database');
 
 app.use(session({
     secret: 'ema-Planner',
