@@ -7,118 +7,64 @@
 {% endif %}
 <html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<head>
+<link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
     <style>
+        * {
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            
+        }
+        .column {
+            float: left;
+            width: calc(100% / 3);
+            padding: 10px;
+        }
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+        #page-container {
+            position: relative;
+            min-height: 90vh;
+            height: 100%;
+        }
+        #content-wrap {
+            padding-bottom: 2.5rem;    /* Footer height */
+        }
+        .material-icons-outlined {
+            
+            font-size: 120px;
+        }
         h1 {
             text-align: center;
-            font-size: 48px;
-            text-shadow: 1px 2px 2px darkgrey;
-            color: #070707;
-        }
-        h3 {
-            text-align: center;
-            font-size: 30px;
-            color: #070707;
         }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: #004CE5;
-        }
-        a:link {
-            color: black;
-            text-decoration: none;
-        }
-        a:visited {
-            color: black;
-            text-decoration: none;
-        }
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-gap: 20px;
-            grid-column-gap: 20px;
-            background-color: #004CE5;
-            grid-template-rows: 200px;
-        }
-        .grid-item {
-            background-color: #004CE5;
-            padding: 20px;
-            font-size: 30px;
-            text-align: center;
-            width: auto;
-        }
-        .card {
-            box-shadow: 5px 10px 8px black;
-            background-color: lightgray;
-            transition: 0.3s;
-            border-radius: 5px;
-        }
-        .card:hover {
-            box-shadow: 5px 10px 18px darkgray;
-            background-color: #57B8FF;
-            color: whitesmoke;
-        }
-        .container {
-            padding: 2px 16px;
-            text-align: center;
+            background-image: linear-gradient(#0095ff, #9ed7ff);
         }
     </style>
+<head>
 </head>
 <body>
-<h1>Exclusive Martial Arts</h1>
-<h3>Students Today: {{ classes_today }}</h3>
-<h3>Students This Week: {{ classes_weekly }}</h3>
-<div class="grid-container">
-    <a href="/add_student"><div class="grid-item">
-        <div class="card">
-            <div class="container">
-                <h4><b>Add a Student</b></h4>
-                <p>Add a student to EMA</p>
-            </div>
-        </div>
-    </div></a>
-    <div class="grid-item">
-        <div class="card">
-            <div class="container">
-                <h4><b>Check-In a Student</b></h4>
-                <p>Check-in a student for a class</p>
-            </div>
-        </div>
-    </div>
-    <div class="grid-item">
-        <div class="card">
-            <div class="container">
-                <h4><b>Reports</b></h4>
-                <p>Generate reports for attendance and belt tests</p>
+    <div id="page-container">
+        <div id="content-wrap">
+            <div class="row">
+                <div class="column">
+                    <i class="material-icons-outlined">account_balance_wallet</i><br>
+                    <h1>Accounts</h1>
+                </div>
+                <div class="column">
+                    <i class="material-icons-outlined">account_box</i><br>
+                    <h1>Students and Classes</h1>
+                </div>
+                <div class="column">
+                    <i class="material-icons-outlined">assignment</i><br>
+                    <h1>Belt Testing</h1>
+                </div>
             </div>
         </div>
     </div>
-    <div class="grid-item">
-        <div class="card">
-            <div class="container">
-                <h4><b>Belt Testing</b></h4>
-                <p>Add a student for belt testing</p>
-            </div>
-        </div>
-    </div>
-    <div class="grid-item">
-        <div class="card">
-            <div class="container">
-                <h4><b>Class Information</b></h4>
-                <p>View class details</p>
-            </div>
-        </div>
-    </div>
-    <div class="grid-item">
-        <div class="card">
-            <div class="container">
-                <h4><b>Student Lookup</b></h4>
-                <p>Lookup and edit student information</p>
-            </div>
-        </div>
-    </div>
-</div>
-
 </body>
 </html>
 

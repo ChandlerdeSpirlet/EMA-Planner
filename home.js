@@ -2,11 +2,14 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const nunjucks = require('nunjucks');
 const session = require('express-session');
+const exp_val = require('express-validator');
+
 
 const app = express();
 const port = process.env.PORT;
 //const port = 5000;
 const router = express.Router();
+app.use(exp_val());
 
 const STRIPE_API = require('./api/stripe-functions.js');
 
