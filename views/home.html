@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<% if (messages.error) { %>
+{% if messages.error %}
     <p style="color:red"><%- messages.error %></p>
-<% } %>
-<% if (messages.success) { %>
+{% endif %}
+{% if messages.success %}
     <p style="color:black"><%- messages.success %></p>
-<% } %>
+{% endif %}
 <html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <head>
@@ -66,10 +66,10 @@
 </head>
 <body>
 <h1>Exclusive Martial Arts</h1>
-<h3>Students Today: <%= classes_today %></h3>
-<h3>Students This Week: <%= classes_weekly %></h3>
+<h3>Students Today: {{ classes_today }}</h3>
+<h3>Students This Week: {{ classes_weekly }}</h3>
 <div class="grid-container">
-    <a href="/home/add_student"><div class="grid-item">
+    <a href="/add_student"><div class="grid-item">
         <div class="card">
             <div class="container">
                 <h4><b>Add a Student</b></h4>

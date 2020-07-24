@@ -145,20 +145,20 @@
 <h1>Exclusive Martial Arts</h1>
 <div class="form-style-10">
     <h1>New Student<span>Enroll a new student.</span></h1>
-    <form action="/home/add_student" method="post">
+    <form action="/add_student" method="post">
         <div class="section"><span>1</span>Name & Address</div>
         <div class="inner-wrap">
-            <label>First Name <input type="text" name="first_name" value="<%= first_name %>"></label>
-            <label>Last Name <input type="text" name="last_name" value="<%= last_name %>"></label>
-            <label>Address <input type="street" name="addr_1" value="<%= addr_1 %>"></label>
-            <label>City <input type="text" name="city" value="<%= city %>"></label>
-            <label>Zip Code <input type="number" name="zip" value="<%= zip %>"></label>
+            <label>First Name <input type="text" name="first_name" value="{{ first_name }}"></label>
+            <label>Last Name <input type="text" name="last_name" value="{{ last_name }}"></label>
+            <label>Address <input type="street" name="addr_1" value="{{ addr_1 }}"></label>
+            <label>City <input type="text" name="city" value="{{ city }}"></label>
+            <label>Zip Code <input type="number" name="zip" value="{{ zip }}"></label>
         </div>
 
         <div class="section"><span>2</span>Email & Phone</div>
         <div class="inner-wrap">
-            <label>Email Address <input type="email" name="email" value="<%= email %>"/></label>
-            <label>Phone Number <input type="text" name="phone" value="<%= phone %>"/></label>
+            <label>Email Address <input type="email" name="email" value="{{ email }}"/></label>
+            <label>Phone Number <input type="text" name="phone" value="{{ phone }}"/></label>
         </div>
 
         <div class="section"><span>3</span>Karate Info</div>
@@ -193,8 +193,8 @@
                 </optgroup>
             </select>
             </label>
-            <label>Belt Size <input type="number" name="belt_size" value="<%= belt_size %>"/></label>
-            <label>Attendance Card Number <input type="number" name="barcode" value="<%= barcode %>"/></label>
+            <label>Belt Size <input type="number" name="belt_size" value="{{ belt_size }}"/></label>
+            <label>Attendance Card Number <input type="number" name="barcode" value="{{ barcode }}"/></label>
         </div>
         <div class="button-section">
             <input type="submit" name="Enroll" />

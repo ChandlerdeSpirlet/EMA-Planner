@@ -1,60 +1,48 @@
-var express = require('express');
-var app = express();
-var path = require('path');
-var session = require("express-session");
-var exp_val = require('express-validator');
-const fastcsv = require("fast-csv");
-var fs = require('fs');
-var nodemailer = require('nodemailer');
+const express = require('express');
 const bodyParser = require('body-parser');
 const nunjucks = require('nunjucks');
+const session = require('express-session');
 
-const STRIPE_API = require('../api/stripe-functions.js');
-app.use('../../styles/', express.static('styles'));
+const app = express();
+//const port = process.env.PORT;
+const port = 5000;
+const router = express.Router();
+
+const STRIPE_API = require('./api/stripe-functions.js');
 
 app.set('view engine', 'html');
 app.engine('html', nunjucks.render);
 nunjucks.configure('views', {noCache: true});
 
-var db = require('../database');
-const cors = require('cors');
-app.use(cors());
+app.use(express.static(__dirname));
+app.use(bodyParser());
+app.use('/', router);
 
-module.exports = app;
-
+//const db = require('./database');
 
 app.use(session({
-    secret: 'EMA_Planner',
+    secret: 'ema-Planner',
     resave: false,
     saveUninitialized: true,
-    cookie: {maxAge: 8 * 60 * 1000}
+    cookie: {maxAge: 60 * 60 * 1000}
 }));
-app.use(
-    bodyParser.urlencoded({
-        extended: true,
-    })
-)
-app.use(bodyParser.json())
-app.use(exp_val());
-app.use(express.static(path.join(__dirname, 'home')));
 
-app.get('/', function(req, res){
-    if (req.headers['x-forwarded-proto'] != 'https'){
-        res.redirect('https://ema-planner.herokuapp.com/')
-    } else {
-        res.render('home/home', {
+router.get('/', (req, res) => {
+    //if (req.headers['x-forwarded-proto'] != 'https'){
+    //    res.redirect('https://ema-planner.herokuapp.com/')
+    //} else {
+        res.render('home.html', {
             classes_today: '',
             classes_weekly: ''
-        })
-    }
+        });
+    //}
 });
 
-
-app.get('/add_student', function(req, res){
-    if (req.headers['x-forwarded-proto'] != 'https'){
-        res.redirect('https://ema-planner.herokuapp.com/home/add_student')
-    } else {
-        res.render('home/add_student', {
+router.get('/add_student', function(req, res){
+    //if (req.headers['x-forwarded-proto'] != 'https'){
+    //    res.redirect('https://ema-planner.herokuapp.com/home/add_student')
+    //} else {
+        res.render('add_student', {
             barcode: '',
             first_name: '',
             last_name: '',
@@ -66,10 +54,10 @@ app.get('/add_student', function(req, res){
             belt_color: '',
             belt_size: ''
         })
-    }
+    //}
 });
 
-app.post('/add_student', function(req, res){
+router.post('/add_student', function(req, res){
     var item = {
         first_name: req.sanitize('first_name').trim(),
         last_name: req.sanitize('last_name').trim(),
@@ -94,46 +82,46 @@ app.post('/add_student', function(req, res){
         })
 });
 
-app.get('/adminView', function(req, res){
+router.get('/adminView', function(req, res){
     STRIPE_API.getAllProductsAndPlans().then(products => {
-        res.render('home/adminView.html', {products: products});
+        res.render('adminView.html', {products: products});
     });
 });
 
-app.get('/createProduct', (req, res) => {
-    res.render('home/createProduct.html');
+router.get('/createProduct', (req, res) => {
+    res.render('createProduct.html');
 });
 
-app.post('/createProduct', (req, res) => {
+router.post('/createProduct', (req, res) => {
     STRIPE_API.createProduct(req.body).then(() => {
-        res.render('home/createProduct.html', {success: true});
+        res.render('createProduct.html', {success: true});
     });
 });
 
-app.post('/createPlan', (req, res) => {
-    res.render('home/createPlan.html', {
+router.post('/createPlan', (req, res) => {
+    res.render('createPlan.html', {
         productID: req.body.productID,
         productName: req.body.productName
     });
 });
 
-app.post('/createPlanForReal', (req, res) => {
+router.post('/createPlanForReal', (req, res) => {
     STRIPE_API.createPlan(req.body).then(() => {
-        res.render('home/createPlan.html', {success: true});
+        res.render('createPlan.html', {success: true});
     });
 });
 
-app.get('/customerView', (req, res) => {
+router.get('/customerView', (req, res) => {
     STRIPE_API.getAllProductsAndPlans().then(products => {
         products = products.filter(product => {
             return product.plans.length > 0;
         });
 
-        res.render('home/customerView.html', {products: products});
+        res.render('customerView.html', {products: products});
     });
 });
 
-app.post('/signUp', (req, res) => {
+router.post('/signUp', (req, res) => {
     var product = {
         name: req.body.productName
     };
@@ -146,10 +134,10 @@ app.post('/signUp', (req, res) => {
         interval_count: req.body.planIntervalCount
     }
 
-    res.render('home/signUp.html', {product: product, plan: plan});
+    res.render('signUp.html', {product: product, plan: plan});
 });
 
-app.post('/processPayment', (req, res) => {
+router.post('/processPayment', (req, res) => {
     var product = {
         name: req.body.productName
     };
@@ -163,8 +151,12 @@ app.post('/processPayment', (req, res) => {
     }
 
     STRIPE_API.createCustomerAndSubscription(req.body).then(() => {
-        res.render('home/signUp.html', {product: product, plan: plan, success: true});
+        res.render('signUp.html', {product: product, plan: plan, success: true});
     }).catch(err => {
-        res.render('home/signUp.html', {product: product, plan: plan, error: true});
+        res.render('signUp.html', {product: product, plan: plan, error: true});
     });
+});
+
+app.listen(port, () => {
+    console.info('EMA-Planner running on port', port);
 });

@@ -1,6 +1,6 @@
 {% set title = 'Create Product' %}
 {% set admin = true %}
-{% extends 'home/base.html' %}
+{% extends 'base.html' %}
 
 {% block content %}
 
@@ -16,7 +16,7 @@
         </div>
     {% else %}
         <div class="create-product-container">
-            <form action="/home/createProduct" method="POST">
+            <form action="/createProduct" method="POST">
                 <div>
                     <label>Product Name</label>
                     <input class="signup-text" placeholder="Product Name" name="productName"/>

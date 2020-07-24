@@ -1,6 +1,6 @@
 {% set title = 'Customer View' %}
 {% set admin = false %}
-{% extends 'home/base.html' %}
+{% extends 'base.html' %}
 
 {% block content %}
 
@@ -11,7 +11,7 @@
             <div class="customer-view-plans">
                 {% for plan in product.plans %}
                     <div class="customer-view-plan">
-                        <form action="/home/signUp" method="POST">
+                        <form action="/signUp" method="POST">
                             <input type="hidden" value="{{ product.name }}" name="productName"/>
                             <input type="hidden" value="{{ plan.id }}" name="planId"/>
                             <input type="hidden" value="{{ plan.nickname }}" name="planName"/>

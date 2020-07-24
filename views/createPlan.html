@@ -1,6 +1,6 @@
 {% set title = 'Create Plan' %}
 {% set admin = true %}
-{% extends 'home/base.html' %}
+{% extends 'base.html' %}
 
 {% block content %}
 
@@ -16,7 +16,7 @@
         </div>
     {% else %}
         <div class="create-plan-container">
-            <form action="/home/createPlanForReal" method="POST">
+            <form action="/createPlanForReal" method="POST">
                 <input type="hidden" value="{{ productId }}" name="productId"/>
 
                 <div>
