@@ -4,7 +4,8 @@
   "description": "Attendance and belt testing manager for Exclusive Martial Arts",
   "main": "home.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
   },
   "keywords": [],
   "author": "Chandler de Spirlet",
