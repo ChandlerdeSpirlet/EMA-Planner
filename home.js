@@ -149,7 +149,7 @@ router.post('/signUp', (req, res) => {
     };
 
     var plan = {
-        id: req.body.planId,
+        Id: req.body.planId,
         name: req.body.planName,
         amount: req.body.planAmount,
         interval: req.body.planInterval,
@@ -172,7 +172,7 @@ router.post('/processPayment', (req, res) => {
     };
     
     var plan = {
-        id: req.body.planId,
+        Id: req.body.planId,
         name: req.body.planName,
         amount: req.body.planAmount,
         interval: req.body.planInterval,
