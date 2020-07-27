@@ -61,9 +61,7 @@ function createCustomerAndSubscription(requestBody){
         stripe.subscriptions.create({
             customer: customer.id,
             items: [
-                {
-                    plan: requestBody.planID
-                }
+                    {plan: requestBody.planId}
             ]
         });
     });

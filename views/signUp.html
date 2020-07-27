@@ -27,7 +27,7 @@
   <div class="sign-up-container">
     <form action="/processPayment" method="POST" id="payment-form">
       <input type="hidden" value="{{ product.name }}" name="productName"/>
-      <input type="hidden" value="{{ plan.id }}" name="planId"/>
+      <input type="hidden" value="{{ plan.Id }}" name="planId"/>
       <input type="hidden" value="{{ plan.amount }}" name="planAmount"/>
       <input type="hidden" value="{{ plan.name }}" name="planName"/>
       <input type="hidden" value="{{ plan.interval }}" name="planInterval"/>
@@ -40,11 +40,11 @@
       <label>
         Email Address
       </label>
-      <input placeholder="Your Email Address" name="customerEmail" value="{{ customerEmail }}"/>
+      <input placeholder="Your Email Address" name="studentEmail" value="{{ studentEmail }}"/>
       <label>
         Phone Number
       </label>
-      <input placeholder="Your Phone Number" name="customerPhone" value="{{ customerPhone }}"/>
+      <input placeholder="Your Phone Number" name="studentPhone" value="{{ studentPhone }}"/>
       <div class="form-row">
         <label for="card-element">
           Credit or debit card
