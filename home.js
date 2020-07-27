@@ -41,6 +41,17 @@ router.get('/', (req, res) => {
     //}
 });
 
+router.get('/home', (req, res) => {
+    //if (req.headers['x-forwarded-proto'] != 'https'){
+    //    res.redirect('https://ema-planner.herokuapp.com/')
+    //} else {
+        res.render('home.html', {
+            classes_today: '',
+            classes_weekly: ''
+        });
+    //}
+});
+
 router.get('/add_student', function(req, res){
     //if (req.headers['x-forwarded-proto'] != 'https'){
     //    res.redirect('https://ema-planner.herokuapp.com/home/add_student')
@@ -213,7 +224,7 @@ router.post('/processPayment', (req, res) => {
     });
 });
 
-app.post('/webhook', bodyParser.raw({type: 'application/json'}), (request, response) => {
+router.post('/webhook', bodyParser.raw({type: 'application/json'}), (request, response) => {
     let event;
     try {
         event = JSON.parse(request.body);
