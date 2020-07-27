@@ -11,8 +11,15 @@
     <style>
         * {
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-            
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
+        }
+        html {
+            height: 100%;
+            background-image: linear-gradient(#0095ff, #9ed7ff);
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
         }
         .column {
             float: left;
@@ -29,20 +36,16 @@
         #page-container {
             position: relative;
             min-height: 90vh;
-            background-image: linear-gradient(#0095ff, #9ed7ff);
         }
         #content-wrap {
             
         }
         .material-icons-outlined {
-            
             font-size: 120px;
+            text-align: center;
         }
         h1 {
             text-align: center;
-        }
-        body {
-            background-image: linear-gradient(#0095ff, #9ed7ff);
         }
         button {
             /*background-color: #5ed1ff;*/
@@ -78,19 +81,27 @@
                 <div class="column">
                     <i class="material-icons-outlined">account_balance_wallet</i><br>
                     <h1>Accounts</h1>
-                    <a href="/add_student"><button>Enroll a Student</button></a><br>
-                    <a href="https://dashboard.stripe.com/test/customers"><button>Modify Billing Subscription</button></a>
                 </div>
                 <div class="column">
                     <i class="material-icons-outlined">account_box</i><br>
                     <h1>Students and Classes</h1>
+                </div>
+                <div class="column">
+                    <i class="material-icons-outlined">assignment</i><br>
+                    <h1>Belt Testing</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="column">
+                    <a href="/add_student"><button>Enroll a Student</button></a><br>
+                    <a href="https://dashboard.stripe.com/test/customers"><button>Modify Billing Subscription</button></a>
+                </div>
+                <div class="column">
                     <button>Class Check-In</button><br>
                     <button>View a Class</button><br>
                     <button>View/Edit a Student</button>
                 </div>
                 <div class="column">
-                    <i class="material-icons-outlined">assignment</i><br>
-                    <h1>Belt Testing</h1>
                     <button>Create a Test</button>
                 </div>
             </div>

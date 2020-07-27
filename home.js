@@ -78,7 +78,7 @@ router.post('/add_student', function(req, res){
     db.query(query, [item.barcode, item.first_name, item.last_name, item.addr_1, item.zip, item.city, item.belt_color, item.belt_size, item.email, item.phone])
         .then(function(rows){
             console.log("In .then");
-            var redir_link = '/customerView/' + item.first_name + ' ' + item.last_name + '/' + item.email + '/' + item.phone + '/' + item.addr_1 + '/' + item.city + '/' + item.zip;
+            var redir_link = '/customerView/' + item.first_name + ' ' + item.last_name + '/' + item.email + '/' + item.phone + '/' + item.addr_1 + '/' + item.city + '/' + item.zip + '/' + item.barcode;
             res.redirect(redir_link);
         })
         .catch(function(err){
@@ -116,7 +116,7 @@ router.post('/createPlanForReal', (req, res) => {
     });
 });
 
-router.get('/customerView/(:studentName)/(:studentEmail)/(:studentPhone)/(:studentAddr)/(:studentCity)/(:studentZip)', (req, res) => {
+router.get('/customerView/(:studentName)/(:studentEmail)/(:studentPhone)/(:studentAddr)/(:studentCity)/(:studentZip)/(:barcode)', (req, res) => {
     STRIPE_API.getAllProductsAndPlans().then(products => {
         products = products.filter(product => {
             return product.plans.length > 0;
@@ -129,7 +129,8 @@ router.get('/customerView/(:studentName)/(:studentEmail)/(:studentPhone)/(:stude
             studentPhone: req.params.studentPhone,
             studentAddr: req.params.studentAddr,
             studentCity: req.params.studentCity,
-            studentZip: req.params.studentZip
+            studentZip: req.params.studentZip,
+            barcode: req.params.barcode
         });
     });
 });

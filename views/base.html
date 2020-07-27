@@ -251,6 +251,8 @@
                 <a href="/adminView"><p class="{% if admin %} active {% endif %}">ADMIN VIEW</p></a>
                 <span>|</span>
                 <a href="/customerView"><p class="{% if not admin %} active {% endif %}">CUSTOMER VIEW</a>
+                <span>|</span>
+                <a href="/home"><p class="{% if not admin %} active {% endif %}">RETURN HOME</a>
             </div>
             {% block content %}
             {% endblock %}

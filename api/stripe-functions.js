@@ -56,6 +56,7 @@ function createCustomerAndSubscription(requestBody){
         name: requestBody.studentName,
         email: requestBody.studentEmail,
         phone: requestBody.studentPhone,
+        metadata: {barcode: requestBody.barcode},
         address: [
             {
                 line1: requestBody.studentAddr,
