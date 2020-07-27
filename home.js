@@ -229,16 +229,15 @@ router.post('/processPayment', (req, res) => {
 app.post('/webhook', (request, response) => {
     let event;
     try {
-        event = JSON.parse(request.body);
         console.log('event is ' + event);
     } catch (err) {
         response.status(400).send(`Webhook Error: ${err.message}`);
     }
 
     // Handle the event
-    switch (event.type) {
+    switch (request.body.type) {
         case 'customer.deleted':
-            const studentCode = event.data.object.metadata.barcode;
+            const studentCode = request.body.data.object.metadata.barcode;
             var query = 'delete from student_list where barcode = $1;';
             db.none(query, [studentCode]);
             break;
