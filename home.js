@@ -32,19 +32,29 @@ app.use(session({
     cookie: {maxAge: 60 * 60 * 1000}
 }));
 
-router.get('/', (req, res) => {
+function convertToMoney(amount){
+    const formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 2
+    })
+    return formatter.format(amount / 100);
+}
+
+app.get('/', (req, res) => {
     //if (req.headers['x-forwarded-proto'] != 'https'){
     //    res.redirect('https://ema-planner.herokuapp.com/')
     //} else {
         const stripe = require('stripe')(process.env.STRIPE_API_KEY);
-        stripe.balance.retrieve(function(err, balance) {
+        stripe.balance.retrieve((err, balance) => {
             if (balance){
                 res.render('home.html', {
-                    balance_available: balance.available.amount,
-                    balance_pending: balance.pending.amount,
+                    balance_available: convertToMoney(balance.available[0].amount),
+                    balance_pending: convertToMoney(balance.pending[0].amount),
                     checked_today: '0',
                     checked_week: '0',
                     dragons: '0',
+                    basic: '0',
                     lvl1: '0',
                     lvl2: '0',
                     lvl3: '0',
