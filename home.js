@@ -19,6 +19,8 @@ nunjucks.configure('views', {noCache: true});
 
 app.use(express.static(__dirname));
 app.use(bodyParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/', router);
 
 const db = require('./database');
