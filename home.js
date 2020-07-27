@@ -213,6 +213,35 @@ router.post('/processPayment', (req, res) => {
     });
 });
 
+app.post('/webhook', bodyParser.raw({type: 'application/json'}), (request, response) => {
+    let event;
+    try {
+        event = JSON.parse(request.body);
+    } catch (err) {
+        response.status(400).send(`Webhook Error: ${err.message}`);
+    }
+
+    // Handle the event
+    switch (event.type) {
+        case 'customer.deleted':
+            const studentCode = event.data.object.metadata.barcode;
+            var query = 'delete from student_list where barcode = $1;';
+            db.none(query, [studentCode]);
+            break;
+        //case 'payment_method.attached':
+        
+        
+        //break;
+        // ... handle other event types
+        default:
+        // Unexpected event type
+        return response.status(400).end();
+    }
+
+    // Return a response to acknowledge receipt of the event
+    response.json({received: true});
+    });
+
 app.listen(port, () => {
     console.info('EMA-Planner running on port', port);
 });
