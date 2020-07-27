@@ -54,14 +54,25 @@ function createCustomerAndSubscription(requestBody){
     return stripe.customers.create({
         source: requestBody.stripeToken,
         name: requestBody.studentName,
-        email: requestBody.customerEmail,
-        phone: requestBody.customerPhone
+        email: requestBody.studentEmail,
+        phone: requestBody.studentPhone,
+        address: [
+            {
+                line1: requestBody.studentAddr,
+                city: requestBody.studentCity,
+                postal_code: requestBody.studentZip,
+                state: 'Colorado',
+                country: 'US'
+            }
+        ]
 
     }).then(customer => {
         stripe.subscriptions.create({
             customer: customer.id,
             items: [
-                    {plan: requestBody.planId}
+                    {
+                        plan: requestBody.planId
+                    }
             ]
         });
     });
