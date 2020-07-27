@@ -57,15 +57,13 @@ function createCustomerAndSubscription(requestBody){
         email: requestBody.studentEmail,
         phone: requestBody.studentPhone,
         metadata: {barcode: requestBody.barcode},
-        address: [
-            {
+        address: {
                 line1: requestBody.studentAddr,
                 city: requestBody.studentCity,
                 postal_code: requestBody.studentZip,
                 state: 'Colorado',
                 country: 'US'
-            }
-        ]
+        }
 
     }).then(customer => {
         stripe.subscriptions.create({
