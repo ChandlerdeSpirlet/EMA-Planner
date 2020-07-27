@@ -6,8 +6,8 @@ const exp_val = require('express-validator');
 
 
 const app = express();
-const port = process.env.PORT;
-//const port = 5000;
+//const port = process.env.PORT;
+const port = 5000;
 const router = express.Router();
 app.use(exp_val());
 
@@ -21,7 +21,7 @@ app.use(express.static(__dirname));
 app.use(bodyParser());
 app.use('/', router);
 
-const db = require('./database');
+//const db = require('./database');
 
 app.use(session({
     secret: 'ema-Planner',
@@ -76,8 +76,8 @@ router.post('/add_student', function(req, res){
     var query = 'insert into student list (barcode, first_name, last_name, addr_1, zip_code, city, belt_color, belt_size, email, phone_number) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);';
     db.query(query, [item.barcode, item.first_name, item.last_name, item.addr_1, item.zip, item.city, item.belt_color, item.belt_size, item.email, item.phone])
         .then(function(rows){
-            req.flash('success', 'Successfully added student.');
-            res.redirect('/');
+            var redir_link = '/customerView/' + item.first_name + ' ' + item.last_name + '/' + item.email + '/' + item.phone;
+            res.redirect(redir_link);
         })
         .catch(function(err){
             req.flash('error', 'Student not enrolled.' + 'ERROR: ' + err);
@@ -114,13 +114,30 @@ router.post('/createPlanForReal', (req, res) => {
     });
 });
 
+router.get('/customerView/(:studentName)/(:studentEmail)/(:studentPhone)', (req, res) => {
+    STRIPE_API.getAllProductsAndPlans().then(products => {
+        products = products.filter(product => {
+            return product.plans.length > 0;
+        });
+
+        res.render('customerView.html', {
+            products: products,
+            studentName: req.params.studentName,
+            studentEmail: req.params.studentEmail,
+            studentPhone: req.params.studentPhone
+        });
+    });
+});
+
 router.get('/customerView', (req, res) => {
     STRIPE_API.getAllProductsAndPlans().then(products => {
         products = products.filter(product => {
             return product.plans.length > 0;
         });
 
-        res.render('customerView.html', {products: products});
+        res.render('customerView.html', {
+            products: products
+        });
     });
 });
 
@@ -137,7 +154,14 @@ router.post('/signUp', (req, res) => {
         interval_count: req.body.planIntervalCount
     }
 
-    res.render('signUp.html', {product: product, plan: plan});
+
+    res.render('signUp.html', {
+        product: product, 
+        plan: plan,
+        studentEmail: req.body.studentEmail,
+        studentName: req.body.studentName,
+        studentPhone: req.body.studentPhone
+    });
 });
 
 router.post('/processPayment', (req, res) => {
@@ -154,9 +178,23 @@ router.post('/processPayment', (req, res) => {
     }
 
     STRIPE_API.createCustomerAndSubscription(req.body).then(() => {
-        res.render('signUp.html', {product: product, plan: plan, success: true});
+        res.render('signUp.html', {
+            product: product, 
+            plan: plan, 
+            success: true,
+            studentEmail: req.body.studentEmail,
+            studentName: req.body.studentName,
+            studentPhone: req.body.studentPhone
+        });
     }).catch(err => {
-        res.render('signUp.html', {product: product, plan: plan, error: true});
+        res.render('signUp.html', {
+            product: product, 
+            plan: plan, 
+            error: true,
+            studentEmail: req.body.studentEmail,
+            studentName: req.body.studentName,
+            studentPhone: req.body.studentPhone
+        });
     });
 });
 

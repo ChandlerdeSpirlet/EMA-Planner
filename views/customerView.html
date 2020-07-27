@@ -18,6 +18,9 @@
                             <input type="hidden" value="{{ plan.amount }}" name="planAmount"/>
                             <input type="hidden" value="{{ plan.interval }}" name="planInterval"/>
                             <input type="hidden" value="{{ plan.interval_count }}" name="planIntervalCount"/>
+                            <input type="hidden" value="{{ studentName }}" name="studentName"/>
+                            <input type="hidden" value="{{ studentEmail }}" name="studentEmail"/>
+                            <input type="hidden" value="{{ studentPhone }}" name="studentPhone"/>
                             <h3>{{ plan.nickname }} &mdash; {{plan.amount }} / 
                                 {% if (plan.interval_count > 1) %}
                                     {{ plan.interval_count }} {{ plan.interval }}

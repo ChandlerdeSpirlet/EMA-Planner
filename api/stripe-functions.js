@@ -53,7 +53,10 @@ function createPlan(requestBody){
 function createCustomerAndSubscription(requestBody){
     return stripe.customers.create({
         source: requestBody.stripeToken,
-        email: requestBody.customerEmail
+        name: requestBody.studentName,
+        email: requestBody.customerEmail,
+        phone: requestBody.customerPhone
+
     }).then(customer => {
         stripe.subscriptions.create({
             customer: customer.id,

@@ -34,9 +34,17 @@
       <input type="hidden" value="{{ plan.interval_count }}" name="planIntervalCount"/>
 
       <label>
+        Student Name
+      </label>
+      <input placeholder="Student Name" name="studentName" value="{{ studentName }}"/>
+      <label>
         Email Address
       </label>
-      <input placeholder="Your Email Address" name="customerEmail"/>
+      <input placeholder="Your Email Address" name="customerEmail" value="{{ customerEmail }}"/>
+      <label>
+        Phone Number
+      </label>
+      <input placeholder="Your Phone Number" name="customerPhone" value="{{ customerPhone }}"/>
       <div class="form-row">
         <label for="card-element">
           Credit or debit card
