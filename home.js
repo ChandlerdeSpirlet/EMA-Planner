@@ -224,7 +224,7 @@ router.post('/processPayment', (req, res) => {
     });
 });
 
-router.post('/webhook', bodyParser.raw({type: 'application/json'}), (request, response) => {
+app.post('/webhook', bodyParser.raw({type: 'application/json'}), (request, response) => {
     let event;
     try {
         event = JSON.parse(request.body);
