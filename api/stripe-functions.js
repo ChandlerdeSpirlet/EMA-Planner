@@ -35,7 +35,8 @@ function getPayouts(){
     stripe.payouts.list(
         {limit: 1},
         function(err, payouts){
-            return payouts.data.amount
+            print(amount);
+            return payouts.data.amount;
         }
     )
 }
@@ -43,7 +44,7 @@ function getPayouts(){
 function getBalance(){
     stripe.balance.retrieve(
         function(err, balance){
-            return balance
+            return balance;
         }
     )
 }
