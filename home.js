@@ -6,8 +6,8 @@ const exp_val = require('express-validator');
 
 
 const app = express();
-//const port = process.env.PORT;
-const port = 5000;
+const port = process.env.PORT;
+//const port = 5000;
 const router = express.Router();
 app.use(exp_val());
 
@@ -21,7 +21,7 @@ app.use(express.static(__dirname));
 app.use(bodyParser());
 app.use('/', router);
 
-//const db = require('./database');
+const db = require('./database');
 
 app.use(session({
     secret: 'ema-Planner',
