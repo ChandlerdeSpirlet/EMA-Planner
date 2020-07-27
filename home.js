@@ -224,10 +224,11 @@ router.post('/processPayment', (req, res) => {
     });
 });
 
-app.post('/webhook', bodyParser.raw({type: 'application/json'}), (request, response) => {
+app.post('/webhook', (request, response) => {
     let event;
     try {
         event = JSON.parse(request.body);
+        console.log('event is ' + event);
     } catch (err) {
         response.status(400).send(`Webhook Error: ${err.message}`);
     }
