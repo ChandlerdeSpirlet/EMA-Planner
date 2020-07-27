@@ -36,11 +36,12 @@ router.get('/', (req, res) => {
     //if (req.headers['x-forwarded-proto'] != 'https'){
     //    res.redirect('https://ema-planner.herokuapp.com/')
     //} else {
-        STRIPE_API.getPayouts().then(payouts => {
-            STRIPE_API.getBalance().then(balance => {
+        const stripe = require('stripe')(process.env.STRIPE_API_KEY);
+        stripe.balance.retrieve(function(err, balance) {
+            if (balance){
                 res.render('home.html', {
-                    balance_summary: 'Available: ' + balance.available.amount + ' Pending: ' + balance.pending.amount,
-                    payout_summary: payouts,
+                    balance_available: balance.available.amount,
+                    balance_pending: balance.pending.amount,
                     checked_today: '0',
                     checked_week: '0',
                     dragons: '0',
@@ -49,7 +50,9 @@ router.get('/', (req, res) => {
                     lvl3: '0',
                     bb: '0'
                 });
-            });
+            } else {
+                console.log('Balance err: ' + err);
+            }
         });
     //}
 });
