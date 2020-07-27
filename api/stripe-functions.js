@@ -31,6 +31,22 @@ function getAllProductsAndPlans() {
         return products;
     });
 }
+function getPayouts(){
+    stripe.payouts.list(
+        {limit: 1},
+        function(err, payouts){
+            return payouts.data.amount
+        }
+    )
+}
+
+function getBalance(){
+    stripe.balance.retrieve(
+        function(err, balance){
+            return balance
+        }
+    )
+}
 
 function createProduct(requestBody){
     return stripe.products.create({
@@ -81,5 +97,7 @@ module.exports = {
     getAllProductsAndPlans,
     createProduct,
     createPlan,
-    createCustomerAndSubscription
+    createCustomerAndSubscription,
+    getPayouts,
+    getBalance
 };

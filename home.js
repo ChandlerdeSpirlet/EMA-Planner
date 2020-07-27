@@ -36,9 +36,20 @@ router.get('/', (req, res) => {
     //if (req.headers['x-forwarded-proto'] != 'https'){
     //    res.redirect('https://ema-planner.herokuapp.com/')
     //} else {
-        res.render('home.html', {
-            classes_today: '',
-            classes_weekly: ''
+        STRIPE_API.getPayouts().then(payouts => {
+            STRIPE_API.getBalance().then(balance => {
+                res.render('home.html', {
+                    balance_summary: 'Available: ' + balance.available.amount + ' Pending: ' + balance.pending.amount,
+                    payout_summary: payouts,
+                    checked_today: '0',
+                    checked_week: '0',
+                    dragons: '0',
+                    lvl1: '0',
+                    lvl2: '0',
+                    lvl3: '0',
+                    bb: '0'
+                });
+            });
         });
     //}
 });

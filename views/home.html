@@ -93,6 +93,25 @@
             </div>
             <div class="row">
                 <div class="column">
+                    <h3>Balance summary this week: {{ balance_summary }}</h3>
+                    <h3>Payout summary this week: {{ payout_summary }}</h3>
+                </div>
+                <div class="column">
+                    <h3>Students checked-in today: {{ checked_today }}</h3>
+                    <h3>Students checked-in this week: {{ checked_week }}</h3>
+                </div>
+                <div class="column">
+                    <h3>Students by belt group</h3>
+                    <h5>Little Dragons: {{ dragons }}</h5>
+                    <h5>Basic: {{ basic }}</h5>
+                    <h5>Level 1: {{ lvl1 }}</h5>
+                    <h5>Level 2: {{ lvl2 }}</h5>
+                    <h5>Level 3: {{ lvl3 }}</h5>
+                    <h5>Black Belt: {{ bb }}</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="column">
                     <a href="/add_student"><button>Enroll a Student</button></a><br>
                     <a href="https://dashboard.stripe.com/test/customers"><button>Modify Billing Subscription</button></a>
                 </div>
