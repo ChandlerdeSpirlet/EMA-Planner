@@ -45,10 +45,10 @@
     <body>
         {% if data %}
             {% for class in data %}
-                <button>
+                <a href="/class_checkin/{{ class.class_id }}"><button>
                     <h2>{% if class.level == -1 %} Little Dragons {% elif class.level == 0 %} Basic {% elif class.level == 1 %} Level 1 {% elif class.level == 2 %} Level 2 {% elif class.level == 3 %} Level 3 {% elif class.level == 4 %} Prep Belt {% elif class.level == 5 %} Black Belt {% else %} Weapons {% endif %}</h2>
                     <h3>{{ class.class_month }} {{ class.class_day }}</h3> <h3>{{ class.class_time }} - {{ class.end_time }}</h3>
-                </button><br>
+                </button></a><br>
             {% endfor %}
         {% else %}
             No classes can be found. Contact a system administrator. Error: c_s:Class

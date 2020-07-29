@@ -6,8 +6,8 @@ const exp_val = require('express-validator');
 
 
 const app = express();
-//const port = process.env.PORT;
-const port = 5000;
+const port = process.env.PORT;
+//const port = 5000;
 const router = express.Router();
 app.use(exp_val());
 
@@ -254,7 +254,7 @@ router.post('/processPayment', (req, res) => {
 });
 
 router.get('/class_selector', (req, res) => {
-    var query = "select to_char(starts_at, 'Month') as class_month, to_char(starts_at, 'DD') as class_day, to_char(starts_at, 'HH:MI') as class_time, to_char(ends_at, 'HH:MI') as end_time, level from classes where date_trunc('day', starts_at) = date_trunc('day', now() - interval '6 hour') order by starts_at;";
+    var query = "select class_id, to_char(starts_at, 'Month') as class_month, to_char(starts_at, 'DD') as class_day, to_char(starts_at, 'HH:MI') as class_time, to_char(ends_at, 'HH:MI') as end_time, level from classes where date_trunc('day', starts_at) = date_trunc('day', now() - interval '6 hour') order by starts_at;";
     db.any(query)
         .then(function(rows){
             res.render('class_selector', {
@@ -267,11 +267,18 @@ router.get('/class_selector', (req, res) => {
         })
 });
 
-router.get('/class_checkin', (req, res) => {
-
-    res.render('class_checkin.html', {
-
-    });
+router.get('/class_checkin/(:class_id)', (req, res) => {
+    var query = "select level, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') as class_date, to_char(starts_at, 'HH:MI') as class_time, class_id from classes where class_id = $1;"
+    db.any(query, [req.params.class_id])
+        .then(function(rows){
+            res.render('class_checkin.html', {
+                data: rows
+            });
+        })
+        .catch(function(err){
+            res.redirect('home');
+            console.log("error finding class with id " + err);
+        })
 });
 //class checkin
     //Select from classes for the day
