@@ -5,6 +5,9 @@
         * {
             font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
         }
+        head {
+            padding-bottom: 15px;
+        }
         html {
             height: 100%;
             background-image: linear-gradient(#0095ff, #9ed7ff);
@@ -13,12 +16,16 @@
             -o-background-size: cover;
             background-size: cover;
         }
+        h1, h3 {
+            text-align: center;
+        }
         button {
             /*background-color: #5ed1ff;*/
             background-color: transparent;
             border: none;
             color: white;
-            padding: 16px 32px;
+            padding-left: 10%;
+            padding-right: 10%;
             text-align: center;
             text-decoration: none;
             display: inline-block;
@@ -26,7 +33,11 @@
             margin: 4px 2px;
             transition-duration: 0.4s;
             cursor: pointer;
+            
             width: 100%;
+        }
+        .buttons h2, h3{
+            line-height: 0.75cm;
         }
         button {
             color: black;
@@ -43,6 +54,7 @@
         <h3>Select a class to check students in.</h3>
     </head>
     <body>
+        <div class="buttons">
         {% if data %}
             {% for class in data %}
                 <a href="/class_checkin/{{ class.class_id }}"><button>
@@ -53,5 +65,6 @@
         {% else %}
             No classes can be found. Contact a system administrator. Error: c_s:Class
         {% endif %}
+        </div>
     </body>
 </html>
