@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
+        }
+        html {
+            height: 100%;
+            background-image: linear-gradient(#0095ff, #9ed7ff);
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+        }
+    </style>
+    <head>
+        <h1>Class Check-In</h1>
+        <h3>Select a class to check students in.</h3>
+    </head>
+    <body>
+        {% if data %}
+            {% for class in data %}
+                {{ class.starts_at }}<br>
+                {% if class.level == -1 %} Little Dragons {% elif class.level == 0 %} Basic {% elif class.level == 1 %} Level 1 {% elif class.level == 2 %} Level 2 {% elif class.level == 3 %} Level 3 {% elif class.level == 4 %} Prep Belt {% elif class.level == 5 %} Black Belt {% else %} Weapons {% endif %}<br>
+            {% endfor %}
+        {% endif %}
+    </body>
+</html>

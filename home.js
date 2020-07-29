@@ -206,7 +206,8 @@ router.post('/signUp', (req, res) => {
         studentPhone: req.body.studentPhone,
         studentAddr: req.body.studentAddr,
         studentCity: req.body.studentCity,
-        studentZip: req.body.studentZip
+        studentZip: req.body.studentZip,
+        barcode: req.body.barcode
     });
 });
 
@@ -233,7 +234,8 @@ router.post('/processPayment', (req, res) => {
             studentPhone: req.body.studentPhone,
             studentAddr: req.body.studentAddr,
             studentCity: req.body.studentCity,
-            studentZip: req.body.studentZip
+            studentZip: req.body.studentZip,
+            barcode: req.body.barcode
         });
     }).catch(err => {
         res.render('signUp.html', {
@@ -245,10 +247,37 @@ router.post('/processPayment', (req, res) => {
             studentPhone: req.body.studentPhone,
             studentAddr: req.body.studentAddr,
             studentCity: req.body.studentCity,
-            studentZip: req.body.studentZip
+            studentZip: req.body.studentZip,
+            barcode: req.body.barcode
         });
     });
 });
+
+router.get('/class_selector', (req, res) => {
+    var query = "select * from classes where date_trunc('day', starts_at) = date_trunc('day', now() - interval '6 hour') order by starts_at";
+    db.any(query)
+        .then(function(rows){
+            console.log('rows[0]' + rows[0]);
+            res.render('class_selector', {
+                data: rows
+            });
+        })
+        .catch(function(err){
+            console.log('error in getting classes ' + err);
+            res.redirect('home');
+        })
+});
+
+router.get('/class_checkin', (req, res) => {
+
+    res.render('class_checkin.html', {
+
+    });
+});
+//class checkin
+    //Select from classes for the day
+    //use id to forward to checkin page with place for barcode scan
+    //scan and redirect to that same checkin page
 
 app.post('/webhook', (request, response) => {
     let event;
