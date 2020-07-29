@@ -1,6 +1,6 @@
-var pgp = require('pg-promise')();
+const pgp = require('pg-promise')();
 
-var dbConfig = process.env.DATABASE_URL;
-var db = pgp(dbConfig);
+const dbConfig = process.env.DATABASE_URL;
+const db = pgp(dbConfig);
 
 module.exports = db;

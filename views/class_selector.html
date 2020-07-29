@@ -13,6 +13,30 @@
             -o-background-size: cover;
             background-size: cover;
         }
+        button {
+            /*background-color: #5ed1ff;*/
+            background-color: transparent;
+            border: none;
+            color: white;
+            padding: 16px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 24px;
+            margin: 4px 2px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+            width: 100%;
+        }
+        button {
+            color: black;
+            border: 4px solid black;
+        }
+
+        button:hover {
+            background-color: #555555;
+            color: white;
+        }
     </style>
     <head>
         <h1>Class Check-In</h1>
@@ -21,9 +45,13 @@
     <body>
         {% if data %}
             {% for class in data %}
-                {{ class.starts_at }}<br>
-                {% if class.level == -1 %} Little Dragons {% elif class.level == 0 %} Basic {% elif class.level == 1 %} Level 1 {% elif class.level == 2 %} Level 2 {% elif class.level == 3 %} Level 3 {% elif class.level == 4 %} Prep Belt {% elif class.level == 5 %} Black Belt {% else %} Weapons {% endif %}<br>
+                <button>
+                    <h2>{% if class.level == -1 %} Little Dragons {% elif class.level == 0 %} Basic {% elif class.level == 1 %} Level 1 {% elif class.level == 2 %} Level 2 {% elif class.level == 3 %} Level 3 {% elif class.level == 4 %} Prep Belt {% elif class.level == 5 %} Black Belt {% else %} Weapons {% endif %}</h2>
+                    <h3>{{ class.class_month }} {{ class.class_day }}</h3> <h3>{{ class.class_time }} - {{ class.end_time }}</h3>
+                </button><br>
             {% endfor %}
+        {% else %}
+            No classes can be found. Contact a system administrator. Error: c_s:Class
         {% endif %}
     </body>
 </html>

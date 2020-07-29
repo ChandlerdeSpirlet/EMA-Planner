@@ -6,8 +6,8 @@ const exp_val = require('express-validator');
 
 
 const app = express();
-const port = process.env.PORT;
-//const port = 5000;
+//const port = process.env.PORT;
+const port = 5000;
 const router = express.Router();
 app.use(exp_val());
 
@@ -254,10 +254,9 @@ router.post('/processPayment', (req, res) => {
 });
 
 router.get('/class_selector', (req, res) => {
-    var query = "select * from classes where date_trunc('day', starts_at) = date_trunc('day', now() - interval '6 hour') order by starts_at";
+    var query = "select to_char(starts_at, 'Month') as class_month, to_char(starts_at, 'DD') as class_day, to_char(starts_at, 'HH:MI') as class_time, to_char(ends_at, 'HH:MI') as end_time, level from classes where date_trunc('day', starts_at) = date_trunc('day', now() - interval '6 hour') order by starts_at;";
     db.any(query)
         .then(function(rows){
-            console.log('rows[0]' + rows[0]);
             res.render('class_selector', {
                 data: rows
             });
