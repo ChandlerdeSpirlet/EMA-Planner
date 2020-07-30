@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Class Check-In | {{ level }} {{ class_date }}</title>
+    <style>
+        * {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
+        }
+        html {
+            height: 100%;
+            background-image: linear-gradient(#0095ff, #9ed7ff);
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+        }
+        h1 {
+            text-align: center;
+        }
+        h3 {
+            text-align: center;
+        }
+        .column {
+            float: left;
+            width: calc(100% / 2);
+            height: 100%;
+            padding: 10px;
+        }
+        #page-container {
+            position: relative;
+            min-height: 90vh;
+        }
+        #content-wrap {
+            
+        }
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+    </style>
+    <head>
+        <h1>% if level == -1 %} Little Dragons {% elif level == 0 %} Basic {% elif level == 1 %} Level 1 {% elif level == 2 %} Level 2 {% elif level == 3 %} Level 3 {% elif level == 4 %} Prep Belt {% elif level == 5 %} Black Belt {% else %} Weapons {% endif %}</h1>
+        <h3>{{ level }} at {{ time }}</h3>
+    </head>
+    <body>
+        <div id="page-container">
+            <div id="content-wrap">
+                <div class="row">
+                    <div class="column">
+                        <form action="/class_checkin" method="POST" id="attendanceForm">
+                            <input type="hidden" value="{{ class_id }}" name="class_id"/>
+                            <input type="hidden" value="{{ level }}" name="level"/>
+                            <input type="hidden" value="{{ time }}" name="time"/>
+                            <label>Attendance Card</label><input type="number" name="barcode_input"/>
+                            <input type="submit" name="Submit" value="Check-In"/>
+                        </form>
+                    </div>
+                    <div class="column">
+                        {% for student in data %}
+                            
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+<script>
+window.onload=function() {
+    document.getElementById('attendanceForm').oninput=function() {
+        if (this.value.length >= 5) {
+            document.getElementById('attendanceForm').submit();
+        }
+    };
+};
+</script>

@@ -110,7 +110,6 @@ router.post('/add_student', function(req, res){
         belt_color: req.sanitize('belt_color').trim(),
         belt_size: req.sanitize('belt_size').trim()
     }
-    console.log('INFO TESTING: ' + item.zip + ' ' + item.addr_1);
     var query = 'insert into student_list (barcode, first_name, last_name, addr_1, zip_code, city, belt_color, belt_size, email, phone_number) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);';
     db.query(query, [item.barcode, item.first_name, item.last_name, item.addr_1, item.zip, item.city, item.belt_color, item.belt_size, item.email, item.phone])
         .then(function(rows){
@@ -267,12 +266,17 @@ router.get('/class_selector', (req, res) => {
         })
 });
 
-router.get('/class_checkin/(:class_id)', (req, res) => {
-    var query = "select level, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') as class_date, to_char(starts_at, 'HH:MI') as class_time, class_id from classes where class_id = $1;"
+//query for people: select s.first_name || ' ' || s.last_name as student_name, b.session_id from student_list s, student_classes b where s.barcode in (select barcode from student_classes) and b.class_id = 123
+
+router.get('/class_checkin/(:class_id)/(:class_level)/(:class_time)', (req, res) => {
+    var query = "select s.first_name || ' ' || s.last_name as student_name, b.session_id from student_list s, student_classes b where s.barcode in (select barcode from student_classes) and b.class_id = $1"
     db.any(query, [req.params.class_id])
         .then(function(rows){
             res.render('class_checkin.html', {
-                data: rows
+                data: rows,
+                level: req.params.class_level,
+                time: req.params.class_time,
+                class_id: req.params.class_id
             });
         })
         .catch(function(err){
@@ -280,10 +284,37 @@ router.get('/class_checkin/(:class_id)', (req, res) => {
             console.log("error finding class with id " + err);
         })
 });
-//class checkin
-    //Select from classes for the day
-    //use id to forward to checkin page with place for barcode scan
-    //scan and redirect to that same checkin page
+
+router.post('/class_checkin', (req, res) => {
+    var item = {
+        class_id: req.sanitize('class_id').trim(),
+        barcode_input: req.sanitize('barcode_input').trim(),
+        level: req.sanitize('level').trim(),
+        time: req.sanitize('time').trim()
+    }
+    var query = 'insert into student_classes (class_id, barcode) values ($1, $2);';
+    db.any(query, [item.class_id, item.barcode_input])
+        .then(function(rows1){
+            var query = "select s.first_name || ' ' || s.last_name as student_name, b.session_id from student_list s, student_classes b where s.barcode in (select barcode from student_classes) and b.class_id = $1"
+            db.any(query, [item.class_id])
+                .then(function(rows){
+                    res.render('class_checkin.html', {
+                        data: rows,
+                        level: item.level,
+                        time: item.time,
+                        class_id: item.class_id
+                    });
+                })
+                .catch(function(err){
+                    res.redirect('home');
+                    console.log("error finding class with id " + err);
+                })
+        })
+        .catch(function(err){
+            res.redirect('home');
+            console.log("Unable to checkin to class " + err);
+        })
+});
 
 app.post('/webhook', (request, response) => {
     let event;
