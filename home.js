@@ -266,7 +266,7 @@ router.get('/class_selector', (req, res) => {
         })
 });
 
-router.get('/class_remove/(:barcode)/(:class_id)', (req, res) => {
+router.get('/class_remove/(:student_name)/(:class_id)', (req, res) => {
     const remove_query = 'delete from student_classes where class_id = $1 and barcode = $2;';
     db.any(remove_query, [req.params.class_id, req.params.barcode])
         .then(function(rows){
