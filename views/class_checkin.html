@@ -7,7 +7,6 @@
             font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
         }
         html {
-            height: 100%;
             background-image: linear-gradient(#0095ff, #9ed7ff);
             -webkit-background-size: cover;
             -moz-background-size: cover;
@@ -38,6 +37,52 @@
             display: table;
             clear: both;
         }
+        .chip {
+            display: inline-block;
+            padding: 0 25px;
+            height: 50px;
+            font-size: 18px;
+            line-height: 50px;
+            border-radius: 25px;
+            background-color: #f1f1f1;
+        }
+        .closebtn {
+            padding-left: 10px;
+            color: #888;
+            font-weight: bold;
+            float: right;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .closebtn:hover {
+            color: #000;
+        }
+        button, label, input, select {
+            display: block;
+            font-size: 100%;
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            width: 100%;
+            padding: 5px;
+            height: 30px;
+        }
+        input[type="text"], select {
+            box-shadow: inset 1px 1px 3px #ccc;
+            border-radius: 5px;
+        }
+
+        label {
+            margin-bottom: 5px;
+        }
+
+        button {
+            width: 60%;
+            margin: 0 auto;
+        }
+        label{
+            font-weight: bold;
+        }
     </style>
     <head>
         <h1>{% if level == -1 %} Little Dragons {% elif level == 0 %} Basic {% elif level == 1 %} Level 1 {% elif level == 2 %} Level 2 {% elif level == 3 %} Level 3 {% elif level == 4 %} Prep Belt {% elif level == 5 %} Black Belt {% else %} Weapons {% endif %}</h1>
@@ -52,12 +97,17 @@
                             <input type="hidden" value="{{ class_id }}" name="class_id"/>
                             <input type="hidden" value="{{ level }}" name="level"/>
                             <input type="hidden" value="{{ time }}" name="time"/>
-                            <label>Attendance Card</label><input type="number" name="barcode_input"/>
+                            <label for="barcode_input">Attendance Card</label>
+                            <input type="number" id="barcode_input" name="barcode_input"/><br>
                             <input type="submit" name="Submit" value="Check-In"/>
                         </form>
                     </div>
                     <div class="column">
                         {% for student in data %}
+                        <div class="chip">
+                            {{ student.student_name }}
+                            <a href ="/class_remove/{{ student.barcode }}/{{ class_id }}"><span class="closebtn">&times;</span></a>
+                        </div>
                         {% endfor %}
                     </div>
                 </div>

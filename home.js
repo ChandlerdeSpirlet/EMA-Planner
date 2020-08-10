@@ -266,10 +266,33 @@ router.get('/class_selector', (req, res) => {
         })
 });
 
-//query for people: select s.first_name || ' ' || s.last_name as student_name, b.session_id from student_list s, student_classes b where s.barcode in (select barcode from student_classes) and b.class_id = 123
+router.get('/class_remove/(:barcode)/(:class_id)', (req, res) => {
+    const remove_query = 'delete from student_classes where class_id = $1 and barcode = $2;';
+    db.any(remove_query, [req.params.class_id, req.params.barcode])
+        .then(function(rows){
+            var query = "select s.first_name || ' ' || s.last_name as student_name, b.session_id, s.barcode from student_list s, student_classes b where s.barcode in (select barcode from student_classes) and b.class_id = $1"
+            db.any(query, [req.params.class_id])
+                .then(function(rows){
+                    res.render('class_checkin.html', {
+                        data: rows,
+                        level: req.params.class_level,
+                        time: req.params.class_time,
+                        class_id: req.params.class_id
+                    });
+                })
+                .catch(function(err){
+                    res.redirect('home');
+                    console.log("error finding class with id " + err);
+                })
+        })
+        .catch(function(err){
+            console.log('Could not remove person from class with class_id and barcode ' + req.params.class_id + ', ' + req.params.barcode + '. Err: ' + err);
+            res.redirect('class_selector');
+        })
+});
 
 router.get('/class_checkin/(:class_id)/(:class_level)/(:class_time)', (req, res) => {
-    var query = "select s.first_name || ' ' || s.last_name as student_name, b.session_id from student_list s, student_classes b where s.barcode in (select barcode from student_classes) and b.class_id = $1"
+    var query = "select s.first_name || ' ' || s.last_name as student_name, b.session_id, s.barcode from student_list s, student_classes b where s.barcode in (select barcode from student_classes) and b.class_id = $1"
     db.any(query, [req.params.class_id])
         .then(function(rows){
             res.render('class_checkin.html', {
