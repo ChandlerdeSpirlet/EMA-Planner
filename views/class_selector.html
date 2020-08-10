@@ -20,25 +20,13 @@
         h1, h3 {
             text-align: center;
         }
-        button {
-            /*background-color: #5ed1ff;*/
-            background-color: transparent;
-            border: none;
-            color: white;
-            padding-left: 20%;
-            padding-right: 20%;
+        .wrapper {
             text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 24px;
-            margin: 4px 2px;
-            transition-duration: 0.4s;
-            cursor: pointer;
-            width: 60%;
-            position: absolute;
         }
-        .buttons h2, h3{
-            line-height: 0.75cm;
+
+        .button {
+            position: absolute;
+            top: 50%;
         }
         button {
             color: black;
@@ -55,12 +43,12 @@
         <h3>Select a class to check students in.</h3>
     </head>
     <body>
-        <div class="buttons">
+        <div class="wrapper">
         {% if data %}
             {% for class in data %}
-                <a href="/class_checkin/{{ class.class_id }}/{{ class.level }}/{{ class.month }}{{class.class_day }}{{ class.class_time }} - {{ class.end_time }}"><button>
+                <a href="/class_checkin/{{ class.class_id }}/{{ class.level }}/{{ class.month }} {{class.class_day }} {{ class.class_time }} - {{ class.end_time }}"><button class="button"><br>
                     <h2>{% if class.level == -1 %} Little Dragons {% elif class.level == 0 %} Basic {% elif class.level == 1 %} Level 1 {% elif class.level == 2 %} Level 2 {% elif class.level == 3 %} Level 3 {% elif class.level == 4 %} Prep Belt {% elif class.level == 5 %} Black Belt {% else %} Weapons {% endif %}</h2>
-                    <h3>{{ class.class_month }} {{ class.class_day }}</h3> <h3>{{ class.class_time }} - {{ class.end_time }}</h3>
+                    <h3>{{ class.class_month }} {{ class.class_day }}</h3> <h3>{{ class.class_time }} &mdash; {{ class.end_time }}</h3>
                 </button></a><br>
             {% endfor %}
         {% else %}
