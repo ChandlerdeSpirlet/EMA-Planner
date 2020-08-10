@@ -24,10 +24,6 @@
             text-align: center;
         }
 
-        .button {
-            position: absolute;
-            top: 50%;
-        }
         button {
             color: black;
             border: 4px solid black;
@@ -46,7 +42,7 @@
         <div class="wrapper">
         {% if data %}
             {% for class in data %}
-                <a href="/class_checkin/{{ class.class_id }}/{{ class.level }}/{{ class.month }} {{class.class_day }} {{ class.class_time }} - {{ class.end_time }}"><button class="button"><br>
+                <a href="/class_checkin/{{ class.class_id }}/{{ class.level }}/{{ class.class_month }} {{class.class_day }} {{ class.class_time }} - {{ class.end_time }}"><button class="button"><br>
                     <h2>{% if class.level == -1 %} Little Dragons {% elif class.level == 0 %} Basic {% elif class.level == 1 %} Level 1 {% elif class.level == 2 %} Level 2 {% elif class.level == 3 %} Level 3 {% elif class.level == 4 %} Prep Belt {% elif class.level == 5 %} Black Belt {% else %} Weapons {% endif %}</h2>
                     <h3>{{ class.class_month }} {{ class.class_day }}</h3> <h3>{{ class.class_time }} &mdash; {{ class.end_time }}</h3>
                 </button></a><br>
