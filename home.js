@@ -292,7 +292,7 @@ router.get('/class_remove/(:barcode)/(:class_id)', (req, res) => {
 });
 
 router.get('/class_checkin/(:class_id)/(:class_level)/(:class_time)', (req, res) => {
-    var query = "select s.first_name || ' ' || s.last_name as student_name, b.session_id, s.barcode from student_list s, student_classes b where s.barcode in (select barcode from student_classes) and b.class_id = $1"
+    var query = "select s.first_name || ' ' || s.last_name as student_name, b.session_id, b.barcode from student_list s, student_classes b where s.barcode in (select barcode from student_classes) and b.class_id = $1"
     db.any(query, [req.params.class_id])
         .then(function(rows){
             res.render('class_checkin.html', {
