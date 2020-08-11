@@ -279,7 +279,7 @@ router.get('/class_remove/(:student_name)/(:class_id)', (req, res) => {
 });
 
 router.get('/class_checkin/(:class_id)/(:class_level)/(:class_time)', (req, res) => {
-    var query = "select s.first_name || ' ' || s.last_name as student_name, b.session_id, b.barcode from student_list s, student_classes b where s.barcode in (select barcode from student_classes) and b.class_id = $1"
+    var query = "select s.first_name || ' ' || s.last_name as student_name, b.session_id, b.barcode from student_list s, student_classes b where b.barcode in (select barcode from student_list) and b.class_id = $1"
     db.any(query, [req.params.class_id])
         .then(function(rows){
             res.render('class_checkin.html', {
@@ -305,20 +305,7 @@ router.post('/class_checkin', (req, res) => {
     var query = 'insert into student_classes (class_id, barcode) values ($1, $2);';
     db.any(query, [item.class_id, item.barcode_input])
         .then(function(rows1){
-            var query = "select s.first_name || ' ' || s.last_name as student_name, b.session_id from student_list s, student_classes b where s.barcode in (select barcode from student_classes) and b.class_id = $1"
-            db.any(query, [item.class_id])
-                .then(function(rows){
-                    res.render('class_checkin.html', {
-                        data: rows,
-                        level: item.level,
-                        time: item.time,
-                        class_id: item.class_id
-                    });
-                })
-                .catch(function(err){
-                    res.redirect('home');
-                    console.log("error finding class with id " + err);
-                })
+            res.redirect('class_checkin/' + item.class_id + '/' + item.level + '/' + item.time);
         })
         .catch(function(err){
             res.redirect('home');
@@ -341,8 +328,9 @@ app.post('/webhook', (request, response) => {
             var query = 'delete from student_list where barcode = $1;';
             db.none(query, [studentCode]);
             break;
-        //case 'payment_method.attached':
-        
+        //case 'charge.failed':
+        //create database, add details to database, have button on home with failed payments and the number of rows in db
+        // have resolved button that deletes from database
         
         //break;
         // ... handle other event types

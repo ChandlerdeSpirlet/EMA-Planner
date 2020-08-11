@@ -1,3 +1,6 @@
 .env
 server.js
 .DS_Store
+*.xml
+*.idea
+.DS_Store
