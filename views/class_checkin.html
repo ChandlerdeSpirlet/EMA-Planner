@@ -117,7 +117,7 @@
 </html>
 <script>
 window.onload=function() {
-    document.getElementById('attendanceForm').oninput=function() {
+    document.getElementById('barcode_input').oninput=function() {
         if (this.value.length >= 5) {
             document.getElementById('attendanceForm').submit();
         }
