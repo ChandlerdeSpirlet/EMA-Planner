@@ -270,7 +270,7 @@ router.get('/class_remove/(:barcode)/(:class_id)', (req, res) => {
     const remove_query = 'delete from student_classes where class_id = $1 and barcode = $2;';
     db.any(remove_query, [req.params.class_id, req.params.barcode])
         .then(function(rows){
-            res.redirect('class_selector')
+            res.redirect('class_selector');
         })
         .catch(function(err){
             console.log('Could not remove person from class with class_id and barcode ' + req.params.class_id + ', ' + req.params.barcode + '. Err: ' + err);
