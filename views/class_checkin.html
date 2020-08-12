@@ -106,6 +106,8 @@
                         {% for student in data %}
                         <div class="chip">
                             {{ student.student_name }}
+                            {% console.log('data is ' + data); $}
+                            {% console.log('student is ' + student); %}
                             <a href ="/class_remove/{{ student.barcode }}/{{ class_id }}"><span class="closebtn">&times;</span></a>
                         </div>
                         {% endfor %}
