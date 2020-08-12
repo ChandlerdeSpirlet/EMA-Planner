@@ -279,7 +279,7 @@ router.get('/class_remove/(:barcode)/(:class_id)', (req, res) => {
 });
 
 router.get('/class_checkin/(:class_id)/(:class_level)/(:class_time)', (req, res) => { //query needs to look for barcode not in student_list, but in class_list
-    var query = "select s.first_name || ' ' || s.last_name as student_name, s.barcode from student_list s, student_classes b where b.class_id = $1 and s.barcode in (select barcode from student_classes where class_id = $2)"
+    var query = "select distinct s.first_name || ' ' || s.last_name as student_name, s.barcode from student_list s, student_classes b where b.class_id = $1 and s.barcode in (select barcode from student_classes where class_id = $2)"
     db.any(query, [req.params.class_id, req.params.class_id])
         .then(function(rows){
             res.render('class_checkin.html', {
