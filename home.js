@@ -203,6 +203,10 @@ router.post('/add_student', function(req, res){
             level_id = 'Level 2';
             belt_num = 3;
             break;
+        case ('Black Belt'):
+            level_id = 'Black Belt';
+            belt_num = 5;
+            break;
         default: 
             level_id = 'Unknown';
             belt_num = 999;
