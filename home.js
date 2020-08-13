@@ -51,13 +51,22 @@ app.get('/', (req, res) => {
                 const stripe = require('stripe')(process.env.STRIPE_API_KEY);
                 stripe.balance.retrieve((err, balance) => {
                     if (balance){
-                        res.render('home.html', {
-                            balance_available: convertToMoney(balance.available[0].amount),
-                            balance_pending: convertToMoney(balance.pending[0].amount),
-                            checked_today: '0',
-                            checked_week: '0',
-                            student_data: rows
-                        });
+                        const failure_query = 'select count(id_failed) as failed_num from failed_payments';
+                        db.one(failure_query)
+                            .then(function(row){
+                                res.render('home.html', {
+                                    balance_available: convertToMoney(balance.available[0].amount),
+                                    balance_pending: convertToMoney(balance.pending[0].amount),
+                                    checked_today: '0',
+                                    checked_week: '0',
+                                    student_data: rows,
+                                    failure_num: row
+                                });
+                            })
+                            .catch(function(err){
+                                console.log('Could not get failed_payment count ' + err);
+                                res.render('home.html');
+                            })
                     } else {
                         console.log('Balance err: ' + err);
                     }
@@ -70,14 +79,11 @@ app.get('/', (req, res) => {
 });
 
 router.get('/home', (req, res) => {
-    //if (req.headers['x-forwarded-proto'] != 'https'){
-    //    res.redirect('https://ema-planner.herokuapp.com/')
-    //} else {
-        res.render('home.html', {
-            classes_today: '',
-            classes_weekly: ''
-        });
-    //}
+    if (req.headers['x-forwarded-proto'] != 'https'){
+        res.redirect('https://ema-planner.herokuapp.com/')
+    } else {
+        res.redirect('/');
+    }
 });
 
 router.get('/add_student', function(req, res){
@@ -415,6 +421,40 @@ router.post('/class_checkin', (req, res) => {
         })
 });
 
+router.get('/failed_charges', (req, res) => {
+    const query = 'select * from failed_payments';
+    db.any(query)
+        .then(function(rows){
+            res.render('failed_charges', {
+                failed_payments: rows
+            })
+        })
+        .catch(function(err){
+            console.log('Could not retrieve failed payments ' + err);
+            res.render('failed_charges', {
+                failed_payments: ''
+            })
+        })
+});
+
+router.get('/email_payment_failure/(:email)/(:amount)/(:reason)/(:customer)', (req, res) => {
+    //Add email client to notify of failure.
+    res.redirect('failed_charges');
+});
+
+router.get('/payment_resolved/(:id)', (req, res) => {
+    const resolve_query = 'delete from failed_payments where id_failed = $1';
+    db.any(resolve_query, [req.params.id])
+        .then(function(row){
+            console.log('Payment was resolved.');
+            res.redirect('failed_charges');
+        })
+        .catch(function(err){
+            console.log('Error resolving payment with id ' + req.params.id);
+            res.redirect('failed_charges');
+        })
+});
+
 app.post('/webhook', (request, response) => {
     let event;
     try {
@@ -430,7 +470,20 @@ app.post('/webhook', (request, response) => {
             var query = 'delete from student_list where barcode = $1;';
             db.none(query, [studentCode]);
             break;
-        //case 'charge.failed':
+        case 'charge.failed':
+            const amount = request.body.data.object.amount;
+            const customer = request.body.data.object.customer;
+            const email = request.body.data.object.billing_details.email;
+            const reason = request.body.data.object.outcome.reason;
+            const failed_query = 'insert into failed_payments (customer, amount, reason, email) values ($1, $2, $3, $4);';
+            db.any(failed_query, [customer, amount, reason, email])
+                .then(function(row){
+                    console.log('Added a charge.failed webhook');
+                })
+                .catch(function(err){
+                    console.log('charge.failed ended with err ' + err);
+                })
+            break;
         //create database, add details to database, have button on home with failed payments and the number of rows in db
         // have resolved button that deletes from database
         

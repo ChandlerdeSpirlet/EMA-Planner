@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Select a Class</title>
+    <style>
+        * {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
+        }
+        head {
+            padding-bottom: 25px;
+        }
+        html {
+            min-height: 100%;
+            background-image: linear-gradient(#0095ff, #9ed7ff);
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+        }
+        h1, h3 {
+            text-align: center;
+        }
+        .wrapper {
+            text-align: center;
+        }
+
+        button {
+            color: black;
+            border: 4px solid black;
+        }
+        
+        .button{
+            width: 60%;
+            align-self: center;
+            background-color: transparent;
+        }
+
+        button:hover {
+            background-color: #555555;
+            color: white;
+        }
+        .column {
+            float: left;
+            width: calc(100% / 3);
+            height: 100%;
+            padding: 10px;
+        }
+    </style>
+    <head>
+        <h1>Failed Charges</h1>
+        <h3>Mark resolved once the payment has been made and the charge has been resolved.</h3>
+    </head>
+    <body>
+        <div class="wrapper">
+        {% if failed_payments %}
+            {% for failure in failed_payments %}
+                <button class="button">
+                    <div class="column">
+                        <p><strong>Customer: </strong>{{ failure.customer }}</p>
+                        <p><strong>Amount: </strong>{{ failure.amount }}</p>
+                        <p><strong>Reason: </strong>{{ failure.reason }}</p>
+                    </div>
+                    <div class="column">
+                        <a href="/email_payment_failure/{{ failure.email }}/{{ failure.amount }}/{{ failure.reason }}/{{ failure.customer }}">Send email to {{ failure.email }}</a>
+                    </div>
+                    <div class="column">
+                        <a href="/payment_resolved/{{ failure.id_failed }}">Mark as resolved</a>
+                    </div>
+                    </button>
+                </button></a><br>
+            {% endfor %}
+        {% else %}
+            There are no failed charges. All accounts are current.
+        {% endif %}
+        </div>
+    </body>
+</html>

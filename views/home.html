@@ -57,8 +57,8 @@
         }
         .material-icons-outlined {
             font-size: 160px;
-            text-align: center;
-            align-content: center;
+            position:relative; /* this line and the next "do the thing" */
+            top:3px;
         }
         h1 {
             text-align: center;
@@ -129,12 +129,12 @@
                     <h2>Students by belt group</h2>
                     <div class="column1">
                         <label>{{ student_data[0].level_name }}: </label>{{ student_data[0].count }}<br>
-                        <label>{{ student_data[2].level_name }}: </label>{{ student_data[2].count }}<br>
-                        <label>{{ student_data[4].level_name }}: </label>{{ student_data[4].count }}
+                        <label>{{ student_data[1].level_name }}: </label>{{ student_data[1].count }}<br>
+                        <label>{{ student_data[2].level_name }}: </label>{{ student_data[2].count }}
                     </div>
                     <div class="column2">
-                        <label>{{ student_data[1].level_name }}: </label>{{ student_data[1].count }}<br>
                         <label>{{ student_data[3].level_name }}: </label>{{ student_data[3].count }}<br>
+                        <label>{{ student_data[4].level_name }}: </label>{{ student_data[4].count }}<br>
                         <label>{{ student_data[5].level_name }}: </label>{{ student_data[5].count }}
                     </div>
                 </div>
@@ -143,7 +143,8 @@
                 <div class="column">
                     <a href="/add_student"><button>Enroll a Student</button></a><br>
                     <button>Add a Prospect</button><br>
-                    <a href="https://dashboard.stripe.com/test/customers"><button>Modify Billing Subscription</button></a>
+                    <a href="https://dashboard.stripe.com/test/customers"><button>Modify Billing Subscription</button></a><br>
+                    <a href="/failed_charges"><button>Failed charges &mdash; {{ failure_num[0].failed_num }}</button></a>
                 </div>
                 <div class="column">
                     <a href="/class_selector"><button>Class Check-In</button></a><br>
