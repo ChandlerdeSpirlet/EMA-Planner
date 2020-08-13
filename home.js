@@ -442,7 +442,7 @@ router.get('/email_payment_failure/(:email)/(:amount)/(:reason)/(:customer)', (r
     res.redirect('failed_charges');
 });
 
-router.get('/payment_resolved/(:id)', (req, res) => {
+router.post('/payment_resolved/(:id)', (req, res) => {
     const resolve_query = 'delete from failed_payments where id_failed = $1';
     db.none(resolve_query, [req.params.id])
         .then(function(row){
