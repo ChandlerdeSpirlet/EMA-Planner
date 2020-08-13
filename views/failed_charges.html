@@ -69,7 +69,7 @@
                     </button>
                 </button></a><br>
             {% endfor %}
-        {% else %}
+        {% elif (failed_payments == []) %}
             There are no failed charges. All accounts are current.
         {% endif %}
         </div>
