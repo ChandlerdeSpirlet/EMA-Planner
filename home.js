@@ -442,16 +442,28 @@ router.get('/email_payment_failure/(:email)/(:amount)/(:reason)/(:customer)', (r
     res.redirect('failed_charges');
 });
 
-router.post('/payment_resolved/(:id)', (req, res) => {
+router.get('/payment_resolved/(:id)', (req, res) => {
     const resolve_query = 'delete from failed_payments where id_failed = $1';
     db.none(resolve_query, [req.params.id])
         .then(function(row){
             console.log('Payment was resolved.');
-            res.redirect('failed_charges.html');
+            const query = 'select * from failed_payments';
+            db.any(query)
+                .then(function(rows){
+                    res.render('failed_charges', {
+                        failed_payments: rows
+                    })
+                })
+                .catch(function(err){
+                    console.log('Could not retrieve failed payments ' + err);
+                    res.render('failed_charges', {
+                        failed_payments: ''
+                    })
+                })
         })
         .catch(function(err){
             console.log('Error resolving payment with id ' + req.params.id);
-            res.redirect('failed_charges.html');
+            res.redirect('/');
         })
 });
 
