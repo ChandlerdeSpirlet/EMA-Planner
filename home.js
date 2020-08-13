@@ -115,76 +115,76 @@ router.post('/add_student', function(req, res){
     var level_id = 0;
     switch (item.belt_color){
         case ('Dragons White'):
-            level_id = -1;
+            level_id = 'Dragons';
             break;
         case ('Dragons Gold'):
-            level_id = -1;
+            level_id = 'Dragons';
             break;
         case ('Dragons Orange'):
-            level_id = -1;
+            level_id = 'Dragons';
             break;
         case ('Dragons Green'):
-            level_id = -1;
+            level_id = 'Dragons';
             break;
         case ('Dragons Purple'):
-            level_id = -1;
+            level_id = 'Dragons';
             break;
         case ('Dragons Blue'):
-            level_id = -1;
+            level_id = 'Dragons';
             break;
         case ('Dragons Red'):
-            level_id = -1;
+            level_id = 'Dragons';
             break;
         case ('Dragons Brown'):
-            level_id = -1;
+            level_id = 'Dragons';
             break;
         case ('White'):
-            level_id = 0;
+            level_id = 'Basic';
             break;
         case ('Gold'):
-            level_id = 0;
+            level_id = 'Basic';
             break;
         case ('Orange'):
-            level_id = 1;
+            level_id = 'Level 1';
             break;
         case ('High Orange'):
-            level_id = 1;
+            level_id = 'Level 1';
             break;
         case ('Green'):
-            level_id = 1;
+            level_id = 'Level 1';
             break;
         case ('High Green'):
-            level_id = 1;
+            level_id = 'Level 1';
             break;
         case ('Purple'):
-            level_id = 2;
+            level_id = 'Level 2';
             break;
         case ('High Purple'):
-            level_id = 2;
+            level_id = 'Level 2';
             break;
         case ('Blue'):
-            level_id = 2;
+            level_id = 'Level 2';
             break;
         case ('High Blue'):
-            level_id = 2;
+            level_id = 'Level 2';
             break;
         case ('Red'):
-            level_id = 3;
+            level_id = 'Level 3';
             break;
         case ('High Red'):
-            level_id = 3;
+            level_id = 'Level 3';
             break;
         case ('Brown'):
-            level_id = 3;
+            level_id = 'Level 3';
             break;
         case ('High Brown'):
-            level_id = 3;
+            level_id = 'Level 2';
             break;
         default: 
-            level_id = 999;
+            level_id = 'Unknown';
             break;
     };
-    var query = 'insert into student_list (barcode, first_name, last_name, addr_1, zip_code, city, belt_color, belt_size, email, phone_number, level_num) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);';
+    var query = 'insert into student_list (barcode, first_name, last_name, addr_1, zip_code, city, belt_color, belt_size, email, phone_number, level_name) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);';
     db.query(query, [item.barcode, item.first_name, item.last_name, item.addr_1, item.zip, item.city, item.belt_color, item.belt_size, item.email, item.phone, level_id])
         .then(function(rows){
             console.log("In .then");
