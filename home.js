@@ -112,7 +112,7 @@ router.post('/add_student', function(req, res){
         belt_color: req.sanitize('belt_color').trim(),
         belt_size: req.sanitize('belt_size').trim()
     }
-    const level_id = 0;
+    var level_id = 0;
     switch (item.belt_color){
         case ('Dragons White'):
             level_id = -1;
