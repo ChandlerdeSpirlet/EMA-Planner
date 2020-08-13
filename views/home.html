@@ -127,19 +127,15 @@
                 </div>
                 <div class="column">
                     <h2>Students by belt group</h2>
-                    {{ student_data }}<br>
-                    {{ student_data[0] }}
-                    {{ student_data[0].level_name }}
-                    {{ student_data[0].count}}
                     <div class="column1">
-                        <label>Little Dragons: </label> <br>
-                        <label>Level 1: </label><br>
-                        <label>Level 3: </label>
+                        <label>{{ student_data[0].level_name }}: </label>{{ student_data[0].count }}<br>
+                        <label>{{ student_data[2].level_name }}: </label>{{ student_data[2].count }}<br>
+                        <label>{{ student_data[4].level_name }}: </label>{{ student_data[4].count }}
                     </div>
                     <div class="column2">
-                        <label>Basic: </label><br>
-                        <label>Level 2: </label><br>
-                        <label>Black Belt: </label>
+                        <label>{{ student_data[1].level_name }}: </label>{{ student_data[1].count }}<br>
+                        <label>{{ student_data[3].level_name }}: </label>{{ student_data[3].count }}<br>
+                        <label>{{ student_data[5].level_name }}: </label>{{ student_data[5].count }}
                     </div>
                 </div>
             </div>
