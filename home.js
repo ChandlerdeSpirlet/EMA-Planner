@@ -42,29 +42,31 @@ function convertToMoney(amount){
 }
 
 app.get('/', (req, res) => {
-    //if (req.headers['x-forwarded-proto'] != 'https'){
-    //    res.redirect('https://ema-planner.herokuapp.com/')
-    //} else {
-        const stripe = require('stripe')(process.env.STRIPE_API_KEY);
-        stripe.balance.retrieve((err, balance) => {
-            if (balance){
-                res.render('home.html', {
-                    balance_available: convertToMoney(balance.available[0].amount),
-                    balance_pending: convertToMoney(balance.pending[0].amount),
-                    checked_today: '0',
-                    checked_week: '0',
-                    dragons: '0',
-                    basic: '0',
-                    lvl1: '0',
-                    lvl2: '0',
-                    lvl3: '0',
-                    bb: '0'
-                });
-            } else {
-                console.log('Balance err: ' + err);
-            }
+    if (req.headers['x-forwarded-proto'] != 'https'){
+        res.redirect('https://ema-planner.herokuapp.com/')
+    } else {
+        const student_query = 'select belt_color, count(belt_color) from student_list group by belt_color';
+        db.any(student_query)
+            .then(function(rows){
+                const stripe = require('stripe')(process.env.STRIPE_API_KEY);
+                stripe.balance.retrieve((err, balance) => {
+                    if (balance){
+                        res.render('home.html', {
+                            balance_available: convertToMoney(balance.available[0].amount),
+                            balance_pending: convertToMoney(balance.pending[0].amount),
+                            checked_today: '0',
+                            checked_week: '0',
+                            student_data: rows
+                        });
+                    } else {
+                        console.log('Balance err: ' + err);
+                    }
+            })
+            .catch(function(err){
+                console.log('Could not run query to count students: ' + err);
+            })
         });
-    //}
+    }
 });
 
 router.get('/home', (req, res) => {
@@ -110,8 +112,80 @@ router.post('/add_student', function(req, res){
         belt_color: req.sanitize('belt_color').trim(),
         belt_size: req.sanitize('belt_size').trim()
     }
-    var query = 'insert into student_list (barcode, first_name, last_name, addr_1, zip_code, city, belt_color, belt_size, email, phone_number) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);';
-    db.query(query, [item.barcode, item.first_name, item.last_name, item.addr_1, item.zip, item.city, item.belt_color, item.belt_size, item.email, item.phone])
+    const level_id = 0;
+    switch (item.belt_color){
+        case ('Dragons White'):
+            level_id = -1;
+            break;
+        case ('Dragons Gold'):
+            level_id = -1;
+            break;
+        case ('Dragons Orange'):
+            level_id = -1;
+            break;
+        case ('Dragons Green'):
+            level_id = -1;
+            break;
+        case ('Dragons Purple'):
+            level_id = -1;
+            break;
+        case ('Dragons Blue'):
+            level_id = -1;
+            break;
+        case ('Dragons Red'):
+            level_id = -1;
+            break;
+        case ('Dragons Brown'):
+            level_id = -1;
+            break;
+        case ('White'):
+            level_id = 0;
+            break;
+        case ('Gold'):
+            level_id = 0;
+            break;
+        case ('Orange'):
+            level_id = 1;
+            break;
+        case ('High Orange'):
+            level_id = 1;
+            break;
+        case ('Green'):
+            level_id = 1;
+            break;
+        case ('High Green'):
+            level_id = 1;
+            break;
+        case ('Purple'):
+            level_id = 2;
+            break;
+        case ('High Purple'):
+            level_id = 2;
+            break;
+        case ('Blue'):
+            level_id = 2;
+            break;
+        case ('High Blue'):
+            level_id = 2;
+            break;
+        case ('Red'):
+            level_id = 3;
+            break;
+        case ('High Red'):
+            level_id = 3;
+            break;
+        case ('Brown'):
+            level_id = 3;
+            break;
+        case ('High Brown'):
+            level_id = 3;
+            break;
+        default: 
+            level_id = 999;
+            break;
+    };
+    var query = 'insert into student_list (barcode, first_name, last_name, addr_1, zip_code, city, belt_color, belt_size, email, phone_number, level_num) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);';
+    db.query(query, [item.barcode, item.first_name, item.last_name, item.addr_1, item.zip, item.city, item.belt_color, item.belt_size, item.email, item.phone, level_id])
         .then(function(rows){
             console.log("In .then");
             var redir_link = '/customerView/' + item.first_name + ' ' + item.last_name + '/' + item.email + '/' + item.phone + '/' + item.addr_1 + '/' + item.city + '/' + item.zip + '/' + item.barcode;
