@@ -444,14 +444,14 @@ router.get('/email_payment_failure/(:email)/(:amount)/(:reason)/(:customer)', (r
 
 router.get('/payment_resolved/(:id)', (req, res) => {
     const resolve_query = 'delete from failed_payments where id_failed = $1';
-    db.any(resolve_query, [req.params.id])
+    db.none(resolve_query, [req.params.id])
         .then(function(row){
             console.log('Payment was resolved.');
-            res.redirect('failed_charges');
+            res.redirect('failed_charges.html');
         })
         .catch(function(err){
             console.log('Error resolving payment with id ' + req.params.id);
-            res.redirect('failed_charges');
+            res.redirect('failed_charges.html');
         })
 });
 
