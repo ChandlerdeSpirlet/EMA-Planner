@@ -2,6 +2,7 @@
 <html>
     {% set local = 'Students' %}
     {% extends 'nav_bar.html' %}
+    {% block content %}
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Class Check-In | Level {{ level }} {{ time }}</title>
     <style>
@@ -126,3 +127,4 @@ window.onload=function() {
     };
 };
 </script>
+{% endblock %}
