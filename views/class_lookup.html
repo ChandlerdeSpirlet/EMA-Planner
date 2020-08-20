@@ -11,6 +11,7 @@
         }
         * {
             font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            box-sizing: border-box;
         }
         form > div {
             margin-bottom: 20px;
@@ -36,7 +37,7 @@
             box-sizing: border-box;
             width: 50%;
             padding: 5px;
-            height: 30px;
+            height: 60px;
         }
         .select-wrapper {
             position: relative;
@@ -71,20 +72,20 @@
         }
         .column1 {
             float: left;
-            width: calc(80% / 2);
+            width: 45%;
             height: 100%;
-            padding: 10px;
+            padding-left: 10px;
         }
         .column2 {
             float: right;
-            width: calc(80% / 2);
+            width: 45%;
             height: 100%;
-            padding: 5px;
-            text-align: center;
+            padding-right: 10px;
         }
         #page-container {
             position: absolute;
             min-height: 90vh;
+            min-width: 80%;
         }
         .row:after {
             content: "";
@@ -93,6 +94,7 @@
         }
         .row {
             height: 50%;
+            min-width: 90%;
         }
     </style>
     <head>
