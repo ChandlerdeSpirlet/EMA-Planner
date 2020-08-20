@@ -374,8 +374,8 @@ router.get('/class_selector', (req, res) => {
         })
 });
 
-router.get('/class_selector_force', (req, res) => {
-    const date_conversion = item.month + ' ' + item.day;
+router.get('/class_selector_force/(:month)/(:day)', (req, res) => {
+    const date_conversion = req.params.month + ' ' + req.params.day;
     var query = "select class_id, to_char(starts_at, 'Month') as class_month, to_char(starts_at, 'DD') as class_day, to_char(starts_at, 'HH:MI') as class_time, to_char(ends_at, 'HH:MI') as end_time, level from classes where to_char(starts_at, 'Month DD') = to_char(to_date($1, 'Month DD'), 'Month DD') order by starts_at;";
     db.any(query, [date_conversion])
         .then(function(rows){
