@@ -86,9 +86,9 @@
             padding-left: 5px;
         }
         #page-container {
-            position: absolute;
             min-height: 90vh;
             min-width: 95%;
+            vertical-align: middle;
         }
         .row:after {
             content: "";
@@ -96,13 +96,15 @@
             clear: both;
         }
         .row {
-            height: 50%;
+            height: 10%;
             min-width: 90%;
+            padding-top: 60px;
         }
         .end {
             max-width: 95%;
             padding-left: 10px;
             padding-right: 10px;
+            vertical-align: middle;
         }
     </style>
     <head>
@@ -142,9 +144,9 @@
                             </select>
                         </div>
                     </div>
-                </div>
-                <div class="end">
-                    <input type="submit" name="Submit" value="Search">
+                    <div class="end">
+                        <input type="submit" name="Submit" value="Search">
+                    </div>
                 </div>
             </form>
         </div>
