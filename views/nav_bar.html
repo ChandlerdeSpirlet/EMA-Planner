@@ -1,0 +1,82 @@
+<html>
+    <style>
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+        }
+        li {
+            float: left;
+        }
+        li a, .dropbtn {
+            display: inline-block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        li a:hover, .dropdown:hover .dropbtn {
+            background-color: red;
+        }
+        li.dropdown {
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+        }
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .active {
+            background-color: #4CAF50;
+        }
+    </style>
+    <head>
+    </head>
+    <body>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li class="dropdown">
+                <a href="javascript:void(0)" class="{% if local == 'Accounts' %} active {% endif %}">Accounts</a>
+                <div class="dropdown-content">
+                    <a href="add_student.html">Enroll a Student</a>
+                    <a href="">Add a Prospect</a>
+                    <a href="https://dashboard.stripe.com/test/customers" target="_blank">Modify Billing Subscription</a>
+                    <a href="failed_charges.html">Failed Charges</a>
+                </div>
+            </li>
+            <li class="dropdown">
+                <a href="javascript:void(0)" class="{% if local == 'Students' %} active {% endif %}">Students and Classes</a>
+                <div class="dropdown-content">
+                    <a href="class_selector.html">Class Check-In</a>
+                    <a href="class_lookup.html">View a Class</a>
+                    <a href="">View/Edit a Student</a>
+                </div>
+            </li>
+            <li class="dropdown">
+                <a href="javascript:void(0)" class="{% if local == 'Tests' %} active {% endif %}">Students and Classes</a>
+                <div class="dropdown-content">
+                    <a href="">Create a Test</a>
+                    <a href="">View a Test</a>
+                </div>
+            </li>
+        </ul>
+    </body>
+</html>
