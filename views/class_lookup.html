@@ -25,6 +25,7 @@
             width: 100%;
             padding: 5px;
             height: 30px;
+            align-content: center;
         }
         
         select {
@@ -35,7 +36,7 @@
             padding: 0;
             margin: 0;
             box-sizing: border-box;
-            width: 50%;
+            width: 100%;
             padding: 5px;
             height: 60px;
         }
@@ -72,20 +73,20 @@
         }
         .column1 {
             float: left;
-            width: 45%;
+            width: 50%;
             height: 100%;
             padding-left: 10px;
         }
         .column2 {
             float: right;
-            width: 45%;
+            width: 5%;
             height: 100%;
             padding-right: 10px;
         }
         #page-container {
             position: absolute;
             min-height: 90vh;
-            min-width: 80%;
+            min-width: 90%;
         }
         .row:after {
             content: "";
@@ -127,6 +128,7 @@
                     <div class="column2">
                         <div class="select-wrapper">
                             <select id="select" name="day_select" required>
+                                <option value="">Day</option>
                                 {% for i in range(1, 31 + 1) -%}
                                     <option value="{{ i }}">{{ i }}</option>
                                 {%- endfor %}
