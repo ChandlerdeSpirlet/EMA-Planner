@@ -374,21 +374,6 @@ router.get('/class_selector', (req, res) => {
         })
 });
 
-router.post('/class_selector_force/(:month)/(:day)', (req, res) => {
-    const date_conversion = req.params.month + ' ' + req.params.day;
-    var query = "select class_id, to_char(starts_at, 'Month') as class_month, to_char(starts_at, 'DD') as class_day, to_char(starts_at, 'HH:MI') as class_time, to_char(ends_at, 'HH:MI') as end_time, level from classes where to_char(starts_at, 'Month DD') = to_char(to_date('$1', 'Month DD'), 'Month DD') order by starts_at;";
-    db.any(query, [date_conversion])
-        .then(function(rows){
-            res.render('class_selector', {
-                data: rows
-            });
-        })
-        .catch(function(err){
-            console.log('error in getting classes ' + err);
-            res.redirect('home');
-        })
-});
-
 router.get('/class_remove/(:barcode)/(:class_id)', (req, res) => {
     const remove_query = 'delete from student_classes where class_id = $1 and barcode = $2;';
     db.any(remove_query, [req.params.class_id, req.params.barcode])
@@ -493,8 +478,18 @@ router.post('/class_lookup', (req, res) => {
         month: req.sanitize('month_select').trim(),
         day: req.sanitize('day_select').trim()
     }
-    const redir_link = 'class_selector_force/' + item.month + '/' + item.day;
-    res.redirect(redir_link);
+    const date_conversion = item.month + ' ' + item.day;
+    var query = "select class_id, to_char(starts_at, 'Month') as class_month, to_char(starts_at, 'DD') as class_day, to_char(starts_at, 'HH:MI') as class_time, to_char(ends_at, 'HH:MI') as end_time, level from classes where to_char(starts_at, 'Month DD') = to_char(to_date('$1', 'Month DD'), 'Month DD') order by starts_at;";
+    db.any(query, [date_conversion])
+        .then(function(rows){
+            res.render('class_selector', {
+                data: rows
+            });
+        })
+        .catch(function(err){
+            console.log('error in getting classes ' + err);
+            res.redirect('home');
+        })
 })
 
 app.post('/webhook', (request, response) => {
