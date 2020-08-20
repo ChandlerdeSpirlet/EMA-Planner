@@ -1,5 +1,8 @@
 <html>
     <style>
+        * {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        }
         ul {
             list-style-type: none;
             margin: 0;
@@ -18,7 +21,7 @@
             text-decoration: none;
         }
         li a:hover, .dropdown:hover .dropbtn {
-            background-color: red;
+            background-color: #007ad1;
         }
         li.dropdown {
             display: inline-block;
@@ -45,28 +48,26 @@
             display: block;
         }
         .active {
-            background-color: #4CAF50;
+            background-color: #007ad1;
         }
     </style>
     <head>
-    </head>
-    <body>
         <ul>
             <li><a href="/">Home</a></li>
             <li class="dropdown">
                 <a href="javascript:void(0)" class="{% if local == 'Accounts' %} active {% endif %}">Accounts</a>
                 <div class="dropdown-content">
-                    <a href="add_student.html">Enroll a Student</a>
+                    <a href="add_student">Enroll a Student</a>
                     <a href="">Add a Prospect</a>
                     <a href="https://dashboard.stripe.com/test/customers" target="_blank">Modify Billing Subscription</a>
-                    <a href="failed_charges.html">Failed Charges</a>
+                    <a href="failed_charges">Failed Charges</a>
                 </div>
             </li>
             <li class="dropdown">
                 <a href="javascript:void(0)" class="{% if local == 'Students' %} active {% endif %}">Students and Classes</a>
                 <div class="dropdown-content">
-                    <a href="class_selector.html">Class Check-In</a>
-                    <a href="class_lookup.html">View a Class</a>
+                    <a href="class_selector">Class Check-In</a>
+                    <a href="class_lookup">View a Class</a>
                     <a href="">View/Edit a Student</a>
                 </div>
             </li>
@@ -78,6 +79,9 @@
                 </div>
             </li>
         </ul>
+    </head>
+    <body>
+        
     </body>
     {% block content %}
     {% endblock %}
