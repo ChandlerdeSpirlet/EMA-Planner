@@ -1,0 +1,98 @@
+<html>
+    <title>Class Lookup</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        html {
+            background-image: linear-gradient(#0095ff, #9ed7ff);
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+        }
+        * {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        form > div {
+            margin-bottom: 20px;
+        }
+        button, label, input, select {
+            display: block;
+            font-size: 100%;
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            width: 100%;
+            padding: 5px;
+            height: 30px;
+        }
+        select {
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .select-wrapper {
+            position: relative;
+        }
+        .select-wrapper::after {
+            content: "▼";
+            font-size: 1rem;
+            top: 6px;
+            right: 10px;
+            position: absolute;
+        }
+        select {
+            box-shadow: inset 1px 1px 3px #ccc;
+            border-radius: 5px;
+        }
+        label {
+            margin-bottom: 5px;
+        }
+        button {
+            width: 60%;
+            margin: 0 auto;
+        }
+        label{
+            font-weight: bold;
+        }
+        p {
+            font-size: 16px;
+        }
+        h1, h3 {
+            text-align: center;
+        }
+    </style>
+    <head>
+        <h1>Class Lookup Tool</h1>
+        <h3>Lookup classes by date</h3>
+    </head>
+    <body>
+        <form action="/class_lookup" method="POST">
+            <div class="select-wrapper">
+                <select id="select" name="month_select" required>
+                    <option value="">Month</option>
+                    <option value="January">January</option>
+                    <option value="February">February</option>
+                    <option value="March">March</option>
+                    <option value="April">April</option>
+                    <option value="May">May</option>
+                    <option value="June">June</option>
+                    <option value="July">July</option>
+                    <option value="August">August</option>
+                    <option value="September">September</option>
+                    <option value="October">October</option>
+                    <option value="November">November</option>
+                    <option value="December">December</option>
+                </select>
+            </div>
+            <div class="select-wrapper">
+                <select id="select" name="day_select" required>
+                    {% for i in range(0, 31) -%}
+                        <option value="{{ i }}">{{ i }}</option>
+                    {%- endfor %}
+                </select>
+            </div>
+            <div>
+                <input type="submit" name="Submit" value="Search">
+            </div>
+        </form>
+    </body>
+</html>
