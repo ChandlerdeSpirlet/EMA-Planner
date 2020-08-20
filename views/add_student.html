@@ -1,8 +1,10 @@
 <html>
     {% set local = 'Accounts' %}
     {% extends 'nav_bar.html' %}
+    {% block content %}
 <title>Enroll a new student</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <head>
     <style>
         html {
@@ -150,7 +152,7 @@
         }
     </style>
 </head>
-{% block content %}
+
 <body>
 <h1>Exclusive Martial Arts</h1>
 <div class="form-style-10">
@@ -213,6 +215,7 @@
 </div>
 
 </body>
-{% endblock %}
+
 </html>
 
+{% endblock %}
