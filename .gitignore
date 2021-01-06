@@ -4,3 +4,4 @@ server.js
 *.xml
 *.idea
 .DS_Store
+node_modules/@fast-csv/parse/build/src/parser/column/.QuotedColumnParser.js 2.map.icloud
