@@ -1,0 +1,68 @@
+<html>
+    <style>
+        p {
+     font-family: Arial, sans-serif;
+     font-weight: bold;
+     margin: 0 0 10px;
+     padding: 0;
+}
+ .merchant-form {
+     border: blue solid 1px;
+     margin: 15px 0;
+     padding: 10px;
+}
+ .psjs {
+     background-color: #f9f9f9;
+     border: red solid 1px;
+     margin: 15px 0;
+     padding: 10px;
+}
+ .form-field {
+     margin: 10px 0;
+}
+ .form-field label {
+     display: block;
+}
+ .form-field input {
+     display: block;
+}
+    </style>
+    <head>
+    <meta charset="utf-8">
+    <title>PaySimpleJS</title>
+    </head>
+    <body>
+    
+        <form id="sample-form">
+            <div class="merchant-form">
+                <p>Merchant Checkout Page</p>
+                <div class="form-field">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" />
+                </div>
+                <div class="form-field">
+            <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" />
+            </div>
+            <div class="form-field">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" />
+                </div>
+            </div>
+        
+      <div class="psjs">
+            <p>PaySimpleJS Payment Form</p>
+            <div id="psjs">
+            <!-- a PaySimpleJS Payment Form will be inserted here -->
+            </div>
+        </div>
+
+        <div class="merchant-form">
+            <p>Merchant Checkout Page</p>
+                <button type="submit" id="submit">Complete Checkout</button>
+        </div>
+    </form>
+
+    <script src="https://sandbox-api.paysimple.com/paysimplejs/v1/scripts/client.js"></script>
+    </body>
+</html>

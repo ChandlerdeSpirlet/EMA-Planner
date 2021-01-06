@@ -1,0 +1,221 @@
+<html>
+    {% set local = 'Accounts' %}
+    {% extends 'nav_bar.html' %}
+    {% block content %}
+<title>Enroll a new student</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<head>
+    <style>
+        html {
+            background-image: linear-gradient(#0095ff, #9ed7ff);
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+        }
+        * {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        h1 {
+            text-align: center;
+            font-size: 48px;
+            text-shadow: 1px 2px 2px darkgrey;
+            color: #070707;
+        }
+        h3 {
+            text-align: center;
+            font-size: 30px;
+            color: #070707;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        .form-style-10{
+            width:450px;
+            padding:30px;
+            margin:40px auto;
+            background: #FFF;
+            border-radius: 10px;
+            -webkit-border-radius:10px;
+            -moz-border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
+            -moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
+            -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
+        }
+        .form-style-10 .inner-wrap{
+            padding: 30px;
+            background: #F8F8F8;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+        .form-style-10 h1{
+            background: #57B8FF;
+            padding: 20px 30px 15px 30px;
+            margin: -30px -30px 30px -30px;
+            border-radius: 10px 10px 0 0;
+            -webkit-border-radius: 10px 10px 0 0;
+            -moz-border-radius: 10px 10px 0 0;
+            color: #fff;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.12);
+            font-family: 30px -apple-system, BlinkMacSystemFont, sans-serif;
+            -moz-box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.17);
+            -webkit-box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.17);
+            box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.17);
+            border: 1px solid #257C9E;
+        }
+        .form-style-10 h1 > span{
+            display: block;
+            margin-top: 2px;
+            font-family: 13px -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        .form-style-10 label{
+            display: block;
+            font-family: 13px -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #888;
+            margin-bottom: 15px;
+        }
+        .form-style-10 input[type="text"],
+        .form-style-10 input[type="date"],
+        .form-style-10 input[type="datetime"],
+        .form-style-10 input[type="email"],
+        .form-style-10 input[type="number"],
+        .form-style-10 input[type="search"],
+        .form-style-10 input[type="time"],
+        .form-style-10 input[type="url"],
+        .form-style-10 input[type="street"],
+        .form-style-10 textarea,
+        .form-style-10 select {
+            display: block;
+            box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            width: 100%;
+            padding: 8px;
+            border-radius: 6px;
+            -webkit-border-radius:6px;
+            -moz-border-radius:6px;
+            border: 2px solid #fff;
+            box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
+            -moz-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
+            -webkit-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
+        }
+
+        .form-style-10 .section{
+            font-family: 20px -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #57B8FF;
+            margin-bottom: 5px;
+        }
+        .form-style-10 .section span {
+            background: #57B8FF;
+            padding: 5px 10px 5px 10px;
+            position: absolute;
+            border-radius: 50%;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            border: 4px solid #fff;
+            font-size: 14px;
+            margin-left: -45px;
+            color: #fff;
+            margin-top: -3px;
+        }
+        .form-style-10 input[type="button"],
+        .form-style-10 input[type="submit"]{
+            background: #57B8FF;
+            padding: 8px 20px 8px 20px;
+            border-radius: 5px;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            color: #fff;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.12);
+            font-family: normal 30px -apple-system, BlinkMacSystemFont, sans-serif;
+            -moz-box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.17);
+            -webkit-box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.17);
+            box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.17);
+            border: 1px solid #257C9E;
+            font-size: 15px;
+        }
+        .form-style-10 input[type="button"]:hover,
+        .form-style-10 input[type="submit"]:hover{
+            background: #2A6881;
+            -moz-box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.28);
+            -webkit-box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.28);
+            box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.28);
+        }
+        .form-style-10 .privacy-policy{
+            float: right;
+            width: 250px;
+            font: 12px Arial, Helvetica, sans-serif;
+            color: #4D4D4D;
+            margin-top: 10px;
+            text-align: right;
+        }
+    </style>
+</head>
+
+<body>
+<h1>Exclusive Martial Arts</h1>
+<div class="form-style-10">
+    <h1>New Student<span>Enroll a new student.</span></h1>
+    <form action="/add_student_test" method="post">
+        <div class="section"><span>1</span>Name & Address</div>
+        <div class="inner-wrap">
+            <label>First Name <input type="text" name="first_name" value="{{ first_name }}"></label>
+            <label>Last Name <input type="text" name="last_name" value="{{ last_name }}"></label>
+            <label>Address <input type="street" name="addr_1" value="{{ addr_1 }}"></label>
+            <label>City <input type="text" name="city" value="{{ city }}"></label>
+            <label>Zip Code <input type="number" name="zip" value="{{ zip }}"></label>
+        </div>
+
+        <div class="section"><span>2</span>Email & Phone</div>
+        <div class="inner-wrap">
+            <label>Email Address <input type="email" name="email" value="{{ email }}"/></label>
+            <label>Phone Number <input type="text" name="phone" value="{{ phone }}"/></label>
+        </div>
+
+        <div class="section"><span>3</span>Karate Info</div>
+        <div class="inner-wrap">
+            <label>Belt Color
+            <select id="belt_color" name="belt_color">
+                <optgroup label="Little Dragons">
+                    <option value="Dragons White">Dragons White</option>
+                    <option value="Dragons Gold">Dragons Gold</option>
+                    <option value="Dragons Orange">Dragons Orange</option>
+                    <option value="Dragons Green">Dragons Green</option>
+                    <option value="Dragons Purple">Dragons Purple</option>
+                    <option value="Dragons Blue">Dragons Blue</option>
+                    <option value="Dragons Red">Dragons Red</option>
+                    <option value="Dragons Brown">Dragons Brown</option>
+                </optgroup>
+                <optgroup label="Exclusive">
+                    <option value="White" selected="selected">White</option>
+                    <option value="Gold">Gold</option>
+                    <option value="Orange">Orange</option>
+                    <option value="High Orange">High Orange</option>
+                    <option value="Green">Green</option>
+                    <option value="High Green">High Green</option>
+                    <option value="Purple">Purple</option>
+                    <option value="High Purple">High Purple</option>
+                    <option value="Blue">Blue</option>
+                    <option value="High Blue">High Blue</option>
+                    <option value="Red">Red</option>
+                    <option value="High Red">High Red</option>
+                    <option value="Brown">Brown</option>
+                    <option value="High Brown">High Brown</option>
+                </optgroup>
+            </select>
+            </label>
+            <label>Belt Size <input type="number" name="belt_size" value="{{ belt_size }}"/></label>
+            <label>Attendance Card Number <input type="number" name="barcode" value="{{ barcode }}"/></label>
+        </div>
+        <div class="button-section">
+            <input type="submit" name="Enroll" />
+        </div>
+    </form>
+</div>
+
+</body>
+
+</html>
+
+{% endblock %}

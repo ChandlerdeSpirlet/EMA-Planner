@@ -1,3 +1,4 @@
+'use strict';
 const express = require('express');
 const bodyParser = require('body-parser');
 const nunjucks = require('nunjucks');
@@ -31,6 +32,93 @@ app.use(session({
     saveUninitialized: true,
     cookie: {maxAge: 60 * 60 * 1000}
 }));
+
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+const crypto = require('crypto');
+const request = require('request');
+
+const settings = {
+    apiv4url: "https://sandbox-api.paysimple.com/v4",
+    username: '',
+    apikey: ''
+};
+
+function getAuthHeader() {
+    let time = (new Date()).toISOString();
+    let hash = crypto.createHmac('SHA256', settings.apikey)
+        .update(time)
+        .digest('base64');
+    return 'PSSERVER ' + "accessid=" + settings.username +
+        "; timestamp=" + time + "; signature=" + hash;
+
+}
+
+// Simple endpoint to communicate with PaySimple 4.0 API to retrieve a JWT
+// that can be passed to PaySimple.JS.
+app.get('/token', function(req, res) {
+    let options = {
+        method: "POST",
+        uri: settings.apiv4url + '/checkouttoken',
+        headers: {
+            Authorization: getAuthHeader()
+        },
+        body: {},
+        json: true,
+    };
+
+    request(options, function(error, response, body) {
+        if (!error && response && response.statusCode < 300) {
+            res.json(body.Response);
+            return;
+        }
+
+        res.status((response && response.statusCode) || 500).send(error);
+    });
+});
+function loadPaysimpleJs(auth) {
+    var paysimplejs = window.paysimpleJs({
+        // the element that will contain the iframe
+        container: document.querySelector('#psjs'),
+        // checkout_token is in auth
+        auth: auth,
+        // allows entry of international postal codes if true
+        bypassPostalCodeValidation: false,
+        // Attempts to prevent browsers from using autocompletion to pre-populate 
+        // or suggest input previously stored by the user. Turn on for point of 
+        // sale or kiosk type applications where many different customers 
+        // will be using the same browser to enter payment information.
+        preventAutocomplete : false,
+        // customized styles are optional
+        styles: {
+        body: {
+            // set the background color of the payment page
+            backgroundColor: '#f9f9f9'
+        }
+        }
+    });
+    };
+
+function getAuth(callback) {
+    var xhr = new XMLHttpRequest();
+    // change to address of the endpoint you created in step 2
+    xhr.open('POST', 'customer_test.html');
+    xhr.onload = function (e) {
+        if (xhr.status < 300) {
+        var data = JSON.parse(this.response);
+        callback.call(null, {
+            token: data.JwtToken
+        });
+        return;
+        }
+
+        alert('Failed to get Auth Token: (' + xhr.status + ') '
+            + xhr.responseText);
+    }
+    xhr.send();
+}
+
+getAuth(loadPaysimpleJs);
+paysimplejs.send.setMode('cc-key-enter');
 
 function convertToMoney(amount){
     const formatter = new Intl.NumberFormat('en-US', {
@@ -103,6 +191,157 @@ router.get('/add_student', function(req, res){
             belt_size: ''
         })
     //}
+});
+router.get('/add_student_test', function(req, res){
+    //if (req.headers['x-forwarded-proto'] != 'https'){
+    //    res.redirect('https://ema-planner.herokuapp.com/home/add_student')
+    //} else {
+        res.render('add_student_test', {
+            barcode: '',
+            first_name: '',
+            last_name: '',
+            addr_1: '',
+            city: '',
+            zip: '',
+            email: '',
+            phone: '',
+            belt_color: '',
+            belt_size: ''
+        })
+    //}
+});
+router.post('/add_student_test', function(req, res){
+    var item = {
+        first_name: req.sanitize('first_name').trim(),
+        last_name: req.sanitize('last_name').trim(),
+        barcode: req.sanitize('barcode').trim(),
+        addr_1: req.sanitize('addr_1').trim(),
+        city: req.sanitize('city').trim(),
+        zip: req.sanitize('zip').trim(),
+        email: req.sanitize('email').trim(),
+        phone: req.sanitize('phone').trim(),
+        belt_color: req.sanitize('belt_color').trim(),
+        belt_size: req.sanitize('belt_size').trim()
+    }
+    var level_id = 0;
+    var belt_num = 0;
+    switch (item.belt_color){
+        case ('Dragons White'):
+            level_id = 'Dragons';
+            belt_num = -1;
+            break;
+        case ('Dragons Gold'):
+            level_id = 'Dragons';
+            belt_num = -1;
+            break;
+        case ('Dragons Orange'):
+            level_id = 'Dragons';
+            belt_num = -1;
+            break;
+        case ('Dragons Green'):
+            level_id = 'Dragons';
+            belt_num = -1;
+            break;
+        case ('Dragons Purple'):
+            level_id = 'Dragons';
+            belt_num = -1;
+            break;
+        case ('Dragons Blue'):
+            level_id = 'Dragons';
+            belt_num = -1;
+            break;
+        case ('Dragons Red'):
+            level_id = 'Dragons';
+            belt_num = -1;
+            break;
+        case ('Dragons Brown'):
+            level_id = 'Dragons';
+            belt_num = -1;
+            break;
+        case ('White'):
+            level_id = 'Basic';
+            belt_num = 0;
+            break;
+        case ('Gold'):
+            level_id = 'Basic';
+            belt_num = 0;
+            break;
+        case ('Orange'):
+            level_id = 'Level 1';
+            belt_num = 1;
+            break;
+        case ('High Orange'):
+            level_id = 'Level 1';
+            belt_num = 1;
+            break;
+        case ('Green'):
+            level_id = 'Level 1';
+            belt_num = 1;
+            break;
+        case ('High Green'):
+            level_id = 'Level 1';
+            belt_num = 1;
+            break;
+        case ('Purple'):
+            level_id = 'Level 2';
+            belt_num = 2;
+            break;
+        case ('High Purple'):
+            level_id = 'Level 2';
+            belt_num = 2;
+            break;
+        case ('Blue'):
+            level_id = 'Level 2';
+            belt_num = 2;
+            break;
+        case ('High Blue'):
+            level_id = 'Level 2';
+            belt_num = 2;
+            break;
+        case ('Red'):
+            level_id = 'Level 3';
+            belt_num = 3;
+            break;
+        case ('High Red'):
+            level_id = 'Level 3';
+            belt_num = 3;
+            break;
+        case ('Brown'):
+            level_id = 'Level 3';
+            belt_num = 3;
+            break;
+        case ('High Brown'):
+            level_id = 'Level 2';
+            belt_num = 3;
+            break;
+        case ('Black Belt'):
+            level_id = 'Black Belt';
+            belt_num = 5;
+            break;
+        default: 
+            level_id = 'Unknown';
+            belt_num = 999;
+            break;
+    };
+    /*
+    var query = 'insert into student_list (barcode, first_name, last_name, addr_1, zip_code, city, belt_color, belt_size, email, phone_number, level_name, belt_order) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12);';
+    db.query(query, [item.barcode, item.first_name, item.last_name, item.addr_1, item.zip, item.city, item.belt_color, item.belt_size, item.email, item.phone, level_id, belt_num])
+        .then(function(rows){
+            console.log("In .then");
+            var redir_link = '/customerView/' + item.first_name + ' ' + item.last_name + '/' + item.email + '/' + item.phone + '/' + item.addr_1 + '/' + item.city + '/' + item.zip + '/' + item.barcode;
+            res.redirect(redir_link);
+        })
+        .catch(function(err){
+            res.redirect('/');
+            console.log('ERROR is ' + err);
+        })
+        */
+    var redir_link = '/customer_test/' + item.first_name + ' ' + item.last_name + '/' + item.email + '/' + item.phone + '/' + item.addr_1 + '/' + item.city + '/' + item.zip + '/' + item.barcode;
+    res.redirect(redir_link);
+});
+
+router.get('/customer_test(:studentName)/(:studentEmail)/(:studentPhone)/(:studentAddr)/(:studentCity)/(:studentZip)/(:barcode)', (req, res) => {
+
 });
 
 router.post('/add_student', function(req, res){

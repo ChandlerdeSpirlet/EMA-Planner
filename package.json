@@ -13,6 +13,7 @@
   "dependencies": {
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
     "dotenv": "^8.2.0",
     "ejs": "^2.7.4",
     "express": "^4.17.1",
@@ -25,6 +26,7 @@
     "nunjucks": "^3.2.2",
     "path": "^0.12.7",
     "pg-promise": "^10.5.8",
+    "request": "^2.88.2",
     "stripe": "^8.78.0"
   }
 }
