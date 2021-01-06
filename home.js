@@ -119,6 +119,37 @@ function getAuth(callback) {
 
 getAuth(loadPaysimpleJs);
 paysimplejs.send.setMode('cc-key-enter');
+app.post('/payment', function(req, res) {
+    var requestData = req.body;
+
+    let options = {
+        method: "POST",
+        uri: settings.apiv4url + '/payment',
+        headers: {
+            Authorization: getAuthHeader()
+        },
+        body: {
+            AccountId: requestData.account.id,
+            PaymentToken: requestData.paymentToken,
+            // Payment Specific information...
+            Amount: requestData.amount,
+            PurchaseOrderNumber: requestData.pono,
+            Description: requestData.description,
+            PaymentSubType: 'MOTO'
+        },
+        json: true,
+    };
+
+    request(options, function(error, response, body) {
+        // The return code for /payment will be a 201 (CREATED)
+        if (!error && response && response.statusCode < 300) {
+            res.json(body.Response);
+            return;
+        }
+
+        res.status((response && response.statusCode) || 500).send(error);
+    });
+});
 
 function convertToMoney(amount){
     const formatter = new Intl.NumberFormat('en-US', {
