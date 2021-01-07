@@ -94,7 +94,7 @@
     <body>
         <div id="page-container">
             <div id="content-wrap">
-                <div style="align-content: center;" class="column">
+                <div style="align-content: center;">
                     <form action="/class_checkin" method="POST" id="attendanceForm">
                         <input type="hidden" value="{{ class_id }}" name="class_id"/>
                         <input type="hidden" value="{{ level }}" name="level"/>
@@ -104,7 +104,8 @@
                         <input type="submit" name="Submit" value="Check-In"/>
                     </form>
                 </div>
-                    <div style="align-content: center;"class="column">
+                <br>
+                    <div style="align-content: center;">
                         {% for student in data %}
                         <div class="chip">
                             {{ student.student_name }}
