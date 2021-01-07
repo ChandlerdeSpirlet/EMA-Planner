@@ -94,19 +94,16 @@
     <body>
         <div id="page-container">
             <div id="content-wrap">
-                <div class="row">
-                    <div style="align-content: center;" class="column">
-                        <form action="/class_checkin" method="POST" id="attendanceForm">
-                            <input type="hidden" value="{{ class_id }}" name="class_id"/>
-                            <input type="hidden" value="{{ level }}" name="level"/>
-                            <input type="hidden" value="{{ time }}" name="time"/>
-                            <label for="barcode_input">Attendance Card</label>
-                            <input type="number" id="barcode_input" name="barcode_input"/><br>
-                            <input type="submit" name="Submit" value="Check-In"/>
-                        </form>
-                    </div>
+                <div style="align-content: center;" class="column">
+                    <form action="/class_checkin" method="POST" id="attendanceForm">
+                        <input type="hidden" value="{{ class_id }}" name="class_id"/>
+                        <input type="hidden" value="{{ level }}" name="level"/>
+                        <input type="hidden" value="{{ time }}" name="time"/>
+                        <label for="barcode_input">Attendance Card</label>
+                        <input type="number" id="barcode_input" name="barcode_input"/><br>
+                        <input type="submit" name="Submit" value="Check-In"/>
+                    </form>
                 </div>
-                <div class="row">
                     <div style="align-content: center;"class="column">
                         {% for student in data %}
                         <div class="chip">
@@ -115,7 +112,6 @@
                         </div>
                         {% endfor %}
                     </div>
-                </div>
             </div>
         </div>
     </body>
