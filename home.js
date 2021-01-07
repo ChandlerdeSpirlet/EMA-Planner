@@ -164,7 +164,7 @@ app.get('/', (req, res) => {
     if (req.headers['x-forwarded-proto'] != 'https'){
         res.redirect('https://ema-planner.herokuapp.com/')
     } else {
-        const student_query = 'select level_name, count(level_name) from student_list group by level_name';
+        const student_query = 'select level_name, count(level_name) from student_list group by level_name, belt_order order by belt_order;';
         db.any(student_query)
             .then(function(rows){
                 const stripe = require('stripe')(process.env.STRIPE_API_KEY);
