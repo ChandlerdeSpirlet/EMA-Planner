@@ -144,7 +144,7 @@
     {% if data %}
         {% set namesArr = [] %}
         {% for name in data %}
-            {% set _ = namesArr.append(name.names) %}
+            {% set _ = namesArr.append( {{ name.names}} ) %}
         {% endfor %}
         <meta name="name_data" content="{{ names_arr }}" />
     {% endif %}
