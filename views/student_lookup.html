@@ -141,14 +141,7 @@
         <h1>Student Lookup Tool</h1>
         <h3>Lookup students by name</h3>
     </head>
-    {% if data %}
-        {% set namesArr = [] %}
-        {% for name in data %}
-            {% set _ = namesArr.append( {{ name.names}} ) %}
-        {% endfor %}
-        <meta name="name_data" content="{{ names_arr }}" />
-    {% endif %}
-    <meta name="yourdata" content="whatever" />
+    
     <body>
         <form autocomplete="off" action="/student_lookup" method="post" name="form1">
             <div class="autocomplete" style="width:70%;">
@@ -158,7 +151,8 @@
         </form>
     </body>
     <script>
-        var data1 = document.getElementsByName('name_data')[0].content;
+        //var data1 = document.getElementsByName('name_data')[0].content;
+        var data1 = data;
         console.log(data1);
         var names = data1;
         function autocomplete(inp, arr) {
