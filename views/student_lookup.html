@@ -142,7 +142,7 @@
         <h3>Lookup students by name</h3>
     </head>
     {% if data %}
-        {% var names_arr = []; %}
+        {% set names_arr = []; %}
         {% for name in data %}
             {% names_arr.append(name.names); %}
         {% endfor %}
