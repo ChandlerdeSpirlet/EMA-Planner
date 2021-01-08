@@ -141,7 +141,7 @@
         <h1>Student Lookup Tool</h1>
         <h3>Lookup students by name</h3>
     </head>
-    
+    <meta name="name_data" content="{{ data }}" />
     <body>
         <form autocomplete="off" action="/student_lookup" method="post" name="form1">
             <div class="autocomplete" style="width:70%;">
@@ -152,10 +152,14 @@
     </body>
     <script>
         //var data1 = document.getElementsByName('name_data')[0].content;
-        var data1 = data;
+        var data1 = document.getElementsByName('name_data')[0].content;
+        console.log('data1');
         console.log(data1);
-        alert(data1);
-        var names = data1;
+        var histo = JSON.parse(document.getElementById('name_data').textContent);
+        console.log('histo');
+        console.log(histo);
+        var data1 = document.getElementsByName('yourdata')[0].content;
+        //var names = data1;
         function autocomplete(inp, arr) {
         /*the autocomplete function takes two arguments,
         the text field element and an array of possible autocompleted values:*/
