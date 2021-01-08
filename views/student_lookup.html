@@ -145,7 +145,7 @@
     <body>
         <form autocomplete="off" action="/student_lookup" method="post" name="form1">
             <div class="autocomplete" style="width:70%;">
-                <input id="result" name="result" type="text" placeholder="Student Name" value="<%= result %>"/>
+                <input id="result" name="result" type="text" placeholder="Student Name" value=""/>
             </div>
             <input type="submit" value="Search" name="Submit"/>
         </form>
@@ -154,6 +154,7 @@
         //var data1 = document.getElementsByName('name_data')[0].content;
         var data1 = data;
         console.log(data1);
+        alert(data1);
         var names = data1;
         function autocomplete(inp, arr) {
         /*the autocomplete function takes two arguments,
