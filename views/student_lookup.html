@@ -142,9 +142,9 @@
         <h3>Lookup students by name</h3>
     </head>
     {% if data %}
-        {% set names_arr = []; %}
+        {% set namesArr = [] %}
         {% for name in data %}
-            {% names_arr.append(name.names); %}
+            {% namesArr.append(name.names); %}
         {% endfor %}
         <meta name="name_data" content="{% names_arr %}" />
     {% endif %}
