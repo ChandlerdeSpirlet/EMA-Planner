@@ -3,7 +3,7 @@ const bodyParser = require('body-parser')
 const nunjucks = require('nunjucks')
 const session = require('express-session')
 const exp_val = require('express-validator')
-import datepicker from 'js-datepicker'
+const datepicker = require('js-datepicker')
 
 const app = express()
 const port = process.env.PORT
