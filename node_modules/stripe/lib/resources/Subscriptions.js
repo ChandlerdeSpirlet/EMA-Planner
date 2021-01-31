@@ -1,3 +1,5 @@
+// File generated from our OpenAPI spec
+
 'use strict';
 
 const StripeResource = require('../StripeResource');
@@ -6,7 +8,7 @@ const stripeMethod = StripeResource.method;
 module.exports = StripeResource.extend({
   path: 'subscriptions',
 
-  includeBasic: ['create', 'list', 'retrieve', 'update', 'del'],
+  includeBasic: ['create', 'retrieve', 'update', 'list', 'del'],
 
   deleteDiscount: stripeMethod({
     method: 'DELETE',

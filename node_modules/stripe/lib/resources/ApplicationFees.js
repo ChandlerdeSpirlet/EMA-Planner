@@ -1,3 +1,5 @@
+// File generated from our OpenAPI spec
+
 'use strict';
 
 const StripeResource = require('../StripeResource');
@@ -6,17 +8,11 @@ const stripeMethod = StripeResource.method;
 module.exports = StripeResource.extend({
   path: 'application_fees',
 
-  includeBasic: ['list', 'retrieve'],
+  includeBasic: ['retrieve', 'list'],
 
   createRefund: stripeMethod({
     method: 'POST',
     path: '/{id}/refunds',
-  }),
-
-  listRefunds: stripeMethod({
-    method: 'GET',
-    path: '/{id}/refunds',
-    methodType: 'list',
   }),
 
   retrieveRefund: stripeMethod({
@@ -27,5 +23,11 @@ module.exports = StripeResource.extend({
   updateRefund: stripeMethod({
     method: 'POST',
     path: '/{fee}/refunds/{id}',
+  }),
+
+  listRefunds: stripeMethod({
+    method: 'GET',
+    path: '/{id}/refunds',
+    methodType: 'list',
   }),
 });

@@ -3,6 +3,7 @@ const bodyParser = require('body-parser')
 const nunjucks = require('nunjucks')
 const session = require('express-session')
 const exp_val = require('express-validator')
+import datepicker from 'js-datepicker'
 
 const app = express()
 const port = process.env.PORT
@@ -507,6 +508,12 @@ router.get('/student_lookup', (req, res) => {
       console.log('Could not find students: ' + err)
       res.redirect('/')
     })
+})
+
+router.get('/create_test', (req, res) => {
+  res.render('create_test', {
+    
+  })
 })
 
 app.post('/webhook', (request, response) => {
