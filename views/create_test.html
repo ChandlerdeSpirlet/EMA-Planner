@@ -162,18 +162,18 @@
                   <option value="" disabled>Time</option>
                     <optgroup label="Morning">
                       {% for i in range(9, 11 + 1) -%}
-                        <option value="{{ i }}00 AM">{{ i }}:00 AM</option>
-                        <option value="{{ i }}15 AM">{{ i }}:15 AM</option>
-                        <option value="{{ i }}30 AM">{{ i }}:30 AM</option>
-                        <option value="{{ i }}45 AM">{{ i }}:45 AM</option>
+                        <option value="{{ i }}:00">{{ i }}:00 AM</option>
+                        <option value="{{ i }}:15">{{ i }}:15 AM</option>
+                        <option value="{{ i }}:30">{{ i }}:30 AM</option>
+                        <option value="{{ i }}:45">{{ i }}:45 AM</option>
                       {%- endfor %}
                     </optgroup>
                     <optgroup label="Evening">
                       {% for i in range(4, 8 + 1) -%}
-                        <option value="{{ i }}00 PM">{{ i }}:00 PM</option>
-                        <option value="{{ i }}15 PM">{{ i }}:15 PM</option>
-                        <option value="{{ i }}30 PM">{{ i }}:30 PM</option>
-                        <option value="{{ i }}45 PM">{{ i }}:45 PM</option>
+                        <option value="{{ i + 12 }}:00">{{ i }}:00 PM</option>
+                        <option value="{{ i + 12}}:15">{{ i }}:15 PM</option>
+                        <option value="{{ i + 12}}:30">{{ i }}:30 PM</option>
+                        <option value="{{ i + 12}}:45">{{ i }}:45 PM</option>
                       {%- endfor %}
                     </optgroup>
                 </select>

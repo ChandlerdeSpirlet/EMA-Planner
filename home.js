@@ -511,8 +511,55 @@ router.get('/student_lookup', (req, res) => {
 
 router.get('/create_test', (req, res) => {
   res.render('create_test', {
-    
   })
+})
+
+router.post('/create_test', (req, res) => {
+  const item = {
+    level = req.sanitize('level_select').trim(),
+    month = req.sanitize('month_select').trim(),
+    day = req.sanitize('day_select').trim(),
+    time = req.sanitize('time_select').trim
+  }
+  let temp_date = new Date();
+  let year = temp_date.getFullYear();
+  const built_date = item.month + ' ' + item.day + ', ' + year;
+  const new_test_query = "insert into test_instance (level, test_date, test_time) values ($1, to_date($2, 'Month DD, YYYY'), $3::time";
+  db.none(new_test_query, [item.level, built_date, item.time])
+    .then(function(rows){
+      switch (item.level) {
+        case '-1':
+          req.flash('success', 'Test created for Little Dragons on ' + built_date + ' at ' + item.time);
+          res.redirect('/create_test');
+          break;
+        case '0':
+          req.flash('success', 'Test created for Basic on ' + built_date + ' at ' + item.time);
+          res.redirect('/create_test');
+          break;
+        case '1':
+          req.flash('success', 'Test created for Level 1 on ' + built_date + ' at ' + item.time);
+          res.redirect('/create_test');
+          break;
+        case '2':
+          req.flash('success', 'Test created for Level 1 on ' + built_date + ' at ' + item.time);
+          res.redirect('/create_test');
+          break;
+        case '3':
+          req.flash('success', 'Test created for Level 1 on ' + built_date + ' at ' + item.time);
+          res.redirect('/create_test');
+          break;
+        default:
+          req.flash('error', 'Test Not Created! with data: (level: ' + item.level + ', built_date: ' + built_date + ', time: ' + item.time + ')');
+          console.log('Test Not Created! with data: (level: ' + item.level + ', built_date: ' + built_date + ', time: ' + item.time + ')');
+          res.redirect('/create_test');
+          break;
+      }
+    })
+    .catch(function(err){
+      console.log("Error in creating test: " + err);
+      req.flash('Test not created. ERR: ' + err);
+      res.redirect('/create_test');
+    })
 })
 
 app.post('/webhook', (request, response) => {
