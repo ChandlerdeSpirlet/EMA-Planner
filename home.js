@@ -534,7 +534,7 @@ router.post('/create_test', (req, res) => {
   console.log('item.level: ' + item.level);
   console.log('built_date: ' + built_date);
   console.log('item.time: ' + item.time);
-  const new_test_query = "insert into test_instance (level, test_date, test_time) values (($1)::, to_date($2, 'Month DD, YYYY'), ($3)::time)";
+  const new_test_query = "insert into test_instance (level, test_date, test_time) values (($1)::int, to_date($2, 'Month DD, YYYY'), ($3)::time)";
   db.any(new_test_query, [item.level, built_date, item.time])
     .then(function(rows){
       switch (item.level) {
