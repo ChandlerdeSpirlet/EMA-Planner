@@ -3,7 +3,6 @@
   {% extends 'nav_bar.html' %}
   {% block content %}
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://unpkg.com/js-datepicker/dist/datepicker.min.css">
   <style>
     html {
       background-image: linear-gradient(#0095ff, #9ed7ff);
@@ -132,11 +131,63 @@
             </div>
           </div>
           <div class="column2">
-            const picker = datepicker('#some-id')
+            <div class="select-wrapper">
+              <select id="select" name="month_select" required>
+                <option value="" disabled>Month</option>
+                <option value="January">January</option>
+                <option value="February">February</option>
+                <option value="March">March</option>
+                <option value="April">April</option>
+                <option value="May">May</option>
+                <option value="June">June</option>
+                <option value="July">July</option>
+                <option value="August">August</option>
+                <option value="September">September</option>
+                <option value="October">October</option>
+                <option value="November">November</option>
+                <option value="December">December</option>
+              </select>
+            </div>
+            <div class="select-wrapper">
+              <select id="select" name="day_select" required>
+                <option value="" disabled>Day</option>
+                  {% for i in range(1, 31 + 1) -%}
+                    <option value="{{ i }}">{{ i }}</option>
+                  {%- endfor %}
+              </select>
+            </div><br>
+            <div class="select-wrapper">
+              <select id="select" name="hour_select" required>
+                <option value="" disabled>Hour</option>
+                  <optgroup label="AM">
+                    <option value="9am">9 AM</option>
+                    <option value="10am">10 AM</option>
+                    <option value="11am">11 AM</option>
+                  </optgroup>
+                  <optgroup label="PM">
+                    <option value="4pm">4 PM</option>
+                    <option value="5pm">5 PM</option>
+                    <option value="6pm">6 PM</option>
+                    <option value="7pm">7 PM</option>
+                    <option value="8pm">8 PM</option>
+                  </optgroup>
+              </select>
+            </div>
+            <div class="select-wrapper">
+              <select id="select" name="minute_select" required>
+                <option value="" disabled>Minute</option>
+                <option value="00">00</option>
+                <option value="15">00</option>
+                <option value="30">00</option>
+                <option value="45">00</option>
+              </select>
+            </div>
           </div>
         </div>
+        <div class="row">
+          <input type="submit" name="Submit" value="Create">
+      </div>
       </form>
     </div>
-    <script src="https://unpkg.com/js-datepicker"></script>
   </body>
 </html>
