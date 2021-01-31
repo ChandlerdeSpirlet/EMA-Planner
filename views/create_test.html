@@ -121,7 +121,7 @@
           <div class="column1">
             <div class="select-wrapper">
               <select id="select" name="level_select" required>
-                <option value="" disabled>Month</option>
+                <option value="" disabled>Level</option>
                 <option value="-1">Little Dragons</option>
                 <option value="0">Basic</option>
                 <option value="1">Level 1</option>
@@ -131,7 +131,7 @@
             </div>
           </div>
           <div class="column2">
-            <div class="select-wrapper">
+            <div class="select-wrapper" style="width: 45%; float: left;">
               <select id="select" name="month_select" required>
                 <option value="" disabled>Month</option>
                 <option value="January">January</option>
@@ -148,7 +148,7 @@
                 <option value="December">December</option>
               </select>
             </div>
-            <div class="select-wrapper">
+            <div class="select-wrapper" style="width: 45%; float: right;">
               <select id="select" name="day_select" required>
                 <option value="" disabled>Day</option>
                   {% for i in range(1, 31 + 1) -%}
