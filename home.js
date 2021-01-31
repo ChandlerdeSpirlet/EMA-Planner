@@ -516,10 +516,10 @@ router.get('/create_test', (req, res) => {
 
 router.post('/create_test', (req, res) => {
   const item = {
-    level = req.sanitize('level_select').trim(),
-    month = req.sanitize('month_select').trim(),
-    day = req.sanitize('day_select').trim(),
-    time = req.sanitize('time_select').trim
+    level: req.sanitize('level_select').trim(),
+    month: req.sanitize('month_select').trim(),
+    day: req.sanitize('day_select').trim(),
+    time: req.sanitize('time_select').trim
   }
   let temp_date = new Date();
   let year = temp_date.getFullYear();
