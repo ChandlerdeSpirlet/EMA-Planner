@@ -6,6 +6,7 @@ const exp_val = require('express-validator')
 var flash = require('connect-flash')
 
 const app = express()
+app.use(flash());
 const port = process.env.PORT
 // const port = 5000;
 const router = express.Router()
@@ -22,7 +23,7 @@ app.use(bodyParser())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use('/', router)
-app.use(flash());
+
 
 const db = require('./database')
 
@@ -526,7 +527,10 @@ router.post('/create_test', (req, res) => {
   let temp_date = new Date();
   let year = temp_date.getFullYear();
   const built_date = item.month + ' ' + item.day + ', ' + year;
-  const new_test_query = "insert into test_instance (level, test_date, test_time) values ($1, to_date($2, 'Month DD, YYYY'), ($3)::time)";
+  console.log('item.level: ' + item.level);
+  console.log('built_date: ' + built_date);
+  console.log('item.time: ' + item.time);
+  const new_test_query = "insert into test_instance (level, test_date, test_time) values (($1)::, to_date($2, 'Month DD, YYYY'), ($3)::time)";
   db.any(new_test_query, [item.level, built_date, item.time])
     .then(function(rows){
       switch (item.level) {
