@@ -156,31 +156,28 @@
                   {%- endfor %}
               </select>
             </div><br>
-            <div class="select-wrapper" style="width: 50%; float: left;">
-              <select id="select" name="hour_select" required>
-                <option value="" disabled>Hour</option>
-                  <optgroup label="AM">
-                    <option value="9am">9 AM</option>
-                    <option value="10am">10 AM</option>
-                    <option value="11am">11 AM</option>
+            <br>
+            <div class="select-wrapper">
+              <select id="select" name="time_select" required>
+                <option value="" disabled>Time</option>
+                  <optgroup label="Morning">
+                    {% for i in range(9, 11 + 1) -%}
+                      <option value="{{ i }}00 AM">{{ i }}:00 AM</option>
+                      <option value="{{ i }}15 AM">{{ i }}:15 AM</option>
+                      <option value="{{ i }}30 AM">{{ i }}:30 AM</option>
+                      <option value="{{ i }}45 AM">{{ i }}:45 AM</option>
+                    {%- endfor %}
                   </optgroup>
-                  <optgroup label="PM">
-                    <option value="4pm">4 PM</option>
-                    <option value="5pm">5 PM</option>
-                    <option value="6pm">6 PM</option>
-                    <option value="7pm">7 PM</option>
-                    <option value="8pm">8 PM</option>
+                  <optgroup label="Evening">
+                    {% for i in range(4, 8 + 1) -%}
+                      <option value="{{ i }}00 PM">{{ i }}:00 PM</option>
+                      <option value="{{ i }}15 PM">{{ i }}:15 PM</option>
+                      <option value="{{ i }}30 PM">{{ i }}:30 PM</option>
+                      <option value="{{ i }}45 PM">{{ i }}:45 PM</option>
+                    {%- endfor %}
                   </optgroup>
               </select>
             </div>
-            <div class="select-wrapper" style="width: 50%; float: right;">
-              <select id="select" name="minute_select" required>
-                <option value="" disabled>Minute</option>
-                <option value="00">00</option>
-                <option value="15">00</option>
-                <option value="30">00</option>
-                <option value="45">00</option>
-              </select>
             </div>
           </div>
         </div>
