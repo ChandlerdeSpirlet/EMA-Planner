@@ -642,7 +642,7 @@ router.post('/test_preview', (req, res) => {
   const item = {
     student_name: req.sanitize('student_name').trim(),
     email: req.sanitize('email').trim(),
-    belt_color: req.sanitize('belts').trim(),
+    belt_color: req.sanitize('belt_color').trim(),
     test_id: req.sanitize('test_id').trim(),
     button: req.sanitize('button')
   };
