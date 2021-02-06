@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Testing Preview</title>
+  <style>
+    * {
+        box-sizing: border-box;
+        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    html {
+        background-image: linear-gradient(#0095ff, #9ed7ff);
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+        min-height: 100%;
+    }
+    input[type="submit"] {
+        display: block;
+        font-size: 100%;
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        width: 70%;
+        padding: 5px;
+        height: 30px;
+    }
+  </style>
+  <head>
+    <h1>Belt Testing Signup Preview</h1>
+  </head>
+  <body>
+    <h2>You have entered the following information</h2>
+    <h3>Student's Name: {{ student_name }}</h3>
+    {% if test_info %}
+      {% for test in test_info %}
+        <h3>Test Day and Time: {{ test.test_isntance }}</h3>
+      {% endfor %}
+    {% endif %}
+    <h3>Belt Color: {{ belt_color }}</h3>
+    <h3>Email: {{ email }}</h3>
+    <p>If this looks corrrect, click <i>Submit</i>, otherwise, click <i>Edit</i></p>
+    <form action="/test_preview" method="POST">
+      <input type="hidden" name="test_id" value="{{ test_id }}">
+      <input type="hidden" name="student_name" value="{{ student_name }}">
+      <input type="hidden" name="email" value="{{ email }}">
+      <input type="hidden" name="belt_color" value="{{ belt_color }}">
+      <input type="submit" name="button" value="Submit"/>
+      <br>
+      <input type="submit" name="button" value="Edit"/>
+    </form>
+  </body>
+</html>

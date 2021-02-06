@@ -572,6 +572,118 @@ router.post('/create_test', (req, res) => {
     })
 })
 
+//TESTING SIGNUP SECTION
+router.get('/testing_signup_basic', (req, res) => {
+  if (req.headers['x-forwarded-proto'] != 'https'){
+    res.redirect('https://ema-planner.herokuapp.com/testing_signup_basic.html');
+  } else {
+    const name_query = "select * from get_names(0);";
+    const tests = "select TO_CHAR(test_date, 'Month') || ' ' || extract(DAY from test_date) || ' at ' || to_char(test_time, 'HH12:MI PM') as test_instance from test_instance where level = 0;";
+    db.any(name_query)
+      .then(rows_names => {
+        db.any(tests)
+          .then(rows => {
+            res.render('testing_signup_basic', {
+              names: rows_names,
+              tests: rows
+            })
+          })
+          .catch(err => {
+            console.log('Could not get tests. Error: ' + err);
+            req.flash('error', 'Signup UNSUCCESSFUL. Please see a staff member.');
+            res.redirect('/testing_signup_basic');
+          })
+      })
+      .catch(err => {
+        console.log('Could not get names. Error: ' + err);
+        req.flash('error', 'Signup UNSUCCESSFUL. Please see a staff member.');
+        res.redirect('/testing_signup_basic');
+      })
+  }
+})
+
+router.post('/testing_signup_basic', (req, res) => {
+  const item = {
+    student_name: req.sanitize('student_name').trim(),
+    email: req.sanitize('email').trim(),
+    belt_color: req.sanitize('belts').trim(),
+    test_id: req.sanitize('test_selection').trim()
+  };
+  const test_instance = "select TO_CHAR(test_date, 'Month') || ' ' || extract(DAY from test_date) || ' at ' || to_char(test_time, 'HH12:MI PM') as test_instance from test_instance where id = $1;";
+  db.any(test_instance, [item.test_id])
+    .then(rows => {
+      res.render('testing_preview', {
+        test_info: rows,
+        test_id: item.test_id,
+        student_name: item.student_name,
+        email: item.email,
+        belt_color: item.belt_color
+      })
+    })
+    .catch(err => {
+      console.log('Could not find test with given id. ERROR: ' + err);
+      req.flash('error', 'Unable to verify the test you are signed up for.');
+      res.redirect('/testing_signup_basic');
+    })
+})
+
+router.get('/testing_preview', (req, res) => {
+  res.render('testing_preview', {
+    test_info: '',
+    test_id: '',
+    student_name: '',
+    email: '',
+    belt_color: ''
+  })
+})
+
+router.post('/testing_preview', (req, res) => {
+  const item = {
+    student_name: req.sanitize('student_name').trim(),
+    email: req.sanitize('email').trim(),
+    belt_color: req.sanitize('belts').trim(),
+    test_id: req.sanitize('test_selection').trim(),
+    button: req.sanitize('button')
+  };
+  if (item.button == 'Submit'){
+    const test_instance = "select TO_CHAR(test_date, 'Month') || ' ' || extract(DAY from test_date) || ' at ' || to_char(test_time, 'HH12:MI PM') as test_instance from test_instance where id = $1;";
+    db.any(test_instance, [item.test_id])
+      .then(rows => {
+        if (item.email == 'exclusivemartialarts@gmail.com'){
+          res.render('testing_confirmed', {
+            student_name: 'Master Young',
+            email: 'master_young@ninja.com',
+            belt_color: item.belt_color,
+            test_instance: rows
+          })
+        } else {
+          const insert_query = "insert into test_signups (student_name, test_id, belt_color, email) values ($1, $2, $3, $4);"
+          db.any(insert_query, [item.student_name, item.test_id, item.belt_color, item.email])
+            .then(rows => {
+              res.render('testing_confirmed', {
+                student_name: item.student_name,
+                email: item.email,
+                belt_color: item.belt_color,
+                test_instance: rows
+              })
+            })
+            .catch(err => {
+              console.log('Could not add to test_signups. ERROR: ' + err);
+              req.flash('error', 'Could not sign up for test.');
+              res.redirect('/testing_signup_basic');
+            })
+        }
+      })
+      .catch(err => {
+        console.log('Could not confirm test. ERROR: ' + err);
+        req.flash('error', 'Cound not complete signup. Please see staff member.');
+        res.redirect('/testing_signup_basic');
+      })
+  } else {
+
+  }
+})
+
 app.post('/webhook', (request, response) => {
   let event
   try {

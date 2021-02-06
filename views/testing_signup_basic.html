@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+{% if (messages.error) { %}
+  <p style="color:red">{%- messages.error %}</p>
+{% endif %}
+{% if (messages.success) { %}
+  <p style="color:green">{%- messages.success %}</p>
+{% endif %}
+<html>
+  <title>Basic Testing Signup</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+  * {
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  html {
+    background-image: linear-gradient(#0095ff, #9ed7ff);
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    }
+    h1, h3 {
+      text-align: center;
+    }
+    p {
+      color: black;
+      font-size: 14px;
+    }
+    li {
+      font-size: 14px;
+    }
+    form > div {
+      margin-bottom: 20px;
+    }
+    button, label, select {
+      display: block;
+      font-size: 100%;
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+      width: 100%;
+      padding: 5px;
+      height: 30px;
+    }
+    input[type="first name"], input[type="last name"], input[type="email"], input[type="submit"] {
+      display: block;
+      font-size: 100%;
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+      width: 100%;
+      padding: 5px;
+      height: 30px;
+    }
+    select {
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .select-wrapper {
+      position: relative;
+    }
+    .select-wrapper::after {
+      content: "▼";
+      font-size: 1rem;
+      top: 6px;
+      right: 10px;
+      position: absolute;
+    }
+    input[type="text"], select {
+      box-shadow: inset 1px 1px 3px #ccc;
+      border-radius: 5px;
+    }
+    label {
+      margin-bottom: 5px;
+    }
+    button {
+      width: 60%;
+      margin: 0 auto;
+    }
+    label{
+      font-weight: bold;
+    }
+    p {
+      font-size: 16px;
+    }
+    .desc {
+      font-size: 14px;
+      display: inline;
+      font-weight: normal;
+    }
+    .item {
+      display: block; 
+      padding: 5px;
+    }
+    input[type="radio"] {
+      display: inline;
+    }
+  </style>
+  <head>
+    <h1>Basic Belt Testing Signup</h1>
+    <p>Sign up for basic level belt testing. Testing times are shown below. Virtual testing is also available on the designated date through Zoom.</p>
+    <p>*NOTE: If no testing times are shown below, there haven't been tests created yet. Reach out to Master Young or Mr. C for more info.</p>
+  </head>
+  <body>
+    <form onsubmit="return ValidateForm()" name="Form" action="/testing_signup_basic" method="POST">
+      <div>
+        <label for="student_name">Student's Name: </label>
+        <div class="select-wrapper">
+          <select name="student_name" id="student_name" required>
+            <option value="" disabled>Select your name</option>
+            {% if names %}
+              {% for student in names %}
+                <option value="{{ student.student_name }}">{{ student.student_name }}</option>
+              {% endfor %}
+            {% endif %}
+          </select>
+        </div>
+        <p>
+          *NOTE: If you do not see your student's name, please see an instructor to assist.
+        </p>
+      </div>
+      <div>
+        <label for="email">Email: </label>
+        <input type="email" name="email" id="email" pattern="[A-z0-9.]+[@][A-z0-9]{1,}[.]+[A-z]{2,}" required placeholder="Email">
+      </div>
+      <div>
+        <label for="belts">Current Belt Rank: </label>
+        <div class="select-wrapper">
+          <select name="belts" id="belts" required>
+            <option value="" disabled>Select a belt color</option>
+            <option value="White">White Belt</option>
+            <option value="Gold">Gold Belt</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label for="tests">Testing Days and Times: </label>
+        {% if tests %}
+          {% for test in tests %}
+            <div class="item">
+              <input type="radio" id="{{ test.id }}" name="test_selection" value="{{ test.id }}" required>{{ test.test_instance }}
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+      <div>
+        <input type="submit" name="Preview" value="Preview"/>
+      </div>
+    </form>
+  </body>
+</html>
+<script>
+  var name = document.getElementById('student_name');
+  var email = document.getElementById('email');
+  var belts = document.getElementById('belts');
+  var test = doc.getElementsByClassName('test_selection');
+  if (name == null || name == ""){
+    alert("Please select a name from the list.");
+    return false;
+  } else if (email == null || email == ""){
+    alert("Please enter an email.");
+    return false;
+  } else if (belts == null || belts == ""){
+    alert("Please pick a belt color.");
+    return false;
+  } else if (test == "" || test == null){
+    alert("Please pick a test day and time.");
+    return false;
+  } else {
+    return true;
+  }
+</script>

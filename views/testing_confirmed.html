@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv = "refresh" content = "5; url = https://ema-planner.herokuapp.com/testing_signup_basic.html"/>
+  <title>Test Confirmed</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    html {
+      background-image: linear-gradient(#0095ff, #9ed7ff);
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+    }
+    p {
+        font-size: 15px;
+    }
+    label {
+        font-weight: bold;
+    }
+  </style>
+  <head>
+
+  </head>
+  <body>
+    <div id="page-container">
+      <div id="content-wrap">
+        <p><label>{{ student_name }}</label>, you are signed up for testing on <label>{{ test_instance }}</label>. You are testing for the belt after <label>{{ belt_color }}</label>.</p>
+        <p>You can view your signup with the email <label>{{ email }}</label>.</p>
+        <p><i>This page will return to the testing signup page in 5 seconds.</i></p>
+      </div>
+    </div>
+  </body>
+</html>
