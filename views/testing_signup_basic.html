@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-{% if (messages.error) { %}
-  <p style="color:red">{%- messages.error %}</p>
+{% if (messages.error) %}
+  <p style="color:red">{{ messages.error }}</p>
 {% endif %}
-{% if (messages.success) { %}
-  <p style="color:green">{%- messages.success %}</p>
+{% if (messages.success) %}
+  <p style="color:green">{{ messages.success }}</p>
 {% endif %}
 <html>
   <title>Basic Testing Signup</title>

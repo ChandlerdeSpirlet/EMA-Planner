@@ -3,10 +3,10 @@
   {% extends 'nav_bar.html' %}
   {% block content %}
   {% if messages.error %}
-    <p style="color:red"><%- messages.error %></p>
+    <p style="color:red">{{ messages.error }}</p>
   {% endif %}
   {% if messages.success %}
-      <p style="color:black"><%- messages.success %></p>
+      <p style="color:black">{{ messages.success }}</p>
   {% endif %}
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
