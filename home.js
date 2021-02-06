@@ -643,7 +643,7 @@ router.post('/test_preview', (req, res) => {
     student_name: req.sanitize('student_name').trim(),
     email: req.sanitize('email').trim(),
     belt_color: req.sanitize('belts').trim(),
-    test_id: req.sanitize('test_selection').trim(),
+    test_id: req.sanitize('test_id').trim(),
     button: req.sanitize('button')
   };
   if (item.button == 'Submit'){
@@ -658,7 +658,7 @@ router.post('/test_preview', (req, res) => {
             test_instance: rows
           })
         } else {
-          const insert_query = "insert into test_signups (student_name, test_id, belt_color, email) values ($1, $2, $3, $4);"
+          const insert_query = "insert into test_signups (student_name, test_id, belt_color, email) values ($1, $2, $3, $4);";
           db.any(insert_query, [item.student_name, item.test_id, item.belt_color, item.email])
             .then(rows => {
               req.flash('success', 'Successfully signed up for testing!');
