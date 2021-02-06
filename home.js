@@ -609,7 +609,7 @@ router.post('/testing_signup_basic', (req, res) => {
     belt_color: req.sanitize('belts').trim(),
     test_id: req.sanitize('test_selection').trim()
   };
-  console.log('item: ' + item);
+  console.log('item.test_id: ' + item.test_id);
   const test_instance = "select TO_CHAR(test_date, 'Month') || ' ' || extract(DAY from test_date) || ' at ' || to_char(test_time, 'HH12:MI PM') as test_instance from test_instance where id = $1;";
   db.any(test_instance, [item.test_id])
     .then(rows => {
@@ -661,6 +661,7 @@ router.post('/testing_preview', (req, res) => {
           const insert_query = "insert into test_signups (student_name, test_id, belt_color, email) values ($1, $2, $3, $4);"
           db.any(insert_query, [item.student_name, item.test_id, item.belt_color, item.email])
             .then(rows => {
+              req.flash('success', 'Successfully signed up for testing!');
               res.render('testing_confirmed', {
                 student_name: item.student_name,
                 email: item.email,

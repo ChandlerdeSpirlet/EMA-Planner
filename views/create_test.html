@@ -2,11 +2,11 @@
   <title>Create a Belt Test</title>
   {% extends 'nav_bar.html' %}
   {% block content %}
-  {% if messages.error %}
-    <p style="color:red">{{ messages.error }}</p>
+  {% if req.session.messages.error %}
+    <p style="color:red">{{ req.session.messages.error }}</p>
   {% endif %}
-  {% if messages.success %}
-      <p style="color:black">{{ messages.success }}</p>
+  {% if req.session.messages.success %}
+      <p style="color:black">{{ req.session.messages.success }}</p>
   {% endif %}
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
