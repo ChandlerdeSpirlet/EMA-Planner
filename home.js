@@ -33,7 +33,7 @@ const db = require('./database')
 
 app.use(session({
   secret: 'ema-Planner',
-  resave: false,
+  resave: true,
   saveUninitialized: true,
   cookie: { maxAge: 60 * 60 * 1000 }
 }))
@@ -590,7 +590,7 @@ router.get('/testing_signup_basic', (req, res) => {
           })
           .catch(err => {
             console.log('Could not get tests. Error: ' + err);
-            req.flash('error', 'Signup UNSUCCESSFUL. Please see a staff member.');
+            res.send(req.flash('error', 'Signup UNSUCCESSFUL. Please see a staff member.'));
             res.redirect('/testing_signup_basic');
           })
       })
