@@ -638,7 +638,7 @@ router.get('/testing_preview', (req, res) => {
   })
 })
 
-router.post('/testing_preview', (req, res) => {
+router.post('/test_preview', (req, res) => {
   const item = {
     student_name: req.sanitize('student_name').trim(),
     email: req.sanitize('email').trim(),
@@ -682,7 +682,7 @@ router.post('/testing_preview', (req, res) => {
         res.redirect('/testing_signup_basic');
       })
   } else {
-
+    //COMPLETE. (NEED BELT COLOR PARSING FOR PROPER LEVEL).
   }
 })
 
