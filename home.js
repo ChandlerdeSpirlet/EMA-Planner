@@ -575,10 +575,10 @@ router.post('/create_test', (req, res) => {
 //TESTING SIGNUP SECTION
 router.get('/testing_signup_basic', (req, res) => {
   if (req.headers['x-forwarded-proto'] != 'https'){
-    res.redirect('https://ema-planner.herokuapp.com/testing_signup_basic.html');
+    res.redirect('https://ema-planner.herokuapp.com/testing_signup_basic');
   } else {
     const name_query = "select * from get_names(0);";
-    const tests = "select TO_CHAR(test_date, 'Month') || ' ' || extract(DAY from test_date) || ' at ' || to_char(test_time, 'HH12:MI PM') as test_instance from test_instance where level = 0;";
+    const tests = "select TO_CHAR(test_date, 'Month') || ' ' || extract(DAY from test_date) || ' at ' || to_char(test_time, 'HH12:MI PM') as test_instance, id from test_instance where level = 0;";
     db.any(name_query)
       .then(rows_names => {
         db.any(tests)
@@ -609,6 +609,7 @@ router.post('/testing_signup_basic', (req, res) => {
     belt_color: req.sanitize('belts').trim(),
     test_id: req.sanitize('test_selection').trim()
   };
+  console.log('item: ' + item);
   const test_instance = "select TO_CHAR(test_date, 'Month') || ' ' || extract(DAY from test_date) || ' at ' || to_char(test_time, 'HH12:MI PM') as test_instance from test_instance where id = $1;";
   db.any(test_instance, [item.test_id])
     .then(rows => {
