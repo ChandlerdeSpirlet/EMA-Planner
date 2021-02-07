@@ -1,0 +1,62 @@
+<html>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="refresh" content = "5; url = https://ema-planner.herokuapp.com/student_classes"/>
+  <title>Class Confirmed for {{ student_name }}</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    html {
+      background-image: linear-gradient(#0095ff, #9ed7ff);
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+      min-height: 100%;
+    }
+    h2 {
+      color: black;
+    }
+    p {
+      color: black;
+    }
+    #page-container {
+      position: relative;
+      min-height: 90vh;
+    }
+    #content-wrap {
+      padding-bottom: 2.5rem;    /* Footer height */
+    }
+    #footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 2.5rem;            /* Footer height */
+      color: black;
+    }
+    ul {
+      color: black;
+    }
+</style>
+<body>
+  <div id="page-container">
+    <div id="content-wrap">
+      <h2>{{ student_name }} is signed up for the following classes: </h2>
+      <ul>
+        {% if classes %}
+          {% for class in classes %}
+            <li>{{ class_instance }}</li>
+          {% endfor %}
+        {% endif %}
+      </ul>
+      <p style="text-emphasis: large;">If you need to take your name off of the list for any particular class, please use the tool on the app under the in-person class signup tab. You can lookup all of your classes using the email: <strong>{{ email }}</strong></p>
+      <p>(This page will return to the class signup page in 5 seconds.)</p>
+    </div>
+    <footer id="footer">
+      Intellectual property of Chandler de Spirlet.<br>
+      Proof of concept and design provided by Matt Young.
+    </footer>
+  </div>
+</body>
+</html>

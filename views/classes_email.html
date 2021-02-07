@@ -1,0 +1,104 @@
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Classes for {{ email }}</title>
+<html>
+  <style>
+    h1 {
+      text-align: center;
+      font-size: 16px;
+    }
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    html {
+      background-image: linear-gradient(#0095ff, #9ed7ff);
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+    }
+    #tests {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    #tests td, #tests th {
+      border: 1px solid #ddd;
+      padding: 8px;
+      background-color: transparent;
+      text-align: center;
+    }
+    #tests th {
+      padding-top: 12px;
+      padding-bottom: 12px;
+      text-align: center;
+      background-blend-mode: hue;
+    }
+    button {
+      width: 90%;
+      margin: 0 auto;
+      height: 40%;
+    }
+    a:link {
+      color: white;
+    }
+    a:visited {
+      color: white;
+    }
+    a:hover {
+      color: white;
+    }
+    a:active {
+      color: white;
+    }
+  </style>
+  <head>
+    <h1>Classes and Tests Associated with {{ email }}</h1>
+  </head>
+  <body>
+    <table id="tests">
+      <tr>
+        <th>Student Name</th>
+        <th>Class Day/Time</th>
+        <th>Drop Class</th>
+      </tr>
+      {% if class_data %}
+        {% for class in class_data %}
+          <tr>
+            <td>{{ class.student_name }}</td>
+            <td>{{ class.class_instance }}</td>
+            <td><a href="">Drop This Class</a></td>
+          </tr>
+        {% endfor %}
+      {% else %}
+          <tr>
+            <td>None</td>
+            <td>None</td>
+            <td>None</td>
+          </tr>
+      {% endif %}
+    </table>
+    <table id="tests">
+      <tr>
+        <th>Student Name</th>
+        <th>Test Day/Time</th>
+        <th>Drop Test</th>
+      </tr>
+      {% if test_data %}
+        {% for test in test_data %}
+          <tr>
+            <td>{{ test.student_name }}</td>
+            <td>{{ test.test_instance }}</td>
+            <td><a href="">Drop This Test</a></td>
+          </tr>
+        {% endfor %}
+      {% else %}
+          <tr>
+            <td>None</td>
+            <td>None</td>
+            <td>None</td>
+          </tr>
+      {% endif %}
+    </table>
+  </body>
+</html>

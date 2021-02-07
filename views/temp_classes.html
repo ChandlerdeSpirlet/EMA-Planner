@@ -1,0 +1,29 @@
+<html>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {% if alert_message != '' %}
+    <script>alert("{{ alert_message }}")</script>
+  {% endif %}
+  <style>
+    * {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    h1 {
+      color: blue;
+      background-color: black;
+      text-align: center;
+      font-size: 30px;
+    }
+    body {
+      color: white;
+      background-color: black;
+      text-align: center;
+      font-size: 25px;
+    }
+  </style>
+  <head>
+    <h1>This isn't where I sign up for {{ level }} classes ?!</h1>
+  </head>
+  <body>
+    There are currently no classes for you to signup for... Don't worry, we are adding more classes for you to signup for. Check back soon to see if new classes have been added.
+  </body>
+</html>

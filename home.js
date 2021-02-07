@@ -575,6 +575,31 @@ router.post('/create_test', (req, res) => {
     })
 })
 
+router.get('/email_lookup', (req, res) => {
+  if (req.headers['x-forwarded-proto'] != 'https'){
+    res.redirect('https://ema-planner.herokuapp.com/email_lookup');
+  } else {
+    res.render('email_lookup', {
+      email: '',
+      alert_message: ''
+    })
+  }
+})
+
+router.post('/email_lookup', (req, res) => {
+  const item = {
+    email: req.sanitize('email')
+  }
+  const email = String(item.email).toLowerCase();
+  res.redirect('classes_email/' + email);
+})
+
+router.get('/classes_email/(:email)', (req, res) => {
+  const test_query = "";
+  const class_query = "";
+  //need test and class info. Need to give email, test_data, class_data. Also build the delete function for tests and classes. Render email_lookup with email pre-filled and alert_message set as 'No Email Associated' if no email (rows.length == 0). If class rows == 0, also run test db and if those == 0 do the alert.
+})
+
 //TESTING SIGNUP SECTION
 function parse_name(name){
   const seperator = name.indexOf('/');
@@ -1093,6 +1118,430 @@ router.post('/test_preview', (req, res) => {
         break;
     }
   }
+})
+//END TEST SIGNUP SECTION
+router.get('/dragons_signup', (req, res) => {
+  if (req.headers['x-forwarded-proto'] != 'https'){
+    res.redirect('https://ema-planner.herokuapp.com/dragons_signup');
+  } else {
+    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, level from classes where level = -1 and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
+    db.any(class_query)
+      .then(rows => {
+        if (rows.length == 0){
+          res.render('temp_classes', {
+            level: 'dragons'
+          })
+        } else {
+          res.render('dragons_signup', {
+            alert_message: '',
+            fname: '',
+            lname: '',
+            level: '',
+            email: '',
+            classes: rows
+          })
+        }
+      })
+      .catch(err => {
+        console.log('Could not render dragons classes. ERROR: ' + err);
+        res.render('dragons_signup', {
+          alert_message: 'Could not find dragons classes.',
+          fname: '',
+          lname: '',
+          level: '',
+          email: '',
+          classes: 'Unable to show classes.'
+        })
+      })
+  }
+})
+
+router.get('/basic_signup', (req, res) => {
+  if (req.headers['x-forwarded-proto'] != 'https'){
+    res.redirect('https://ema-planner.herokuapp.com/basic_signup');
+  } else {
+    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, level from classes where level in (0, 0.5) and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
+    db.any(class_query)
+      .then(rows => {
+        if (rows.length == 0){
+          res.render('temp_classes', {
+            level: 'basic'
+          })
+        } else {
+          res.render('basic_signup', {
+            alert_message: '',
+            fname: '',
+            lname: '',
+            level: '',
+            email: '',
+            classes: rows
+          })
+        }
+      })
+      .catch(err => {
+        console.log('Could not render basic classes. ERROR: ' + err);
+        res.render('basic_signup', {
+          alert_message: 'Could not find basic classes.',
+          fname: '',
+          lname: '',
+          level: '',
+          email: '',
+          classes: 'Unable to show classes.'
+        })
+      })
+  }
+})
+
+router.get('/level1_signup', (req, res) => {
+  if (req.headers['x-forwarded-proto'] != 'https'){
+    res.redirect('https://ema-planner.herokuapp.com/level1_signup');
+  } else {
+    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, level from classes where level in (1, 1.5) and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
+    db.any(class_query)
+      .then(rows => {
+        if (rows.length == 0){
+          res.render('temp_classes', {
+            level: 'level 1'
+          })
+        } else {
+          res.render('level1_signup', {
+            alert_message: '',
+            fname: '',
+            lname: '',
+            level: '',
+            email: '',
+            classes: rows
+          })
+        }
+      })
+      .catch(err => {
+        console.log('Could not render level 1 classes. ERROR: ' + err);
+        res.render('level1_signup', {
+          alert_message: 'Could not find level 1 classes.',
+          fname: '',
+          lname: '',
+          level: '',
+          email: '',
+          classes: 'Unable to show classes.'
+        })
+      })
+  }
+})
+
+router.get('/level2_signup', (req, res) => {
+  if (req.headers['x-forwarded-proto'] != 'https'){
+    res.redirect('https://ema-planner.herokuapp.com/level2_signup');
+  } else {
+    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, level from classes where level = 2 and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
+    db.any(class_query)
+      .then(rows => {
+        if (rows.length == 0){
+          res.render('temp_classes', {
+            level: 'level 2'
+          })
+        } else {
+          res.render('level2_signup', {
+            alert_message: '',
+            fname: '',
+            lname: '',
+            level: '',
+            email: '',
+            classes: rows
+          })
+        }
+      })
+      .catch(err => {
+        console.log('Could not render level 2 classes. ERROR: ' + err);
+        res.render('level2_signup', {
+          alert_message: 'Could not find level 2 classes.',
+          fname: '',
+          lname: '',
+          level: '',
+          email: '',
+          classes: 'Unable to show classes.'
+        })
+      })
+  }
+})
+
+router.get('/level3_signup', (req, res) => {
+  if (req.headers['x-forwarded-proto'] != 'https'){
+    res.redirect('https://ema-planner.herokuapp.com/level3_signup');
+  } else {
+    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, level from classes where level = 3 and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
+    db.any(class_query)
+      .then(rows => {
+        if (rows.length == 0){
+          res.render('temp_classes', {
+            level: 'level 3'
+          })
+        } else {
+          res.render('level3_signup', {
+            alert_message: '',
+            fname: '',
+            lname: '',
+            level: '',
+            email: '',
+            classes: rows
+          })
+        }
+      })
+      .catch(err => {
+        console.log('Could not render level 3 classes. ERROR: ' + err);
+        res.render('level3_signup', {
+          alert_message: 'Could not find level 3 classes.',
+          fname: '',
+          lname: '',
+          level: '',
+          email: '',
+          classes: 'Unable to show classes.'
+        })
+      })
+  }
+})
+
+router.get('/bb_signup', (req, res) => {
+  if (req.headers['x-forwarded-proto'] != 'https'){
+    res.redirect('https://ema-planner.herokuapp.com/bb_signup');
+  } else {
+    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, level from classes where level = 5 and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
+    db.any(class_query)
+      .then(rows => {
+        if (rows.length == 0){
+          res.render('temp_classes', {
+            level: 'black belt'
+          })
+        } else {
+          res.render('bb_signup', {
+            alert_message: '',
+            fname: '',
+            lname: '',
+            level: '',
+            email: '',
+            classes: rows
+          })
+        }
+      })
+      .catch(err => {
+        console.log('Could not render black belt classes. ERROR: ' + err);
+        res.render('bb_signup', {
+          alert_message: 'Could not find black belt classes.',
+          fname: '',
+          lname: '',
+          level: '',
+          email: '',
+          classes: 'Unable to show classes.'
+        })
+      })
+  }
+})
+
+router.post('/dragons_signup', (req, res) => {
+  const item = {
+    fname: req.sanitize('fname').trim(),
+    lname: req.sanitize('lname').trim(),
+    email: req.sanitize('email').trim(),
+    day_time: req.sanitize('day_time')
+  }
+  belt_group = 'Little Dragons';
+  const email = String(item.email).toLowerCase();
+  const student_name = item.fname + ' ' + item.lname;
+  const redir_link = '/process_classes/' + student_name + '/' + email + '/' + belt_group + '/' + item.day_time;
+  res.redirect(redir_link);
+})
+
+router.post('/basic_signup', (req, res) => {
+  const item = {
+    fname: req.sanitize('fname').trim(),
+    lname: req.sanitize('lname').trim(),
+    email: req.sanitize('email').trim(),
+    day_time: req.sanitize('day_time')
+  }
+  belt_group = 'Basic';
+  const email = String(item.email).toLowerCase();
+  const student_name = item.fname + ' ' + item.lname;
+  const redir_link = '/process_classes/' + student_name + '/' + email + '/' + belt_group + '/' + item.day_time;
+  res.redirect(redir_link);
+})
+
+router.post('/level1_signup', (req, res) => {
+  const item = {
+    fname: req.sanitize('fname').trim(),
+    lname: req.sanitize('lname').trim(),
+    email: req.sanitize('email').trim(),
+    day_time: req.sanitize('day_time')
+  }
+  belt_group = 'Level 1';
+  const email = String(item.email).toLowerCase();
+  const student_name = item.fname + ' ' + item.lname;
+  const redir_link = '/process_classes/' + student_name + '/' + email + '/' + belt_group + '/' + item.day_time;
+  res.redirect(redir_link);
+})
+
+router.post('/level2_signup', (req, res) => {
+  const item = {
+    fname: req.sanitize('fname').trim(),
+    lname: req.sanitize('lname').trim(),
+    email: req.sanitize('email').trim(),
+    day_time: req.sanitize('day_time')
+  }
+  belt_group = 'Level 2';
+  const email = String(item.email).toLowerCase();
+  const student_name = item.fname + ' ' + item.lname;
+  const redir_link = '/process_classes/' + student_name + '/' + email + '/' + belt_group + '/' + item.day_time;
+  res.redirect(redir_link);
+})
+
+router.post('/level3_signup', (req, res) => {
+  const item = {
+    fname: req.sanitize('fname').trim(),
+    lname: req.sanitize('lname').trim(),
+    email: req.sanitize('email').trim(),
+    day_time: req.sanitize('day_time')
+  }
+  belt_group = 'Level 3';
+  const email = String(item.email).toLowerCase();
+  const student_name = item.fname + ' ' + item.lname;
+  const redir_link = '/process_classes/' + student_name + '/' + email + '/' + belt_group + '/' + item.day_time;
+  res.redirect(redir_link);
+})
+
+router.post('/bb_signup', (req, res) => {
+  const item = {
+    fname: req.sanitize('fname').trim(),
+    lname: req.sanitize('lname').trim(),
+    email: req.sanitize('email').trim(),
+    day_time: req.sanitize('day_time')
+  }
+  belt_group = 'Black Belt';
+  const email = String(item.email).toLowerCase();
+  const student_name = item.fname + ' ' + item.lname;
+  const redir_link = '/process_classes/' + student_name + '/' + email + '/' + belt_group + '/' + item.day_time;
+  res.redirect(redir_link);
+})
+
+function parseID(id_set){
+  var set_id = [];
+    while (id_set.indexOf(",") != -1){
+      var id_idx = id_set.indexOf(",");
+      var id = id_set.substring(0, id_idx);
+      id_set = id_set.substring(id_idx + 1, id_set.length);
+      set_id.push(Number(id));
+    }
+    if ((id_set.indexOf(",") == -1) && (id_set !== '')){
+      set_id.push(Number(id_set));
+      id_set = '';
+    }
+  return set_id;
+}
+
+app.get('/process_classes/(:student_name)/(:email)/(:belt_group)/(id_set)', (req, res) => {
+  const query_classes = "insert into class_signups (student_name, email, belt, class_session_id, class_check) values ($1, $2, $3, $4, $5);";
+  var id_set = parseID(req.params.id_set);
+  id_set.forEach(element => {
+    var temp_class_check = req.params.student_name.toLowerCase().replace(/\s/g, "") + element.toString();
+    db.none(query_classes, [req.params.student_name, req.params.email, req.params.belt_group, element, temp_class_check])
+      .then(rows => {
+        console.log('Added class with element ' + element);
+      })
+      .catch(err => {
+        console.log('Err: with element ' + element + '. Err: ' + err);
+      })
+  });
+  switch(id_set.length){
+    case 1:
+      var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, from classes where class_id = $1;"
+      db.any(end_query, [id_set[0]])
+        .then(rows => {
+          res.render('class_confirmed', {
+            classes: rows,
+            email: req.params.email,
+            student_name: req.params.student_name,
+            belt_group: req.params.belt_color
+          })
+        })
+        .catch(err => {
+          console.log('Err in displaying confirmed classes: ' + err);
+          res.render('temp_classes', {
+            alert_message: 'Unable to submit classes for signup.',
+            level: 'none'
+          })
+        })
+      break;
+    case 2:
+      var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, from classes where class_id in ($1, $2);"
+      db.any(end_query, [id_set[0], id_set[1]])
+        .then(rows => {
+          res.render('class_confirmed', {
+            classes: rows,
+            email: req.params.email,
+            student_name: req.params.student_name,
+            belt_group: req.params.belt_color
+          })
+        })
+        .catch(err => {
+          console.log('Err in displaying confirmed classes: ' + err);
+          res.render('temp_classes', {
+            alert_message: 'Unable to submit classes for signup.',
+            level: 'none'
+          })
+        })
+      break;
+    case 3:
+      var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, from classes where class_id in ($1, $2, $3);"
+      db.any(end_query, [id_set[0], id_set[1], id_set[2]])
+        .then(rows => {
+          res.render('class_confirmed', {
+            classes: rows,
+            email: req.params.email,
+            student_name: req.params.student_name,
+            belt_group: req.params.belt_color
+          })
+        })
+        .catch(err => {
+          console.log('Err in displaying confirmed classes: ' + err);
+          res.render('temp_classes', {
+            alert_message: 'Unable to submit classes for signup.',
+            level: 'none'
+          })
+        })
+      break;
+    case 4:
+      var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, from classes where class_id in ($1, $2, $3, $4);"
+      db.any(end_query, [id_set[0], id_set[1], id_set[2], id_set[3]])
+        .then(rows => {
+          res.render('class_confirmed', {
+            classes: rows,
+            email: req.params.email,
+            student_name: req.params.student_name,
+            belt_group: req.params.belt_color
+          })
+        })
+        .catch(err => {
+          console.log('Err in displaying confirmed classes: ' + err);
+          res.render('temp_classes', {
+            alert_message: 'Unable to submit classes for signup.',
+            level: 'none'
+          })
+        })
+      break;
+    default:
+      console.log('Length of id_set not within [1,4]. id_set is ' + id_set + ' with length of ' + id_set.length);
+      res.render('temp_classes', {
+        alert_message: 'Class IDs not properly set. Classes NOT signed up for.',
+        level: 'none'
+      })
+      break;
+  };
+})
+
+app.get('/class_confirmed', (req, res) => {
+  res.render('class_confirmed', {
+    classes: '',
+    email: '',
+    student_name: '',
+    belt_group: ''
+  })
 })
 
 app.post('/webhook', (request, response) => {
