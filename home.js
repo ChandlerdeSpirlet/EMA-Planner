@@ -433,7 +433,7 @@ router.post('/class_checkin', (req, res) => {
     level: req.sanitize('level').trim(),
     time: req.sanitize('time').trim()
   }
-  const query = 'insert into student_classes (class_id, barcode) values ($1, $2);'
+  const query = 'insert into student_classes (class_id, barcode) values ($1, $2) on conflict (session_id) do nothing;'
   db.any(query, [item.class_id, item.barcode_input])
     .then(function (rows1) {
       res.redirect('class_checkin/' + item.class_id + '/' + item.level + '/' + item.time)
@@ -554,11 +554,11 @@ router.post('/create_test', (req, res) => {
           res.redirect('/create_test');
           break;
         case '2':
-          req.flash('success', 'Test created for Level 1 on ' + built_date + ' at ' + item.time);
+          req.flash('success', 'Test created for Level 2 on ' + built_date + ' at ' + item.time);
           res.redirect('/create_test');
           break;
         case '3':
-          req.flash('success', 'Test created for Level 1 on ' + built_date + ' at ' + item.time);
+          req.flash('success', 'Test created for Level 3 on ' + built_date + ' at ' + item.time);
           res.redirect('/create_test');
           break;
         default:
@@ -575,7 +575,37 @@ router.post('/create_test', (req, res) => {
     })
 })
 
+router.get('/email_lookup', (req, res) => {
+  if (req.headers['x-forwarded-proto'] != 'https'){
+    res.redirect('https://ema-planner.herokuapp.com/email_lookup');
+  } else {
+    res.render('email_lookup', {
+      email: ''
+    })
+  }
+})
+
+router.post('/email_lookup', (req, res) => {
+  const item = {
+    email: req.sanititze('email').trim()
+  }
+  const email = String(item.email).toLowerCase();
+  res.redirect('test_email/' + email);
+})
+
+router.get('/classes_email/(:email)', (req, res) => {
+
+})
+
 //TESTING SIGNUP SECTION
+function parse_name(name){
+  const seperator = name.indexOf('/');
+  const values = [];
+  values.push(name.substring(0, seperator));
+  values.push(Number(name.substring(seperator + 1, name.length)));
+  return values;
+}
+
 router.get('/student_tests', (req, res) => {
   if (req.headers['x-forwarded-proto'] != 'https'){
     res.redirect('https://ema-planner.herokuapp.com/student_tests');
@@ -749,12 +779,14 @@ router.post('/testing_signup_dragons', (req, res) => {
   };
   console.log('item.test_id: ' + item.test_id);
   const test_instance = "select TO_CHAR(test_date, 'Month') || ' ' || extract(DAY from test_date) || ' at ' || to_char(test_time, 'HH12:MI PM') as test_instance from test_instance where id = $1;";
+  const data = parse_name(item.student_name);
   db.any(test_instance, [item.test_id])
     .then(rows => {
       res.render('testing_preview', {
         test_info: rows,
+        barcode: data[1],
         test_id: item.test_id,
-        student_name: item.student_name,
+        student_name: data[0],
         email: item.email,
         belt_color: item.belt_color
       })
@@ -775,12 +807,14 @@ router.post('/testing_signup_basic', (req, res) => {
   };
   console.log('item.test_id: ' + item.test_id);
   const test_instance = "select TO_CHAR(test_date, 'Month') || ' ' || extract(DAY from test_date) || ' at ' || to_char(test_time, 'HH12:MI PM') as test_instance from test_instance where id = $1;";
+  const data = parse_name(item.student_name);
   db.any(test_instance, [item.test_id])
     .then(rows => {
       res.render('testing_preview', {
         test_info: rows,
+        barcode: data[1],
         test_id: item.test_id,
-        student_name: item.student_name,
+        student_name: data[0],
         email: item.email,
         belt_color: item.belt_color
       })
@@ -801,12 +835,14 @@ router.post('/testing_signup_level1', (req, res) => {
   };
   console.log('item.test_id: ' + item.test_id);
   const test_instance = "select TO_CHAR(test_date, 'Month') || ' ' || extract(DAY from test_date) || ' at ' || to_char(test_time, 'HH12:MI PM') as test_instance from test_instance where id = $1;";
+  const data = parse_name(item.student_name);
   db.any(test_instance, [item.test_id])
     .then(rows => {
       res.render('testing_preview', {
         test_info: rows,
+        barcode: data[1],
         test_id: item.test_id,
-        student_name: item.student_name,
+        student_name: data[0],
         email: item.email,
         belt_color: item.belt_color
       })
@@ -827,12 +863,14 @@ router.post('/testing_signup_level2', (req, res) => {
   };
   console.log('item.test_id: ' + item.test_id);
   const test_instance = "select TO_CHAR(test_date, 'Month') || ' ' || extract(DAY from test_date) || ' at ' || to_char(test_time, 'HH12:MI PM') as test_instance from test_instance where id = $1;";
+  const data = parse_name(item.student_name);
   db.any(test_instance, [item.test_id])
     .then(rows => {
       res.render('testing_preview', {
         test_info: rows,
+        barcode: data[1],
         test_id: item.test_id,
-        student_name: item.student_name,
+        student_name: data[0],
         email: item.email,
         belt_color: item.belt_color
       })
@@ -853,12 +891,14 @@ router.post('/testing_signup_level3', (req, res) => {
   };
   console.log('item.test_id: ' + item.test_id);
   const test_instance = "select TO_CHAR(test_date, 'Month') || ' ' || extract(DAY from test_date) || ' at ' || to_char(test_time, 'HH12:MI PM') as test_instance from test_instance where id = $1;";
+  const data = parse_name(item.student_name);
   db.any(test_instance, [item.test_id])
     .then(rows => {
       res.render('testing_preview', {
         test_info: rows,
+        barcode: data[1],
         test_id: item.test_id,
-        student_name: item.student_name,
+        student_name: data[0],
         email: item.email,
         belt_color: item.belt_color
       })
@@ -875,6 +915,7 @@ router.get('/testing_preview', (req, res) => {
     test_info: '',
     test_id: '',
     student_name: '',
+    barcode: '',
     email: '',
     belt_color: ''
   })
@@ -907,6 +948,7 @@ router.post('/test_preview', (req, res) => {
     email: req.sanitize('email').trim(),
     belt_color: req.sanitize('belt_color').trim(),
     test_id: req.sanitize('test_id').trim(),
+    barcode: req.sanitize('barcode').trim(),
     button: req.sanitize('button')
   };
   if (item.button == 'Submit'){
@@ -921,8 +963,8 @@ router.post('/test_preview', (req, res) => {
             test_instance: rows
           })
         } else {
-          const insert_query = "insert into test_signups (student_name, test_id, belt_color, email) values ($1, $2, $3, $4);";
-          db.any(insert_query, [item.student_name, item.test_id, item.belt_color, item.email])
+          const insert_query = "insert into test_signups (student_name, test_id, belt_color, email, barcode) values ($1, $2, $3, $4, $5) on conflict(session_id) do nothing;";
+          db.any(insert_query, [item.student_name, item.test_id, item.belt_color, item.email, item.barcode])
             .then(rows => {
               req.flash('success', 'Successfully signed up for testing!');
               res.render('testing_confirmed', {

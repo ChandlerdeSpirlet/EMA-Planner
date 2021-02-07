@@ -42,6 +42,7 @@
     <p>If this looks corrrect, click <i>Submit</i>, otherwise, click <i>Edit</i></p>
     <form action="/test_preview" method="POST">
       <input type="hidden" name="test_id" value="{{ test_id }}">
+      <input type="hidden" name="barcode" value="{{ barcode }}">
       <input type="hidden" name="student_name" value="{{ student_name }}">
       <input type="hidden" name="email" value="{{ email }}">
       <input type="hidden" name="belt_color" value="{{ belt_color }}">

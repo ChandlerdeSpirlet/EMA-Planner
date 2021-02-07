@@ -112,7 +112,7 @@
             <option value="" disabled>Select your name</option>
             {% if names %}
               {% for student in names %}
-                <option value="{{ student.student_name }}">{{ student.student_name }}</option>
+                <option value="{{ student.student_name }}/{{ student.barcode }}">{{ student.student_name }}</option>
               {% endfor %}
             {% endif %}
           </select>
