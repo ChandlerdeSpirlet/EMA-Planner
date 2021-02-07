@@ -4,6 +4,7 @@ const nunjucks = require('nunjucks')
 const session = require('express-session')
 const exp_val = require('express-validator')
 var flash = require('connect-flash')
+var bodyParser = require('body-parser'
 
 const app = express()
 app.use(flash());
@@ -15,6 +16,9 @@ const port = process.env.PORT
 // const port = 5000;
 const router = express.Router()
 app.use(exp_val())
+
+app.use(bodyParser.json()); // support json encoded bodies
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const STRIPE_API = require('./api/stripe-functions.js')
 
