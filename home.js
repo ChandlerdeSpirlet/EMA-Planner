@@ -573,18 +573,60 @@ router.post('/create_test', (req, res) => {
 })
 
 //TESTING SIGNUP SECTION
+router.get('/student_tests', (req, res) => {
+  if (req.headers['x-forwarded-proto'] != 'https'){
+    res.redirect('https://ema-planner.herokuapp.com/student_tests');
+  } else {
+    res.render('student_tests', {
+    })
+  }
+})
+
+router.get('/testing_signup_dragons', (req, res) => {
+  if (req.headers['x-forwarded-proto'] != 'https'){
+    res.redirect('https://ema-planner.herokuapp.com/testing_signup_dragons');
+  } else {
+    const name_query = "select * from get_names(-1);";
+    const tests = "select TO_CHAR(test_date, 'Month') || ' ' || extract(DAY from test_date) || ' at ' || to_char(test_time, 'HH12:MI PM') as test_instance, id from test_instance where level = -1 and test_date >= (CURRENT_DATE - INTERVAL '7 hour')::date;";
+    db.any(name_query)
+      .then(rows_names => {
+        db.any(tests)
+          .then(rows => {
+            res.render('testing_signup_dragons', {
+              names: rows_names,
+              email: '',
+              belts: '',
+              tests: rows
+            })
+          })
+          .catch(err => {
+            console.log('Could not get tests. Error: ' + err);
+            res.send(req.flash('error', 'Signup UNSUCCESSFUL. Please see a staff member.'));
+            res.redirect('/testing_signup_dragons');
+          })
+      })
+      .catch(err => {
+        console.log('Could not get names. Error: ' + err);
+        req.flash('error', 'Signup UNSUCCESSFUL. Please see a staff member.');
+        res.redirect('/testing_signup_dragons');
+      })
+  }
+})
+
 router.get('/testing_signup_basic', (req, res) => {
   if (req.headers['x-forwarded-proto'] != 'https'){
     res.redirect('https://ema-planner.herokuapp.com/testing_signup_basic');
   } else {
     const name_query = "select * from get_names(0);";
-    const tests = "select TO_CHAR(test_date, 'Month') || ' ' || extract(DAY from test_date) || ' at ' || to_char(test_time, 'HH12:MI PM') as test_instance, id from test_instance where level = 0;";
+    const tests = "select TO_CHAR(test_date, 'Month') || ' ' || extract(DAY from test_date) || ' at ' || to_char(test_time, 'HH12:MI PM') as test_instance, id from test_instance where level = 0 and test_date >= (CURRENT_DATE - INTERVAL '7 hour')::date;";
     db.any(name_query)
       .then(rows_names => {
         db.any(tests)
           .then(rows => {
             res.render('testing_signup_basic', {
               names: rows_names,
+              email: '',
+              belts: '',
               tests: rows
             })
           })
@@ -600,6 +642,125 @@ router.get('/testing_signup_basic', (req, res) => {
         res.redirect('/testing_signup_basic');
       })
   }
+})
+
+router.get('/testing_signup_level1', (req, res) => {
+  if (req.headers['x-forwarded-proto'] != 'https'){
+    res.redirect('https://ema-planner.herokuapp.com/testing_signup_level1');
+  } else {
+    const name_query = "select * from get_names(1);";
+    const tests = "select TO_CHAR(test_date, 'Month') || ' ' || extract(DAY from test_date) || ' at ' || to_char(test_time, 'HH12:MI PM') as test_instance, id from test_instance where level = 1 and test_date >= (CURRENT_DATE - INTERVAL '7 hour')::date;";
+    db.any(name_query)
+      .then(rows_names => {
+        db.any(tests)
+          .then(rows => {
+            res.render('testing_signup_level1', {
+              names: rows_names,
+              email: '',
+              belts: '',
+              tests: rows
+            })
+          })
+          .catch(err => {
+            console.log('Could not get tests. Error: ' + err);
+            res.send(req.flash('error', 'Signup UNSUCCESSFUL. Please see a staff member.'));
+            res.redirect('/testing_signup_level1');
+          })
+      })
+      .catch(err => {
+        console.log('Could not get names. Error: ' + err);
+        req.flash('error', 'Signup UNSUCCESSFUL. Please see a staff member.');
+        res.redirect('/testing_signup_level1');
+      })
+  }
+})
+
+router.get('/testing_signup_level2', (req, res) => {
+  if (req.headers['x-forwarded-proto'] != 'https'){
+    res.redirect('https://ema-planner.herokuapp.com/testing_signup_level2');
+  } else {
+    const name_query = "select * from get_names(2);";
+    const tests = "select TO_CHAR(test_date, 'Month') || ' ' || extract(DAY from test_date) || ' at ' || to_char(test_time, 'HH12:MI PM') as test_instance, id from test_instance where level = 2 and test_date >= (CURRENT_DATE - INTERVAL '7 hour')::date;";
+    db.any(name_query)
+      .then(rows_names => {
+        db.any(tests)
+          .then(rows => {
+            res.render('testing_signup_level2', {
+              names: rows_names,
+              email: '',
+              belts: '',
+              tests: rows
+            })
+          })
+          .catch(err => {
+            console.log('Could not get tests. Error: ' + err);
+            res.send(req.flash('error', 'Signup UNSUCCESSFUL. Please see a staff member.'));
+            res.redirect('/testing_signup_level2');
+          })
+      })
+      .catch(err => {
+        console.log('Could not get names. Error: ' + err);
+        req.flash('error', 'Signup UNSUCCESSFUL. Please see a staff member.');
+        res.redirect('/testing_signup_level2');
+      })
+  }
+})
+
+router.get('/testing_signup_level3', (req, res) => {
+  if (req.headers['x-forwarded-proto'] != 'https'){
+    res.redirect('https://ema-planner.herokuapp.com/testing_signup_level3');
+  } else {
+    const name_query = "select * from get_names(1);";
+    const tests = "select TO_CHAR(test_date, 'Month') || ' ' || extract(DAY from test_date) || ' at ' || to_char(test_time, 'HH12:MI PM') as test_instance, id from test_instance where level = 3 and test_date >= (CURRENT_DATE - INTERVAL '7 hour')::date;";
+    db.any(name_query)
+      .then(rows_names => {
+        db.any(tests)
+          .then(rows => {
+            res.render('testing_signup_level3', {
+              names: rows_names,
+              email: '',
+              belts: '',
+              tests: rows
+            })
+          })
+          .catch(err => {
+            console.log('Could not get tests. Error: ' + err);
+            res.send(req.flash('error', 'Signup UNSUCCESSFUL. Please see a staff member.'));
+            res.redirect('/testing_signup_level3');
+          })
+      })
+      .catch(err => {
+        console.log('Could not get names. Error: ' + err);
+        req.flash('error', 'Signup UNSUCCESSFUL. Please see a staff member.');
+        res.redirect('/testing_signup_level3');
+      })
+  }
+})
+
+router.post('/testing_signup_dragons', (req, res) => {
+  const item = {
+    student_name: req.sanitize('student_name').trim(),
+    email: req.sanitize('email').trim(),
+    belt_color: req.sanitize('belts').trim(),
+    test_id: req.sanitize('test_selection').trim()
+  };
+  console.log('item.test_id: ' + item.test_id);
+  const test_instance = "select TO_CHAR(test_date, 'Month') || ' ' || extract(DAY from test_date) || ' at ' || to_char(test_time, 'HH12:MI PM') as test_instance from test_instance where id = $1;";
+  db.any(test_instance, [item.test_id])
+    .then(rows => {
+      res.render('testing_preview', {
+        test_info: rows,
+        test_id: item.test_id,
+        student_name: item.student_name,
+        email: item.email,
+        belt_color: item.belt_color
+      })
+    })
+    .catch(err => {
+      console.log('Could not find test with given id. ERROR: ' + err);
+      req.flash('error', 'Unable to verify the test you are signed up for.');
+      res.redirect('/testing_signup_dragons');
+    })
 })
 
 router.post('/testing_signup_basic', (req, res) => {
@@ -628,6 +789,84 @@ router.post('/testing_signup_basic', (req, res) => {
     })
 })
 
+router.post('/testing_signup_level1', (req, res) => {
+  const item = {
+    student_name: req.sanitize('student_name').trim(),
+    email: req.sanitize('email').trim(),
+    belt_color: req.sanitize('belts').trim(),
+    test_id: req.sanitize('test_selection').trim()
+  };
+  console.log('item.test_id: ' + item.test_id);
+  const test_instance = "select TO_CHAR(test_date, 'Month') || ' ' || extract(DAY from test_date) || ' at ' || to_char(test_time, 'HH12:MI PM') as test_instance from test_instance where id = $1;";
+  db.any(test_instance, [item.test_id])
+    .then(rows => {
+      res.render('testing_preview', {
+        test_info: rows,
+        test_id: item.test_id,
+        student_name: item.student_name,
+        email: item.email,
+        belt_color: item.belt_color
+      })
+    })
+    .catch(err => {
+      console.log('Could not find test with given id. ERROR: ' + err);
+      req.flash('error', 'Unable to verify the test you are signed up for.');
+      res.redirect('/testing_signup_level1');
+    })
+})
+
+router.post('/testing_signup_level2', (req, res) => {
+  const item = {
+    student_name: req.sanitize('student_name').trim(),
+    email: req.sanitize('email').trim(),
+    belt_color: req.sanitize('belts').trim(),
+    test_id: req.sanitize('test_selection').trim()
+  };
+  console.log('item.test_id: ' + item.test_id);
+  const test_instance = "select TO_CHAR(test_date, 'Month') || ' ' || extract(DAY from test_date) || ' at ' || to_char(test_time, 'HH12:MI PM') as test_instance from test_instance where id = $1;";
+  db.any(test_instance, [item.test_id])
+    .then(rows => {
+      res.render('testing_preview', {
+        test_info: rows,
+        test_id: item.test_id,
+        student_name: item.student_name,
+        email: item.email,
+        belt_color: item.belt_color
+      })
+    })
+    .catch(err => {
+      console.log('Could not find test with given id. ERROR: ' + err);
+      req.flash('error', 'Unable to verify the test you are signed up for.');
+      res.redirect('/testing_signup_level2');
+    })
+})
+
+router.post('/testing_signup_level3', (req, res) => {
+  const item = {
+    student_name: req.sanitize('student_name').trim(),
+    email: req.sanitize('email').trim(),
+    belt_color: req.sanitize('belts').trim(),
+    test_id: req.sanitize('test_selection').trim()
+  };
+  console.log('item.test_id: ' + item.test_id);
+  const test_instance = "select TO_CHAR(test_date, 'Month') || ' ' || extract(DAY from test_date) || ' at ' || to_char(test_time, 'HH12:MI PM') as test_instance from test_instance where id = $1;";
+  db.any(test_instance, [item.test_id])
+    .then(rows => {
+      res.render('testing_preview', {
+        test_info: rows,
+        test_id: item.test_id,
+        student_name: item.student_name,
+        email: item.email,
+        belt_color: item.belt_color
+      })
+    })
+    .catch(err => {
+      console.log('Could not find test with given id. ERROR: ' + err);
+      req.flash('error', 'Unable to verify the test you are signed up for.');
+      res.redirect('/testing_signup_level3');
+    })
+})
+
 router.get('/testing_preview', (req, res) => {
   res.render('testing_preview', {
     test_info: '',
@@ -637,6 +876,27 @@ router.get('/testing_preview', (req, res) => {
     belt_color: ''
   })
 })
+
+function belt_parser(color){
+  const regex_dragon = /Dragons/g;
+  const regex_basic = /^White|^Gold/g;
+  const regex_level1 = /^Orange|^High Orange|^Green|^High Green/g;
+  const regex_level2 = /^Purple|^High Purple|^Blue|^High Blue/g;
+  const regex_level3 = /^Red|^High Red|^Brown|^High Brown/g;
+  if (regex_dragon.test(color)){
+    return 'Dragons';
+  } else if (regex_basic.test(color)){
+    return 'Basic';
+  } else if (regex_level1.test(color)){
+    return 'Level 1';
+  } else if (regex_level2.test(color)){
+    return 'Level 2';
+  } else if (regex_level3.test(color)){
+    return 'Level 3';
+  } else {
+    return 'Unknown';
+  }
+}
 
 router.post('/test_preview', (req, res) => {
   const item = {
@@ -682,7 +942,133 @@ router.post('/test_preview', (req, res) => {
         res.redirect('/testing_signup_basic');
       })
   } else {
-    //COMPLETE. (NEED BELT COLOR PARSING FOR PROPER LEVEL).
+    const name_query = "select * from get_names($1);";
+    const tests = "select TO_CHAR(test_date, 'Month') || ' ' || extract(DAY from test_date) || ' at ' || to_char(test_time, 'HH12:MI PM') as test_instance, id from test_instance where level = $1 and test_date >= (CURRENT_DATE - INTERVAL '7 hour')::date;";
+    switch (belt_parser(item.belt_color)){
+      case 'Dragons':
+        db.any(name_query, [-1])
+          .then(rows_names => {
+            db.any(tests, [-1])
+              .then(rows => {
+                res.render('testing_signup_dragons', {
+                  names: rows_names,
+                  email: item.email,
+                  belts: item.belt_color,
+                  tests: rows
+                })
+              })
+              .catch(err => {
+                console.log('Could not get tests. Error: ' + err);
+                res.send(req.flash('error', 'Signup UNSUCCESSFUL. Please see a staff member.'));
+                res.redirect('/testing_signup_dragons');
+              })
+          })
+          .catch(err => {
+            console.log('Could not get names. Error: ' + err);
+            req.flash('error', 'Signup UNSUCCESSFUL. Please see a staff member.');
+            res.redirect('/testing_signup_dragons');
+          })
+        break;
+      case 'Basic':
+        db.any(name_query, [0])
+          .then(rows_names => {
+            db.any(tests, [0])
+              .then(rows => {
+                res.render('testing_signup_basic', {
+                  names: rows_names,
+                  email: item.email,
+                  belts: item.belt_color,
+                  tests: rows
+                })
+              })
+              .catch(err => {
+                console.log('Could not get tests. Error: ' + err);
+                res.send(req.flash('error', 'Signup UNSUCCESSFUL. Please see a staff member.'));
+                res.redirect('/testing_signup_basic');
+              })
+          })
+          .catch(err => {
+            console.log('Could not get names. Error: ' + err);
+            req.flash('error', 'Signup UNSUCCESSFUL. Please see a staff member.');
+            res.redirect('/testing_signup_basic');
+          })
+        break;
+      case 'Level 1':
+        db.any(name_query, [1])
+          .then(rows_names => {
+            db.any(tests, [1])
+              .then(rows => {
+                res.render('testing_signup_level1', {
+                  names: rows_names,
+                  email: item.email,
+                  belts: item.belt_color,
+                  tests: rows
+                })
+              })
+              .catch(err => {
+                console.log('Could not get tests. Error: ' + err);
+                res.send(req.flash('error', 'Signup UNSUCCESSFUL. Please see a staff member.'));
+                res.redirect('/testing_signup_level1');
+              })
+          })
+          .catch(err => {
+            console.log('Could not get names. Error: ' + err);
+            req.flash('error', 'Signup UNSUCCESSFUL. Please see a staff member.');
+            res.redirect('/testing_signup_level1');
+          })
+        break;
+      case 'Level 2':
+        db.any(name_query, [2])
+          .then(rows_names => {
+            db.any(tests, [2])
+              .then(rows => {
+                res.render('testing_signup_level2', {
+                  names: rows_names,
+                  email: item.email,
+                  belts: item.belt_color,
+                  tests: rows
+                })
+              })
+              .catch(err => {
+                console.log('Could not get tests. Error: ' + err);
+                res.send(req.flash('error', 'Signup UNSUCCESSFUL. Please see a staff member.'));
+                res.redirect('/testing_signup_level2');
+              })
+          })
+          .catch(err => {
+            console.log('Could not get names. Error: ' + err);
+            req.flash('error', 'Signup UNSUCCESSFUL. Please see a staff member.');
+            res.redirect('/testing_signup_level2');
+          })
+        break;
+      case 'Level 3':
+        db.any(name_query, [3])
+          .then(rows_names => {
+            db.any(tests, [3])
+              .then(rows => {
+                res.render('testing_signup_level3', {
+                  names: rows_names,
+                  email: item.email,
+                  belts: item.belt_color,
+                  tests: rows
+                })
+              })
+              .catch(err => {
+                console.log('Could not get tests. Error: ' + err);
+                res.send(req.flash('error', 'Signup UNSUCCESSFUL. Please see a staff member.'));
+                res.redirect('/testing_signup_level3');
+              })
+          })
+          .catch(err => {
+            console.log('Could not get names. Error: ' + err);
+            req.flash('error', 'Signup UNSUCCESSFUL. Please see a staff member.');
+            res.redirect('/testing_signup_level3');
+          })
+        break;
+      default:
+        console.log('Unknown level for Edit');
+        break;
+    }
   }
 })
 
