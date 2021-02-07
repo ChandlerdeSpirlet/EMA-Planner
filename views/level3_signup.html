@@ -152,7 +152,7 @@
         {% for class in classes %}
           <div class="item">
             <input type="checkbox" class="check" id="{{ class.class_id }}" name="day_time" value="{{ class.class_id }}">
-            {% if class.level == '3' %}
+            {% if class.level == '3.0' %}
               <label for="{{ class.class_id }}" class="desc">{{ class.class_instance }}</label>
             {% endif %}
           </div><br>
