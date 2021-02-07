@@ -1185,7 +1185,7 @@ function parseID(id_set){
   return set_id;
 }
 
-app.get('/process_classes/(:student_name)/(:email)/(:belt_group)/(id_set)', (req, res) => {
+router.get('/process_classes/(:student_name)/(:email)/(:belt_group)/(id_set)', (req, res) => {
   const query_classes = "insert into class_signups (student_name, email, belt, class_session_id, class_check) values ($1, $2, $3, $4, $5);";
   var id_set = parseID(req.params.id_set);
   id_set.forEach(element => {
@@ -1285,7 +1285,7 @@ app.get('/process_classes/(:student_name)/(:email)/(:belt_group)/(id_set)', (req
   };
 })
 
-app.get('/class_confirmed', (req, res) => {
+router.get('/class_confirmed', (req, res) => {
   res.render('class_confirmed', {
     classes: '',
     email: '',
