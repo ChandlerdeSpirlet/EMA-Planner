@@ -575,28 +575,6 @@ router.post('/create_test', (req, res) => {
     })
 })
 
-router.get('/email_lookup', (req, res) => {
-  if (req.headers['x-forwarded-proto'] != 'https'){
-    res.redirect('https://ema-planner.herokuapp.com/email_lookup');
-  } else {
-    res.render('email_lookup', {
-      email: ''
-    })
-  }
-})
-
-router.post('/email_lookup', (req, res) => {
-  const item = {
-    email: req.sanititze('email').trim()
-  }
-  const email = String(item.email).toLowerCase();
-  res.redirect('test_email/' + email);
-})
-
-router.get('/classes_email/(:email)', (req, res) => {
-
-})
-
 //TESTING SIGNUP SECTION
 function parse_name(name){
   const seperator = name.indexOf('/');
