@@ -524,7 +524,7 @@ router.get('/create_test', (req, res) => {
   })
 })
 
-router.post('/create_test', async (req, res) => {
+router.post('/create_test', (req, res) => {
   const item = {
     level: req.sanitize('level_select').trim(),
     month: req.sanitize('month_select').trim(),
@@ -562,7 +562,7 @@ router.post('/create_test', async (req, res) => {
           res.redirect('/create_test');
           break;
         default:
-          await req.flash('error', 'Test Not Created! with data: (level: ' + item.level + ', built_date: ' + built_date + ', time: ' + item.time + ')');
+          req.flash('error', 'Test Not Created! with data: (level: ' + item.level + ', built_date: ' + built_date + ', time: ' + item.time + ')');
           console.log('Test Not Created! with data: (level: ' + item.level + ', built_date: ' + built_date + ', time: ' + item.time + ')');
           res.redirect('/create_test');
           break;
@@ -570,7 +570,7 @@ router.post('/create_test', async (req, res) => {
     })
     .catch(function(err){
       console.log("Error in creating test: " + err);
-      await req.flash('error', 'Test not created. ERR: ' + err);
+      req.flash('error', 'Test not created. ERR: ' + err);
       res.redirect('/create_test');
     })
 })
