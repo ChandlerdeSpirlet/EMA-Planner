@@ -35,8 +35,11 @@ app.use(session({
   secret: 'ema-Planner',
   resave: true,
   saveUninitialized: true,
+  useCookieSession: true,
   cookie: { maxAge: 60 * 60 * 1000 }
 }))
+
+app.use(flash({ sessionKeyName: 'ema-Planner' }))
 
 function convertToMoney (amount) {
   const formatter = new Intl.NumberFormat('en-US', {
@@ -521,7 +524,7 @@ router.get('/create_test', (req, res) => {
   })
 })
 
-router.post('/create_test', (req, res) => {
+router.post('/create_test', async (req, res) => {
   const item = {
     level: req.sanitize('level_select').trim(),
     month: req.sanitize('month_select').trim(),
@@ -559,7 +562,7 @@ router.post('/create_test', (req, res) => {
           res.redirect('/create_test');
           break;
         default:
-          req.flash('error', 'Test Not Created! with data: (level: ' + item.level + ', built_date: ' + built_date + ', time: ' + item.time + ')');
+          await req.flash('error', 'Test Not Created! with data: (level: ' + item.level + ', built_date: ' + built_date + ', time: ' + item.time + ')');
           console.log('Test Not Created! with data: (level: ' + item.level + ', built_date: ' + built_date + ', time: ' + item.time + ')');
           res.redirect('/create_test');
           break;
@@ -567,7 +570,7 @@ router.post('/create_test', (req, res) => {
     })
     .catch(function(err){
       console.log("Error in creating test: " + err);
-      req.flash('error', 'Test not created. ERR: ' + err);
+      await req.flash('error', 'Test not created. ERR: ' + err);
       res.redirect('/create_test');
     })
 })
