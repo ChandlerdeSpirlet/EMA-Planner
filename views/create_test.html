@@ -2,11 +2,8 @@
   <title>Create a Belt Test</title>
   {% extends 'nav_bar.html' %}
   {% block content %}
-  {% if messages.error %}
-    <p style="color:red">{{ messages.error }}</p>
-  {% endif %}
-  {% if messages.success %}
-      <p style="color:black">{{ messages.success }}</p>
+  {% if alert_message != '' %}
+    <script>alert("{{ alert_message }}")</script>
   {% endif %}
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>

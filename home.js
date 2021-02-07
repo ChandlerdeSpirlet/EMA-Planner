@@ -524,6 +524,7 @@ router.get('/student_lookup', (req, res) => {
 
 router.get('/create_test', (req, res) => {
   res.render('create_test', {
+    alert_message: ''
   })
 })
 
@@ -545,24 +546,29 @@ router.post('/create_test', (req, res) => {
     .then(function(rows){
       switch (item.level) {
         case '-1':
-          req.flash('success', 'Test created for Little Dragons on ' + built_date + ' at ' + item.time);
-          res.redirect('/create_test');
+          res.render('create_test', {
+            alert_message: 'Test created for Little Dragons on ' + built_date + ' at ' + item.time
+          })
           break;
         case '0':
-          req.flash('success', 'Test created for Basic on ' + built_date + ' at ' + item.time);
-          res.redirect('/create_test');
+          res.render('create_test', {
+            alert_message: 'Test created for Basic on ' + built_date + ' at ' + item.time
+          })
           break;
         case '1':
-          req.flash('success', 'Test created for Level 1 on ' + built_date + ' at ' + item.time);
-          res.redirect('/create_test');
+          res.render('create_test', {
+            alert_message: 'Test created for Level 1 on ' + built_date + ' at ' + item.time
+          })
           break;
         case '2':
-          req.flash('success', 'Test created for Level 2 on ' + built_date + ' at ' + item.time);
-          res.redirect('/create_test');
+          res.render('create_test', {
+            alert_message: 'Test created for Level 2 on ' + built_date + ' at ' + item.time
+          })
           break;
         case '3':
-          req.flash('success', 'Test created for Level 3 on ' + built_date + ' at ' + item.time);
-          res.redirect('/create_test');
+          res.render('create_test', {
+            alert_message: 'Test created for Level 3 on ' + built_date + ' at ' + item.time
+          })
           break;
         default:
           req.flash('error', 'Test Not Created! with data: (level: ' + item.level + ', built_date: ' + built_date + ', time: ' + item.time + ')');
@@ -598,9 +604,68 @@ router.post('/email_lookup', (req, res) => {
 })
 
 router.get('/classes_email/(:email)', (req, res) => {
-  const test_query = "";
-  const class_query = "";
-  //need test and class info. Need to give email, test_data, class_data. Also build the delete function for tests and classes. Render email_lookup with email pre-filled and alert_message set as 'No Email Associated' if no email (rows.length == 0). If class rows == 0, also run test db and if those == 0 do the alert.
+  const test_query = "select s.student_name, s.session_id, s.test_id, s.email, to_char(i.test_date, 'Month') || ' ' || to_char(i.test_date, 'DD') || ' at ' || to_char(i.test_time, 'HH:MI PM') as test_instance from test_signups s, test_instance i where s.email = '$1' and i.id = s.test_id;";
+  const class_query = "select s.student_name, s.email, s.class_check, s.class_session_id, to_char(c.starts_at, 'Month') || ' ' || to_char(c.starts_at, 'DD') || ' at ' || to_char(c.starts_at, 'HH:MI') as class_instance, c.starts_at, c.class_id from classes c, class_signups s where s.email = '$1' and s.class_session_id = c.class_id;";
+  db.any(class_query, [req.params.email])
+    .then(classes => {
+      if (classes.lenth == 0){
+        db.any(test_query, [req.params.email])
+        .then(tests => {
+          if (tests.length == 0){
+            res.render('email_lookup', {
+              email: req.params.email,
+              alert_message: 'No classes or tests associated with the email ' + req.params.email
+            })
+          } else {
+            db.any(test_query, [req.params.email])
+              .then(tests => {
+                res.render('classes_email', {
+                  email: req.params.email,
+                  class_data: classes,
+                  test_data: tests
+                })
+              })
+              .catch(err => {
+                console.log('Unable to pull in tests. ERROR: ' + err);
+                res.render('email_lookup', {
+                  email: req.params.email,
+                  alert_message: 'Database issue pulling in tests. Please see a staff member.'
+                })
+              })
+          }
+        })
+        .catch(err => {
+          console.log('Unable to pull in tests. ERROR: ' + err);
+          res.render('email_lookup', {
+            email: req.params.email,
+            alert_message: 'Database issue pulling in tests. Please see a staff member.'
+          })
+        })
+      } else {
+        db.any(test_query, [req.params.email])
+        .then(tests => {
+          res.render('classes_email', {
+            email: req.params.email,
+            class_data: classes,
+            test_data: tests
+          })
+        })
+        .catch(err => {
+          console.log('Unable to pull in tests. ERROR: ' + err);
+          res.render('email_lookup', {
+            email: req.params.email,
+            alert_message: 'Database issue pulling in tests. Please see a staff member.'
+          })
+        })
+      }
+    })
+    .catch(err => {
+      console.log('Unable to pull in classes. ERROR: ' + err);
+      res.render('email_lookup', {
+        email: req.params.email,
+        alert_message: 'Database issue pulling in classes. Please see a staff member.'
+      })
+    })
 })
 
 //TESTING SIGNUP SECTION
@@ -1453,7 +1518,7 @@ router.get('/process_classes/(:student_name)/(:email)/(:belt_group)/(:id_set)', 
   });
   switch(id_set.length){
     case 1:
-      var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, from classes where class_id = $1;"
+      var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance from classes where class_id = $1;"
       db.any(end_query, [id_set[0]])
         .then(rows => {
           res.render('class_confirmed', {
@@ -1472,7 +1537,7 @@ router.get('/process_classes/(:student_name)/(:email)/(:belt_group)/(:id_set)', 
         })
       break;
     case 2:
-      var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, from classes where class_id in ($1, $2);"
+      var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance from classes where class_id in ($1, $2);"
       db.any(end_query, [id_set[0], id_set[1]])
         .then(rows => {
           res.render('class_confirmed', {
@@ -1491,7 +1556,7 @@ router.get('/process_classes/(:student_name)/(:email)/(:belt_group)/(:id_set)', 
         })
       break;
     case 3:
-      var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, from classes where class_id in ($1, $2, $3);"
+      var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance from classes where class_id in ($1, $2, $3);"
       db.any(end_query, [id_set[0], id_set[1], id_set[2]])
         .then(rows => {
           res.render('class_confirmed', {
@@ -1510,7 +1575,7 @@ router.get('/process_classes/(:student_name)/(:email)/(:belt_group)/(:id_set)', 
         })
       break;
     case 4:
-      var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, from classes where class_id in ($1, $2, $3, $4);"
+      var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance from classes where class_id in ($1, $2, $3, $4);"
       db.any(end_query, [id_set[0], id_set[1], id_set[2], id_set[3]])
         .then(rows => {
           res.render('class_confirmed', {
