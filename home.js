@@ -1297,6 +1297,12 @@ router.get('/class_confirmed', (req, res) => {
   })
 })
 
+router.get('/student_classes', (req, res) => {
+  res.render('student_classes'), {
+    
+  }
+})
+
 app.post('/webhook', (request, response) => {
   let event
   try {
