@@ -1,5 +1,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Classes for {{ email }}</title>
+{% if alert_message != '' %}
+  <script>alert("{{ alert_message }}")</script>
+{% endif %}
 <html>
   <style>
     h1 {
@@ -67,10 +70,11 @@
           <tr>
             <td>{{ class.student_name }}</td>
             <td>{{ class.class_instance }}</td>
-            <td><a href="">Drop This Class</a></td>
+            <td><a href="/delete_instance/{{ class.class_check }}/{{ email }}/class">Drop This Class</a></td>
           </tr>
         {% endfor %}
-      {% else %}
+      {% endif %}
+      {% if class_data.length == 0 %}
           <tr>
             <td>None</td>
             <td>None</td>
@@ -90,7 +94,7 @@
           <tr>
             <td>{{ test.student_name }}</td>
             <td>{{ test.test_instance }}</td>
-            <td><a href="">Drop This Test</a></td>
+            <td><a href="/delete_instance/{{ test.session_id }}/{{ email }}/test">Drop This Test</a></td>
           </tr>
         {% endfor %}
       {% endif %}

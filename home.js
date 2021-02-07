@@ -622,7 +622,8 @@ router.get('/classes_email/(:email)', (req, res) => {
                 res.render('classes_email', {
                   email: req.params.email,
                   class_data: classes,
-                  test_data: tests
+                  test_data: tests,
+                  alert_message: ''
                 })
               })
               .catch(err => {
@@ -647,7 +648,8 @@ router.get('/classes_email/(:email)', (req, res) => {
           res.render('classes_email', {
             email: req.params.email,
             class_data: classes,
-            test_data: tests
+            test_data: tests,
+            alert_message: ''
           })
         })
         .catch(err => {
@@ -666,6 +668,47 @@ router.get('/classes_email/(:email)', (req, res) => {
         alert_message: 'Database issue pulling in classes. Please see a staff member.'
       })
     })
+})
+
+app.get('/delete_instance/(:id)/(:email)/(:type)', (req, res) => {
+  switch (req.params.type){ //allows for addition of swat class
+    case 'test':
+      const drop_test = "delete from test_signups where session_id = $1 and email + $2;";
+      db.none(drop_test, [req.params.id, req.params.email])
+        .then(rows => {
+          res.redirect('https://ema-planner.herokuapp.com/classes_email/' + req.params.email);
+        })
+        .catch(err => {
+          console.log('Unable to delete test. ERR: ' + err);
+          res.render('classes_email', {
+            email: req.params.email,
+            class_data: '',
+            test_data: '',
+            alert_message: 'Unable to delete test. Please refresh and try again. Otherwise, please see a staff member.'
+          })
+        })
+      break;
+    case 'class': 
+        const dropt_class = "delete from class_signups where class_check = $1 and email = $2;";
+        db.none(dropt_class, [req.params.id, req.params.email])
+          .then(rows => {
+            res.redirect('https://ema-planner.herokuapp.com/classes_email/' + req.params.email);
+          })
+          .catch(err => {
+            console.log('Unable to delete class. ERR: ' + err);
+            res.render('classes_email', {
+              email: req.params.email,
+              class_data: '',
+              test_data: '',
+              alert_message: 'Unable to delete class. Please refresh and try again. Otherwise, please see a staff member.'
+            })
+          })
+      break;
+    default:
+      console.log('Unknown delete type.');
+      res.redirect('https://ema-planner.herokuapp.com/classes_email/' + req.params.email);
+      break;
+  }
 })
 
 //TESTING SIGNUP SECTION
