@@ -673,7 +673,7 @@ router.get('/classes_email/(:email)', (req, res) => {
 app.get('/delete_instance/(:id)/(:email)/(:type)', (req, res) => {
   switch (req.params.type){ //allows for addition of swat class
     case 'test':
-      const drop_test = "delete from test_signups where session_id = $1 and email + $2;";
+      const drop_test = "delete from test_signups where session_id = $1 and email = $2;";
       db.none(drop_test, [req.params.id, req.params.email])
         .then(rows => {
           res.redirect('https://ema-planner.herokuapp.com/classes_email/' + req.params.email);
