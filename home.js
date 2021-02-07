@@ -604,8 +604,8 @@ router.post('/email_lookup', (req, res) => {
 })
 
 router.get('/classes_email/(:email)', (req, res) => {
-  const test_query = "select s.student_name, s.session_id, s.test_id, s.email, to_char(i.test_date, 'Month') || ' ' || to_char(i.test_date, 'DD') || ' at ' || to_char(i.test_time, 'HH:MI PM') as test_instance from test_signups s, test_instance i where s.email = '$1' and i.id = s.test_id;";
-  const class_query = "select s.student_name, s.email, s.class_check, s.class_session_id, to_char(c.starts_at, 'Month') || ' ' || to_char(c.starts_at, 'DD') || ' at ' || to_char(c.starts_at, 'HH:MI') as class_instance, c.starts_at, c.class_id from classes c, class_signups s where s.email = '$1' and s.class_session_id = c.class_id;";
+  const test_query = "select s.student_name, s.session_id, s.test_id, s.email, to_char(i.test_date, 'Month') || ' ' || to_char(i.test_date, 'DD') || ' at ' || to_char(i.test_time, 'HH:MI PM') as test_instance from test_signups s, test_instance i where s.email = $1 and i.id = s.test_id;";
+  const class_query = "select s.student_name, s.email, s.class_check, s.class_session_id, to_char(c.starts_at, 'Month') || ' ' || to_char(c.starts_at, 'DD') || ' at ' || to_char(c.starts_at, 'HH:MI') as class_instance, c.starts_at, c.class_id from classes c, class_signups s where s.email = $1 and s.class_session_id = c.class_id;";
   db.any(class_query, [req.params.email])
     .then(classes => {
       if (classes.lenth == 0){
