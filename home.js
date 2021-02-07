@@ -1346,7 +1346,7 @@ router.post('/dragons_signup', (req, res) => {
   belt_group = 'Little Dragons';
   const email = String(item.email).toLowerCase();
   const student_name = item.fname + ' ' + item.lname;
-  const redir_link = '/process_classes/' + student_name + '/' + email + '/' + belt_group + '/' + item.day_time;
+  const redir_link = 'process_classes/' + student_name + '/' + email + '/' + belt_group + '/' + item.day_time;
   res.redirect(redir_link);
 })
 
@@ -1360,7 +1360,7 @@ router.post('/basic_signup', (req, res) => {
   belt_group = 'Basic';
   const email = String(item.email).toLowerCase();
   const student_name = item.fname + ' ' + item.lname;
-  const redir_link = '/process_classes/' + student_name + '/' + email + '/' + belt_group + '/' + item.day_time;
+  const redir_link = 'process_classes/' + student_name + '/' + email + '/' + belt_group + '/' + item.day_time;
   res.redirect(redir_link);
 })
 
@@ -1374,7 +1374,7 @@ router.post('/level1_signup', (req, res) => {
   belt_group = 'Level 1';
   const email = String(item.email).toLowerCase();
   const student_name = item.fname + ' ' + item.lname;
-  const redir_link = '/process_classes/' + student_name + '/' + email + '/' + belt_group + '/' + item.day_time;
+  const redir_link = 'process_classes/' + student_name + '/' + email + '/' + belt_group + '/' + item.day_time;
   res.redirect(redir_link);
 })
 
@@ -1388,7 +1388,7 @@ router.post('/level2_signup', (req, res) => {
   belt_group = 'Level 2';
   const email = String(item.email).toLowerCase();
   const student_name = item.fname + ' ' + item.lname;
-  const redir_link = '/process_classes/' + student_name + '/' + email + '/' + belt_group + '/' + item.day_time;
+  const redir_link = 'process_classes/' + student_name + '/' + email + '/' + belt_group + '/' + item.day_time;
   res.redirect(redir_link);
 })
 
@@ -1402,7 +1402,7 @@ router.post('/level3_signup', (req, res) => {
   belt_group = 'Level 3';
   const email = String(item.email).toLowerCase();
   const student_name = item.fname + ' ' + item.lname;
-  const redir_link = '/process_classes/' + student_name + '/' + email + '/' + belt_group + '/' + item.day_time;
+  const redir_link = 'process_classes/' + student_name + '/' + email + '/' + belt_group + '/' + item.day_time;
   res.redirect(redir_link);
 })
 
@@ -1416,7 +1416,7 @@ router.post('/bb_signup', (req, res) => {
   belt_group = 'Black Belt';
   const email = String(item.email).toLowerCase();
   const student_name = item.fname + ' ' + item.lname;
-  const redir_link = '/process_classes/' + student_name + '/' + email + '/' + belt_group + '/' + item.day_time;
+  const redir_link = 'process_classes/' + student_name + '/' + email + '/' + belt_group + '/' + item.day_time;
   res.redirect(redir_link);
 })
 
