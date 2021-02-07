@@ -2,6 +2,9 @@
   <title>Create a Belt Test</title>
   {% extends 'nav_bar.html' %}
   {% block content %}
+  {% for message in messages %}
+    <p>{{ message }}</p>
+  {% endfor %}
   {% if messages.error %}
     <p style="color:red">{{ messages.error }}</p>
   {% endif %}
