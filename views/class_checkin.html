@@ -135,7 +135,7 @@
                         {% for student in data %}
                         <div class="chip">
                             {{ student.student_name }}
-                            <a href ="/class_remove/{{ student.barcode }}/{{ class_id }}"><span class="closebtn">&times;</span></a>
+                            <a href ="/class_remove/{{ student.barcode }}/{{ class_id }}/{{ level }}/{{ time }}"><span class="closebtn">&times;</span></a>
                         </div>
                         {% endfor %}
                     </div>
@@ -146,7 +146,7 @@
                         {% for person in signedup %}
                         <div class="chip2">
                             {{ person.student_name}}
-                            <a href="/class_checkin/{{ person.barcode }}/{{ class_id }}"><span class="closebtn2">&radic;</span></a>
+                            <a href="/class_checkin/{{ person.barcode }}/{{ class_id }}/{{ level }}/{{ time }}"><span class="closebtn2">&radic;</span></a>
                         </div>
                         {% endfor %}
                     </div>

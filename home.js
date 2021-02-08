@@ -400,11 +400,11 @@ router.get('/class_selector_force/(:month)/(:day)', (req, res) => {
     })
 })
 
-router.get('/class_remove/(:barcode)/(:class_id)', (req, res) => {
+router.get('/class_remove/(:barcode)/(:class_id)/(:class_level)/(:class_time)', (req, res) => {
   const remove_query = 'delete from student_classes where class_id = $1 and barcode = $2;'
   db.any(remove_query, [req.params.class_id, req.params.barcode])
     .then(function (rows) {
-      res.redirect('https://ema-planner.herokuapp.com/class_selector');
+      res.redirect('https://ema-planner.herokuapp.com/class_checkin/' + req.params.class_id + '/' + req.params.class_level + '/' + req.params.class_time);
     })
     .catch(function (err) {
       console.log('Could not remove person from class with class_id and barcode ' + req.params.class_id + ', ' + req.params.barcode + '. Err: ' + err)
@@ -412,11 +412,12 @@ router.get('/class_remove/(:barcode)/(:class_id)', (req, res) => {
     })
 })
 
-router.get('/class_checkin/(:barcode)/(:class_id)', (req, res) => {
+router.get('/class_checkin/(:barcode)/(:class_id)/(:class_level/(:class_time)', (req, res) => {
   const insert_query = 'insert into student_classes (class_id, barcode) values ($1, $2);';
+  const update_status = 'update class_signups set checked_in = true where ';//UPDATE WITH WORKING VERSION
   db.any(insert_query, [req.params.class_id, req.params.barcode])
     .then(rows => {
-      res.redirect('https://ema-planner.herokuapp.com/class_selector');
+      res.redirect('https://ema-planner.herokuapp.com/class_checkin/' + req.params.class_id + '/' + req.params.class_level + '/' + req.params.class_time);
     })
     .catch(err => {
       console.log('Could not check in person from class with class_id and barcode ' + req.params.class_id + ', ' + req.params.barcode + '. Err: ' + err);
@@ -425,7 +426,7 @@ router.get('/class_checkin/(:barcode)/(:class_id)', (req, res) => {
 })
 
 router.get('/class_checkin/(:class_id)/(:class_level)/(:class_time)', (req, res) => { // query needs to look for barcode not in student_list, but in class_list
-  const query = "select distinct s.first_name || ' ' || s.last_name as student_name, s.barcode from student_list s, student_classes b where b.class_id = $1 and s.barcode in (select barcode from student_classes where class_id = $2)";
+  const query = "select distinct s.first_name || ' ' || s.last_name as student_name, s.barcode, s.checked_in from student_list s, student_classes b where b.class_id = $1 and s.barcode in (select barcode from student_classes where class_id = $2) and s.checked_in = ";//UPDATE WITH WORKING VERSION
   const query_reserved = "select s.student_name, s.class_session_id, l.barcode from class_signups s, student_list l where s.student_name like '%' || l.first_name || ' ' || l.last_name || '%' and s.class_session_id = $1;";
   db.any(query_reserved, [req.params.class_id])
     .then(signedup => {
