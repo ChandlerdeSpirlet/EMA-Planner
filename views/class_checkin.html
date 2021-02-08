@@ -2,10 +2,10 @@
 <html>
     {% set local = 'Students' %}
     {% extends 'nav_bar.html' %}
+    {% block content %}
     {% if alert_message != '' %}
         <script>alert("{{ alert_message }}")</script>
     {% endif %}
-    {% block content %}
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Class Check-In | Level {{ level }} {{ time }}</title>
     <style>
@@ -148,6 +148,7 @@
                             {{ person.student_name}}
                             <a href="/class_checkin/{{ person.barcode }}/{{ class_id }}"><span class="closebtn2">&radic;</span></a>
                         </div>
+                        {% endfor %}
                     </div>
             </div>
         </div>
