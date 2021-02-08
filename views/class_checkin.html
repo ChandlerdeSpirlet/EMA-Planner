@@ -2,6 +2,9 @@
 <html>
     {% set local = 'Students' %}
     {% extends 'nav_bar.html' %}
+    {% if alert_message != '' %}
+        <script>alert("{{ alert_message }}")</script>
+    {% endif %}
     {% block content %}
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Class Check-In | Level {{ level }} {{ time }}</title>
@@ -49,6 +52,15 @@
             border-radius: 25px;
             background-color: #f1f1f1;
         }
+        .chip2 {
+            display: inline-block;
+            padding: 0 25px;
+            height: 50px;
+            font-size: 18px;
+            line-height: 50px;
+            border-radius: 25px;
+            background-color: #f1f1f1;
+        }
         .closebtn {
             padding-left: 10px;
             color: #888;
@@ -58,6 +70,17 @@
             cursor: pointer;
         }
         .closebtn:hover {
+            color: #000;
+        }
+        .closebtn2 {
+            padding-left: 10px;
+            color: rgb(14, 170, 9);
+            font-weight: bold;
+            float: right;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .closebtn2:hover {
             color: #000;
         }
         button, label, input, select {
@@ -104,14 +127,27 @@
                         <input type="submit" name="Submit" value="Check-In"/>
                     </form>
                 </div>
+                <hr>
+                <h3>Checked In</h3>
                 <br>
                     <div style="align-content: center;">
+
                         {% for student in data %}
                         <div class="chip">
                             {{ student.student_name }}
                             <a href ="/class_remove/{{ student.barcode }}/{{ class_id }}"><span class="closebtn">&times;</span></a>
                         </div>
                         {% endfor %}
+                    </div>
+                <br>
+                <hr>
+                <h3>Signed Up</h3>
+                    <div style="align-content: center;">
+                        {% for person in signedup %}
+                        <div class="chip2">
+                            {{ person.student_name}}
+                            <a href="/class_checkin/{{ person.barcode }}/{{ class_id }}"><span class="closebtn2">&radic;</span></a>
+                        </div>
                     </div>
             </div>
         </div>
