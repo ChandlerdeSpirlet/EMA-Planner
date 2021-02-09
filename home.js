@@ -434,7 +434,7 @@ router.get('/update_checkin/(:barcode)/(:class_id)/(:class_level)/(:class_time)/
 
 router.get('/class_checkin/(:class_id)/(:class_level)/(:class_time)', (req, res) => { // query needs to look for barcode not in student_list, but in class_list
   const query = "select distinct s.first_name || ' ' || s.last_name as student_name, s.barcode from student_list s, student_classes b where b.class_id = $1 and s.barcode in (select barcode from student_classes where class_id = $2)";
-  const query_reserved = "select s.student_name, s.class_session_id, l.barcode from class_signups s, student_list l where s.student_name like '%' || l.first_name || ' ' || l.last_name || '%' and s.class_session_id = $1;";
+  const query_reserved = "select s.student_name, s.class_session_id, l.barcode from class_signups s, student_list l where s.student_name like '%' || l.first_name || ' ' || l.last_name || '%' and s.class_session_id = $1 and s.checked_in = false;";
   db.any(query_reserved, [req.params.class_id])
     .then(signedup => {
       db.any(query, [req.params.class_id, req.params.class_id])
