@@ -146,7 +146,7 @@
                         {% for person in signedup %}
                         <div class="chip2">
                             {{ person.student_name}}
-                            <a href="/class_checkin/{{ person.barcode }}/{{ class_id }}/{{ level }}/{{ time }}/{{ class_session_id }}"><span class="closebtn2">&radic;</span></a>
+                            <a href="/update_checkin/{{ person.barcode }}/{{ class_id }}/{{ level }}/{{ time }}/{{ class_session_id }}"><span class="closebtn2">&radic;</span></a>
                         </div>
                         {% endfor %}
                     </div>
