@@ -412,7 +412,7 @@ router.get('/class_remove/(:barcode)/(:class_id)/(:class_level)/(:class_time)', 
     })
 })
 
-router.get('/class_checkin/(:barcode)/(:class_id)/(:class_level/(:class_time)/(:class_session_id)', (req, res) => {
+router.get('/class_checkin/(:barcode)/(:class_id)/(:class_level)/(:class_time)/(:class_session_id)', (req, res) => {
   const insert_query = 'insert into student_classes (class_id, barcode) values ($1, $2);';
   const update_status = 'update class_signups set checked_in = true where class_session_id = $1;';//UPDATE WITH WORKING VERSION
   db.any(insert_query, [req.params.class_id, req.params.barcode])
