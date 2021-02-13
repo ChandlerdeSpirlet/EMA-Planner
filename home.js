@@ -540,7 +540,7 @@ router.post('/class_lookup', (req, res) => {
 })
 
 router.get('/student_lookup', (req, res) => {
-  const name_query = "select first_name || ' ' || last_name as names from student_list"
+  const name_query = "select * from get_all_names()"
   db.any(name_query)
     .then(function (rows) {
       res.render('student_lookup', {

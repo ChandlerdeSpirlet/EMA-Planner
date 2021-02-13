@@ -142,7 +142,7 @@
         <h3>Lookup students by name</h3>
     </head>
     <meta name="name_data" content="{{ data }}" />
-    <meta name="name_data_names" content="{{ data.names }}" />
+    <meta name="name_data_names" content="{{ data.student_name }}" />
     <body>
         <form autocomplete="off" action="/student_lookup" method="post" name="form1">
             <div class="autocomplete" style="width:70%;">
@@ -156,7 +156,7 @@
         var data1 = document.getElementsByName('name_data')[0].content;
         console.log('data1');
         console.log(data1);
-        console.log('data.names');
+        console.log('data.student_names');
         console.log(document.getElementsByName('name_data_names')[0].content);
         console.log('-----------');
         console.log(JSON.parse(document.getElementsByName('name_data')[0].content));
