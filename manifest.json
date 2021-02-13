@@ -5,12 +5,12 @@
   "background_color": "#2196f3",
   "display": "standalone",
   "orientation": "landscape",
-  "scope": "",
+  "scope": "https://ema-planner.herokuapp.com",
   "start_url": "https://ema-planner.herokuapp.com",
   "icons": [
     {
       "src": "https://ema-planner.herokuapp.com/views/ema.png",
-      "sizes": "1024x1024"
+      "sizes": "512x512"
     }
   ]
 }
