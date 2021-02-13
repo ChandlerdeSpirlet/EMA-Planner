@@ -617,7 +617,7 @@ router.post('/create_test', (req, res) => {
       console.log("Error in creating test: " + err);
       req.flash('error', 'Test not created. ERR: ' + err);
       res.render('create_test', {
-        alert_message: 'Test not created. Error: ' + err;
+        alert_message: 'Test not created. Error: ' + err
       })
     })
 })
