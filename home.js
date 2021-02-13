@@ -1799,10 +1799,33 @@ app.post('/webook_ps', (req, res) => {
   }
   switch (req.body.type) {
     case 'payment_failed':
-
+      const amount = request.body.data.amount
+      const customer = request.body.data.customer_id
+      const reason = request.body.data.failure_reason
+      const failed_query = 'insert into failed_payments (customer, amount, reason, email) values ($1, $2, $3, (select email from student_list where barcode = $4));'
+      db.any(failed_query, [customer, amount, reason, customer])
+        .then(function (row) {
+          console.log('Added a charge.failed webhook')
+        })
+        .catch(function (err) {
+          console.log('charge.failed ended with err ' + err)
+        })
       break;
     case 'customer_created':
-
+        const fname = req.body.first_name;
+        const lname = req.body.last_name;
+        const barcode = req.body.customer_id;
+        const email = req.body.email;
+        const add_query = 'insert into student_list (barcode, first_name, last_name, belt_color, belt_size, email, level_name, belt_order) value ($1, $2, $3, $4, $5, $6, $7, $8);';
+        db.none(add_query, [barcode, fname, lname, 'White', -1, email, 'Basic', 0])
+          .then(row => {
+            console.log('Submitted a new student');
+            res.status(200).send(`Webhook customer_created received.`);
+          })
+          .catch(err => {
+            console.log('customer_created webhook err: ' + err);
+            res.status(400).send(`Webhook Error: ${err.message}`);
+          })
       break;
     case 'customer_deleted':
       const studentCode = req.body.data.customer_id;
