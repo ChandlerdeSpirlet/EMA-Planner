@@ -157,7 +157,22 @@
         console.log('data1');
         console.log(data1.student_name);
         console.log('{{ data.student_name }}');
-        name_data.forEach(item => {
+        document.getElementsByName('name_data')[0].content.forEach(item => {
+            console.log('item is ' + item.student_name);
+            console.log('item is : ' + item.barcode);
+            console.log('full item: ' + item);
+        })
+        document.getElementsByName('name_data')[0].forEach(item => {
+            console.log('item is ' + item.student_name);
+            console.log('item is : ' + item.barcode);
+            console.log('full item: ' + item);
+        })
+        document.getElementsByName('name_data').content.forEach(item => {
+            console.log('item is ' + item.student_name);
+            console.log('item is : ' + item.barcode);
+            console.log('full item: ' + item);
+        })
+        document.getElementsByName('name_data').forEach(item => {
             console.log('item is ' + item.student_name);
             console.log('item is : ' + item.barcode);
             console.log('full item: ' + item);
