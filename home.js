@@ -53,6 +53,8 @@ function convertToMoney (amount) {
   return formatter.format(amount / 100)
 }
 
+
+
 app.get('/', (req, res) => {
   if (req.headers['x-forwarded-proto'] != 'https') {
     res.redirect('https://ema-planner.herokuapp.com/')

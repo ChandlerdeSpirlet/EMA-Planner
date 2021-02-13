@@ -1,0 +1,16 @@
+{
+  "name": "EMA Planner",
+  "short_name": "EMA Planner",
+  "theme_color": "#2196f3",
+  "background_color": "#2196f3",
+  "display": "standalone",
+  "orientation": "landscape",
+  "scope": "/",
+  "start_url": "/https://ema-planner.herokuapp.com",
+  "icons": [
+    {
+      "src": "https://ema-planner.herokuapp.com/views/ema.png",
+      "sizes": "1024x1024"
+    }
+  ]
+}
