@@ -1790,6 +1790,38 @@ router.get('/student_classes', (req, res) => {
   }
 })
 
+app.post('/webook_ps', (req, res) => {
+  let event = req.body.event_type;
+  try {
+    console.log('event is ' + event);
+  } catch (err) {
+    res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+  switch (req.body.type) {
+    case 'payment_failed':
+
+      break;
+    case 'customer_created':
+
+      break;
+    case 'customer_deleted':
+      const studentCode = req.body.data.customer_id;
+      var del_query = 'delete from student_list where barcode = $1;'
+      db.none(del_query, [studentCode])
+        .then(row => {
+          res.status(200).send(`Webhook customer_deleted received.`)
+        })
+        .catch(err => {
+          console.log('customer_deleted webhook err: ' + err);
+          res.status(400).send(`Webhook Error: ${err.message}`);
+        })
+      break;
+    default:
+      return response.status(400).end();
+  }
+  res.json({received: true})
+})
+
 app.post('/webhook', (request, response) => {
   let event
   try {
