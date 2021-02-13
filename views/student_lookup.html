@@ -142,6 +142,7 @@
         <h3>Lookup students by name</h3>
     </head>
     <meta name="name_data" content="{{ data }}" />
+    <meta name="name_data_maybe" content="{% for student in data %} {{student.student_name }} {% endfor %}
     <meta name="name_data_names" content="{{ data.student_name }}" />
     <body>
         <form autocomplete="off" action="/student_lookup" method="post" name="form1">
