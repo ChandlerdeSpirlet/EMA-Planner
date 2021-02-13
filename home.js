@@ -601,6 +601,11 @@ router.post('/create_test', (req, res) => {
             alert_message: 'Test created for Level 3 on ' + built_date + ' at ' + item.time
           })
           break;
+        case '7':
+          res.render('create_test', {
+            alert_message: 'Test created for Exclusive on ' + built_date + ' at ' + item.time
+          })
+          break;
         default:
           req.flash('error', 'Test Not Created! with data: (level: ' + item.level + ', built_date: ' + built_date + ', time: ' + item.time + ')');
           console.log('Test Not Created! with data: (level: ' + item.level + ', built_date: ' + built_date + ', time: ' + item.time + ')');
@@ -611,7 +616,9 @@ router.post('/create_test', (req, res) => {
     .catch(function(err){
       console.log("Error in creating test: " + err);
       req.flash('error', 'Test not created. ERR: ' + err);
-      res.redirect('/create_test');
+      res.render('create_test', {
+        alert_message: 'Test not created. Error: ' + err;
+      })
     })
 })
 
@@ -915,6 +922,37 @@ router.get('/testing_signup_level3', (req, res) => {
   }
 })
 
+router.get('/testing_signup_weapons', (req, res) => {
+  if (req.headers['x-forwarded-proto'] != 'https'){
+    res.redirect('https://ema-planner.herokuapp.com/testing_signup_weapons');
+  } else {
+    const name_query = "select * from get_names(1);";
+    const tests = "select TO_CHAR(test_date, 'Month') || ' ' || extract(DAY from test_date) || ' at ' || to_char(test_time, 'HH12:MI PM') as test_instance, id from test_instance where level = 7 and test_date >= (CURRENT_DATE - INTERVAL '7 hour')::date;";
+    db.any(name_query)
+      .then(rows_names => {
+        db.any(tests)
+          .then(rows => {
+            res.render('testing_signup_weapons', {
+              names: rows_names,
+              email: '',
+              belts: '',
+              tests: rows
+            })
+          })
+          .catch(err => {
+            console.log('Could not get tests. Error: ' + err);
+            res.send(req.flash('error', 'Signup UNSUCCESSFUL. Please see a staff member.'));
+            res.redirect('/testing_signup_weapons');
+          })
+      })
+      .catch(err => {
+        console.log('Could not get names. Error: ' + err);
+        req.flash('error', 'Signup UNSUCCESSFUL. Please see a staff member.');
+        res.redirect('/testing_signup_weapons');
+      })
+  }
+})
+
 router.post('/testing_signup_dragons', (req, res) => {
   const item = {
     student_name: req.sanitize('student_name').trim(),
@@ -1055,6 +1093,34 @@ router.post('/testing_signup_level3', (req, res) => {
     })
 })
 
+router.post('/testing_signup_weapons', (req, res) => {
+  const item = {
+    student_name: req.sanitize('student_name').trim(),
+    email: req.sanitize('email').trim(),
+    belt_color: req.sanitize('belts').trim(),
+    test_id: req.sanitize('test_selection').trim()
+  };
+  console.log('item.test_id: ' + item.test_id);
+  const test_instance = "select TO_CHAR(test_date, 'Month') || ' ' || extract(DAY from test_date) || ' at ' || to_char(test_time, 'HH12:MI PM') as test_instance from test_instance where id = $1;";
+  const data = parse_name(item.student_name);
+  db.any(test_instance, [item.test_id])
+    .then(rows => {
+      res.render('testing_preview', {
+        test_info: rows,
+        barcode: data[1],
+        test_id: item.test_id,
+        student_name: data[0],
+        email: item.email,
+        belt_color: item.belt_color
+      })
+    })
+    .catch(err => {
+      console.log('Could not find test with given id. ERROR: ' + err);
+      req.flash('error', 'Unable to verify the test you are signed up for.');
+      res.redirect('/testing_signup_weapons');
+    })
+})
+
 router.get('/testing_preview', (req, res) => {
   res.render('testing_preview', {
     test_info: '',
@@ -1072,6 +1138,7 @@ function belt_parser(color){
   const regex_level1 = /^Orange|^High Orange|^Green|^High Green/g;
   const regex_level2 = /^Purple|^High Purple|^Blue|^High Blue/g;
   const regex_level3 = /^Red|^High Red|^Brown|^High Brown/g;
+  const regex_weapons = /^Weapons/g;
   if (regex_dragon.test(color)){
     return 'Dragons';
   } else if (regex_basic.test(color)){
@@ -1082,6 +1149,8 @@ function belt_parser(color){
     return 'Level 2';
   } else if (regex_level3.test(color)){
     return 'Level 3';
+  } else if (regex_weapons.test(color)){
+    return 'Weapons';
   } else {
     return 'Unknown';
   }
@@ -1253,6 +1322,30 @@ router.post('/test_preview', (req, res) => {
             console.log('Could not get names. Error: ' + err);
             req.flash('error', 'Signup UNSUCCESSFUL. Please see a staff member.');
             res.redirect('/testing_signup_level3');
+          })
+        break;
+      case 'Weapons':
+        db.any(name_query, [7])
+          .then(rows_names => {
+            db.any(tests, [7])
+              .then(rows => {
+                res.render('testing_signup_weapons', {
+                  names: rows_names,
+                  email: item.email,
+                  belts: item.belt_color,
+                  tests: rows
+                })
+              })
+              .catch(err => {
+                console.log('Could not get tests. Error: ' + err);
+                res.send(req.flash('error', 'Signup UNSUCCESSFUL. Please see a staff member.'));
+                res.redirect('/testing_signup_weapons');
+              })
+          })
+          .catch(err => {
+            console.log('Could not get names. Error: ' + err);
+            req.flash('error', 'Signup UNSUCCESSFUL. Please see a staff member.');
+            res.redirect('/testing_signup_weapons');
           })
         break;
       default:
