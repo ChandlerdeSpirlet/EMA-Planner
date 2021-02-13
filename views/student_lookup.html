@@ -155,37 +155,23 @@
     <script>
         //var data1 = document.getElementsByName('name_data')[0].content;
         var data1 = document.getElementsByName('name_data_maybe')[0].content;
-        var data2 = document.getElementsByName('name_data_maybe').content;
-        console.log('data1: ' + data1);
-        console.log('data2: ' + data2);
-        console.log('data1');
-        console.log(data1.student_name);
-        console.log('{{ data[1].student_name }}'); //works
-        {% for student in data %}
-            console.log(student.student_name);
-        {% endfor %}
-        document.getElementsByName('name_data')[0].forEach(item => {
-            console.log('item is ' + item.student_name);
-            console.log('item is : ' + item.barcode);
-            console.log('full item: ' + item);
-        })
-        document.getElementsByName('name_data').content.forEach(item => {
-            console.log('item is ' + item.student_name);
-            console.log('item is : ' + item.barcode);
-            console.log('full item: ' + item);
-        })
-        document.getElementsByName('name_data').forEach(item => {
-            console.log('item is ' + item.student_name);
-            console.log('item is : ' + item.barcode);
-            console.log('full item: ' + item);
-        })
-        console.log(document.getElementsByName('name_data_names')[0].content);
-        console.log('-----------');
-        console.log(JSON.parse(document.getElementsByName('name_data')[0].content));
-        console.log(histo);
-        
-        //var names = SOMETHING;
-        /*
+        function parseNames(name_data){
+            var name_arr = []
+            while (name_data.length > 0){
+                if (name_data.indexOf('  ') != -1){
+                    var idx = name_data.indexOf('  ');
+                    var stud_name = name_data.substring(0, name_data.indexOf('  '));
+                    name_arr.push(stud_name);
+                    name_data = name_data.substring(idx + 2, name_data.length);
+                } else {
+                    var stud_name = name_data;
+                    name_arr.push(stud_name);
+                    name_data = '';
+                }
+            }
+            return name_arr;
+        }
+        var names = parseNames(data1);
         function autocomplete(inp, arr) {
         var currentFocus;
         inp.addEventListener("input", function(e) {
@@ -251,10 +237,9 @@
         closeAllLists(e.target);
     });
     }
-    */
         </script>
         <script>
-                //autocomplete(document.getElementById("result"), names);
+            autocomplete(document.getElementById("result"), names);
         </script>
 </html>
 {% endblock %}
