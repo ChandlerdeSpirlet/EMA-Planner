@@ -160,9 +160,6 @@
         {% for student in data %}
             console.log(student.student_name);
         {% endfor %}
-        {% data %}.forEach(item => {
-            console.log('item ' + item.student_name);
-        })
         document.getElementsByName('name_data')[0].forEach(item => {
             console.log('item is ' + item.student_name);
             console.log('item is : ' + item.barcode);
