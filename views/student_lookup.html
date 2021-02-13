@@ -155,9 +155,9 @@
         //var data1 = document.getElementsByName('name_data')[0].content;
         var data1 = document.getElementsByName('name_data')[0].content;
         console.log('data1');
-        console.log(data1);
+        console.log(data1.student_name);
         console.log('{{ data.student_name }}');
-        data.forEach(item => {
+        name_data.forEach(item => {
             console.log('item is ' + item.student_name);
             console.log('item is : ' + item.barcode);
             console.log('full item: ' + item);
