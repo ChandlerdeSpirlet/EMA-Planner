@@ -553,6 +553,11 @@ router.get('/student_lookup', (req, res) => {
     })
 })
 
+router.post('/student_lookup', (req, res){
+  //Add button to edit on PaySimple
+  //Add fields to edit all info. Pre-fill with what is in db
+})
+
 router.get('/create_test', (req, res) => {
   res.render('create_test', {
     alert_message: ''
