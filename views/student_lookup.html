@@ -156,7 +156,12 @@
         var data1 = document.getElementsByName('name_data')[0].content;
         console.log('data1');
         console.log(data1);
-        console.log('data.student_names');
+        console.log('{{ data.student_name }}');
+        data.forEach(item => {
+            console.log('item is ' + item.student_name);
+            console.log('item is : ' + item.barcode);
+            console.log('full item: ' + item);
+        })
         console.log(document.getElementsByName('name_data_names')[0].content);
         console.log('-----------');
         console.log(JSON.parse(document.getElementsByName('name_data')[0].content));
