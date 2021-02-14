@@ -248,7 +248,7 @@ router.post('/add_student', function (req, res) {
 })
 
 function parseBelt(current_color, is_promotion) { //returns belt color, level, and belt_order value
-  var belt_info = ['', '', -1]
+  var belt_info = ['', '', 999]
   if (is_promotion) {
     switch (current_color) {
       case 'Dragons White':
@@ -876,6 +876,7 @@ router.post('/student_data', (req, res) => {
     belt_color: req.sanitize('beltColor').trim()
   }
   var level_info = parseBelt(items.belt_color, false);
+  console.log('level_info: ' + level_info);
   const update_query = "update student_list set first_name = $1, last_name = $2, belt_color = $3, belt_size = $4, email = $5, level_name = $6, belt_order = $7 where barcode = $8;";
   db.none(update_query, [items.first_name, items.last_name, level_info[0], items.belt_size, items.email, level_info[1], level_info[2], items.barcode])
     .then(rows_update => {
