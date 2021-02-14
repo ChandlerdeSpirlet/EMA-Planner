@@ -1,4 +1,6 @@
 <html>
+  {% set local = 'Students' %}
+  {% extends 'nav_bar.html' %}
   <title>Student &mdash; {{ name }}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/png" href="https://ema-planner.herokuapp.com/views/ema.png">
@@ -103,6 +105,7 @@
   <body>
     {% if data %}
     <form name="Form" action="/student_data" method="POST">
+      <input type="hidden" name="barcode" value="{{ barcode }}">
       <div>
         <label for="first_name">First Name: </label>
         <input type="first name" name="first_name" id="first_name" pattern="[A-z]{1}[A-z ]+" value="{{ data[0].first_name }}" placeholder="First Name" required>

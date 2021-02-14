@@ -819,14 +819,18 @@ router.get('/student_lookup', (req, res) => {
     })
     .catch(function (err) {
       console.log('Could not find students: ' + err)
-      res.redirect('/')
+      res.render('student_lookup', {
+        data: '',
+        alert_message: 'Unable to find student. Please refresh the page and try agin.'
+      })
     })
 })
 
 router.get('/student_data', (req, res) => {
   res.render('student_data', {
     data: '',
-    name: ''
+    name: '',
+    barcode: ''
   })
 })
 
@@ -843,11 +847,12 @@ router.post('/student_lookup', (req, res) => {
   }
   const stud_info = parseStudentInfo(items.student_info);
   const studentInfoQuery = "select * from student_list where barcode = $1 and first_name || ' ' || last_name = $2;";
-  db.any(studentInfoQuery, [stud_info[1], stud_info[2]])
+  db.any(studentInfoQuery, [stud_info[1], stud_info[0]])
     .then(rows => {
       res.render('student_data', {
         data: rows,
-        name: items.student_info
+        name: stud_info[0],
+        barcode: stud_info[1]
       })
     })
     .catch(err => {
@@ -859,7 +864,41 @@ router.post('/student_lookup', (req, res) => {
 })
 
 router.post('/student_data', (req, res) => {
-  
+  var items = {
+    barcode: req.sanitize('barcode').trim(),
+    first_name: req.sanitize('first_name').trim(),
+    last_name:  req.sanitize('last_name').trim(),
+    email: req.sanitize('email').trim(),
+    belt_size: req.sanitize('beltSize').trim(),
+    belt_color: req.sanitize('beltColor').trim()
+  }
+  var level_info = parseBelt(items.belt_color, false);
+  const update_query = "update student_list set first_name = $1, last_name = $2, belt_color = $3, belt_size = $4, email = $5, level_name = $6, belt_order = $7 where barcode = $8;";
+  db.none(update_query, [items.first_name, items.last_name, level_info[0], items.belt_size, items.email, level_info[1], level_info[2], items.barcode])
+    .then(rows_update => {
+      const name_query = "select * from get_all_names()"
+      db.any(name_query)
+        .then(function (rows) {
+          res.render('student_lookup', {
+            data: rows,
+            alert_message: items.first_name + ' ' + items.last_name + ' has been successfully updated!'
+          })
+        })
+        .catch(function (err) {
+          console.log('Could not find students: ' + err)
+          res.render('student_lookup', {
+            data: '',
+            alert_message: 'Could not find any students. Please refresh the page and try again.'
+          })
+        })
+    })
+    .catch(err => {
+      console.log('Could not update student: ' + err)
+      res.render('student_lookup', {
+        data: '',
+        alert_message: 'Could not update the student ' + items.first_name + ' ' + items.last_name + '. Please make a note of this and contact the admin.'
+      })
+    })
 })
 
 router.get('/create_test', (req, res) => {
