@@ -852,7 +852,7 @@ router.post('/student_lookup', (req, res) => {
   db.any(studentInfoQuery, [stud_info[1], stud_info[0]])
     .then(rows => {
       console.log('In .then for /student_lookup')
-      res.render('/student_data', {
+      res.render('student_data', {
         data: rows,
         name: stud_info[0],
         barcode: stud_info[1]
