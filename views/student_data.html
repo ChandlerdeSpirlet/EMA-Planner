@@ -1,0 +1,161 @@
+<html>
+  <title>Student &mdash; {{ name }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" href="https://ema-planner.herokuapp.com/views/ema.png">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    html {
+      background-image: linear-gradient(#0095ff, #9ed7ff);
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+      min-height: 100%;
+    }
+    h1 {
+      text-align: center;
+    }
+    body {
+      font-size: 16px;
+    }
+    p, li {
+      font-size: 14px;
+    }
+    form > div {
+      margin-bottom: 20px;
+    }
+    button, label {
+      display: block;
+      font-size: 100%;
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+      width: 100%;
+      padding: 5px;
+      height: 30px;
+    }
+    select {
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .desc {
+      font-size: 14px;
+      display: inline;
+      font-weight: normal;
+    }
+    .select-wrapper {
+      position: relative;
+    }
+    .select-wrapper::after {
+      content: "▼";
+      font-size: 1rem;
+      top: 6px;
+      right: 10px;
+      position: absolute;
+    }
+    input[type="text"], [type="first name"], [type="last name"], [type="email"], [type="submit"] {
+      box-shadow: inset 1px 1px 3px #ccc;
+      border-radius: 5px;
+      display: block;
+      font-size: 100%;
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+      width: 100%;
+      padding: 5px;
+      height: 30px;
+    }
+    label {
+      margin-bottom: 5px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    button {
+      width: 60%;
+      margin: 0 auto;
+    }
+    .item {
+      display: block; 
+      padding: 5px;
+    }
+    input[type=checkbox] {
+      display: inline;
+    }
+    a:link {
+      color: white;
+    }
+    a:visited {
+      color: white;
+    }
+    a:hover {
+      color: white;
+    }
+    a:active {
+      color: white;
+    }
+  </style>
+  <head>
+    <h1>Viewing/Editing Information for {{ name }}</h1>
+  </head>
+  <body>
+    {% if data %}
+    <form name="Form" action="/student_data" method="POST">
+      <div>
+        <label for="first_name">First Name: </label>
+        <input type="first name" name="first_name" id="first_name" pattern="[A-z]{1}[A-z ]+" value="{{ data[0].first_name }}" placeholder="First Name" required>
+      </div>
+      <div>
+        <label for="last_name">Last Name: </label>
+        <input type="last name" name="last_name" id="last_name" pattern="[A-z]{1}[A-z ]+" value="{{ data[0].last_name }}" placeholder="Last Name" required>
+      </div>
+      <div>
+        <label for="email">Email: </label>
+        <input type="email" name="email" id="email" pattern="[A-z0-9.]+[@][A-z0-9]{1,}[.]+[A-z]{2,}" value="{{ data[0].email }}" placeholder="email" required>
+      </div>
+      <div>
+        <label for="beltSize">Belt Size: </label>
+        <input type="number" inputmode="numeric" name="beltSize" id="beltSize" pattern="[0-9]+" placeholder="Belt Size" value="{{ data[0].belt_size }}" required>
+      </div>
+      <div class="select-wrapper">
+        <select id="select" name="beltColor" required>
+          <optgroup label="Current Belt color">
+            <option value="{{ belt_color }}">{{ data[0].belt_color }}</option>
+          </optgroup>
+          <optgroup label="Little Dragons">
+            <option value="Dragons White">Dragons White</option>
+            <option value="Dragons Gold">Dragons Gold</option>
+            <option value="Dragons Orange">Dragons Orange</option>
+            <option value="Dragons Green">Dragons Green</option>
+            <option value="Dragons Purple">Dragons Purple</option>
+            <option value="Dragons Blue">Dragons Blue</option>
+            <option value="Dragons Red">Dragons Red</option>
+            <option value="Dragons Brown">Dragons Brown</option>
+          </optgroup>
+          <optgroup label="Exclusive">
+              <option value="White" selected="selected">White</option>
+              <option value="Gold">Gold</option>
+              <option value="Orange">Orange</option>
+              <option value="High Orange">High Orange</option>
+              <option value="Green">Green</option>
+              <option value="High Green">High Green</option>
+              <option value="Purple">Purple</option>
+              <option value="High Purple">High Purple</option>
+              <option value="Blue">Blue</option>
+              <option value="High Blue">High Blue</option>
+              <option value="Red">Red</option>
+              <option value="High Red">High Red</option>
+              <option value="Brown">Brown</option>
+              <option value="High Brown">High Brown</option>
+          </optgroup>
+        </select>
+      </div>
+      <div>
+        <input type="submit" name="Submit" value="Save">
+      </div>
+    </form>
+    {% endif %}
+  </body>
+</html>

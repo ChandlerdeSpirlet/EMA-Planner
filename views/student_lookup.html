@@ -2,6 +2,9 @@
     <title>Class Lookup</title>
     {% extends 'nav_bar.html' %}
     {% block content %}
+    {% if alert_message != '' %}
+        <script>alert('{{ alert_message }}')</script>
+    {% endif %}
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="https://ema-planner.herokuapp.com/views/ema.png">
     <style>
@@ -159,6 +162,7 @@
         var data1 = document.getElementsByName('name_data_maybe')[0].content;
         function parseNames(name_data){
             var name_arr = []
+            name_data = name_data.substring(1, name_data.length);
             while (name_data.length > 0){
                 if (name_data.indexOf('  ') != -1){
                     var idx = name_data.indexOf('  ');

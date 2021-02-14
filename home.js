@@ -813,7 +813,8 @@ router.get('/student_lookup', (req, res) => {
   db.any(name_query)
     .then(function (rows) {
       res.render('student_lookup', {
-        data: rows
+        data: rows,
+        alert_message: ''
       })
     })
     .catch(function (err) {
@@ -822,9 +823,43 @@ router.get('/student_lookup', (req, res) => {
     })
 })
 
+router.get('/student_data', (req, res) => {
+  res.render('student_data', {
+    data: '',
+    name: ''
+  })
+})
+
+function parseStudentInfo(info){
+  var stud_info = ['', 0];
+  stud_info[0] = info.substring(0, info.indexOf(' - '));
+  stud_info[1] = info.substring(info.indexOf(' - ') + 3, info.length);
+  return stud_info;
+}
+
 router.post('/student_lookup', (req, res) => {
-  //Add button to edit on PaySimple
-  //Add fields to edit all info. Pre-fill with what is in db
+  var items = {
+    student_info: req.sanitize('result').trim()
+  }
+  const stud_info = parseStudentInfo(items.student_info);
+  const studentInfoQuery = "select * from student_list where barcode = $1 and first_name || ' ' || last_name = $2;";
+  db.any(studentInfoQuery, [stud_info[1], stud_info[2]])
+    .then(rows => {
+      res.render('student_data', {
+        data: rows,
+        name: items.student_info
+      })
+    })
+    .catch(err => {
+      res.render('student_lookup', {
+        data: '',
+        alert_message: "Error: Could not retrieve student info for " + items.student_info + ". Please refresh the page and try again."
+      })
+    })
+})
+
+router.post('/student_data', (req, res) => {
+  
 })
 
 router.get('/create_test', (req, res) => {
