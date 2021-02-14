@@ -421,72 +421,72 @@ function parseBelt(current_color, is_promotion) { //returns belt color, level, a
       case 'White':
         belt_info[0] = 'White';
         belt_info[1] = 'Basic';
-        belt_info[1] = 0;
+        belt_info[2] = 0;
         break;
       case 'Gold':
         belt_info[0] = 'Gold';
         belt_info[1] = 'Basic';
-        belt_info[1] = 0;
+        belt_info[2] = 0;
         break;
       case 'Orange':
         belt_info[0] = 'Orange';
         belt_info[1] = 'Level 1';
-        belt_info[1] = 1;
+        belt_info[2] = 1;
         break;
       case 'High Orange':
         belt_info[0] = 'High Orange';
         belt_info[1] = 'Level 1';
-        belt_info[1] = 1;
+        belt_info[2] = 1;
         break;
       case 'Green':
         belt_info[0] = 'Green';
         belt_info[1] = 'Level 1';
-        belt_info[1] = 1;
+        belt_info[2] = 1;
         break;
       case 'High Green':
         belt_info[0] = 'High Green';
         belt_info[1] = 'Level 1';
-        belt_info[1] = 1;
+        belt_info[2] = 1;
         break;
       case 'Purple':
         belt_info[0] = 'Purple';
         belt_info[1] = 'Level 2';
-        belt_info[1] = 2;
+        belt_info[2] = 2;
         break;
       case 'High Purple':
         belt_info[0] = 'High Purple';
         belt_info[1] = 'Level 2';
-        belt_info[1] = 2;
+        belt_info[2] = 2;
         break;
       case 'Blue':
         belt_info[0] = 'Blue';
         belt_info[1] = 'Level 2';
-        belt_info[1] = 2;
+        belt_info[2] = 2;
         break;
       case 'High Blue':
         belt_info[0] = 'High Blue';
         belt_info[1] = 'Level 2';
-        belt_info[1] = 2;
+        belt_info[2] = 2;
         break;
       case 'Red':
         belt_info[0] = 'Red';
         belt_info[1] = 'Level 3';
-        belt_info[1] = 3;
+        belt_info[2] = 3;
         break;
       case 'High Red':
         belt_info[0] = 'High Red';
         belt_info[1] = 'Level 3';
-        belt_info[1] = 3;
+        belt_info[2] = 3;
         break;
       case 'Brown':
         belt_info[0] = 'Brown';
         belt_info[1] = 'Level 3';
-        belt_info[1] = 3;
+        belt_info[2] = 3;
         break;
       case 'High Brown':
         belt_info[0] = 'High Brown';
         belt_info[1] = 'Level 3';
-        belt_info[1] = 3;
+        belt_info[2] = 3;
         break;
       case 'Prep':
         belt_info[0] = 'Prep';
