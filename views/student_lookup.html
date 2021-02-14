@@ -147,7 +147,7 @@
         <h1>Student Lookup Tool</h1>
         <h3>Lookup students by name</h3>
     </head>
-    <meta name="name_data_maybe" content="{% for student in data %} {{ student.student_name }} {% endfor %}" />
+    <meta name="name_data_maybe" content="{% for student in data %} {{ student.student_name }} - {{ student.barcode }} {% endfor %}" />
     <form autocomplete="off" action="/student_lookup" method="post" name="form1">
         <div class="autocomplete" style="width:70%;">
             <input id="result" name="result" type="text" placeholder="Student First Name" value="{{ result }}"/>
