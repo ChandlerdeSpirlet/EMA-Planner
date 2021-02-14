@@ -7,10 +7,12 @@ var flash = require('connect-flash')
 
 const app = express()
 app.use(flash());
-app.use(session({ cookie: { maxAge: 60000 }, 
+app.use(session({
+  cookie: { maxAge: 60000 },
   secret: 'secret_key',
-  resave: false, 
-  saveUninitialized: false}));
+  resave: false,
+  saveUninitialized: false
+}));
 const port = process.env.PORT
 // const port = 5000;
 const router = express.Router()
@@ -44,7 +46,7 @@ app.use(session({
 
 app.use(flash({ sessionKeyName: 'ema-Planner' }))
 
-function convertToMoney (amount) {
+function convertToMoney(amount) {
   const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -244,6 +246,271 @@ router.post('/add_student', function (req, res) {
       console.log('ERROR is ' + err)
     })
 })
+
+function parseBelt(current_color, is_promotion) { //returns belt color, level, and belt_order value
+  var belt_info = ['', '', -1]
+  if (is_promotion) {
+    switch (current_color) {
+      case 'Dragons White':
+        belt_info[0] = 'Dragons Gold';
+        belt_info[1] = 'Dragons';
+        belt_info[2] = -1;
+        break;
+      case 'Dragons Gold':
+        belt_info[0] = 'Dragons Orange';
+        belt_info[1] = 'Dragons';
+        belt_info[2] = -1;
+        break;
+      case 'Dragons Orange':
+        belt_info[0] = 'Dragons Green';
+        belt_info[1] = 'Dragons';
+        belt_info[2] = -1;
+        break;
+      case 'Dragons Green':
+        belt_info[0] = 'Dragons Purple';
+        belt_info[1] = 'Dragons';
+        belt_info[2] = -1;
+        break;
+      case 'Dragons Purple':
+        belt_info[0] = 'Dragons Blue';
+        belt_info[1] = 'Dragons';
+        belt_info[2] = -1;
+        break;
+      case 'Dragons Blue':
+        belt_info[0] = 'Dragons Red';
+        belt_info[1] = 'Dragons';
+        belt_info[2] = -1;
+        break;
+      case 'Dragons Red':
+        belt_info[0] = 'Dragons Brown';
+        belt_info[1] = 'Dragons';
+        belt_info[2] = -1;
+        break;
+      case 'Dragons Brown':
+        belt_info[0] = 'White';
+        belt_info[1] = 'Basic';
+        belt_info[2] = 0;
+        break;
+      case 'White':
+        belt_info[0] = 'Gold';
+        belt_info[1] = 'Basic';
+        belt_info[1] = 0;
+        break;
+      case 'Gold':
+        belt_info[0] = 'Orange';
+        belt_info[1] = 'Level 1';
+        belt_info[1] = 1;
+        break;
+      case 'Orange':
+        belt_info[0] = 'High Orange';
+        belt_info[1] = 'Level 1';
+        belt_info[1] = 1;
+        break;
+      case 'High Orange':
+        belt_info[0] = 'Green';
+        belt_info[1] = 'Level 1';
+        belt_info[1] = 1;
+        break;
+      case 'Green':
+        belt_info[0] = 'High Green';
+        belt_info[1] = 'Level 1';
+        belt_info[1] = 1;
+        break;
+      case 'High Green':
+        belt_info[0] = 'Purple';
+        belt_info[1] = 'Level 2';
+        belt_info[1] = 2;
+        break;
+      case 'Purple':
+        belt_info[0] = 'High Purple';
+        belt_info[1] = 'Level 2';
+        belt_info[1] = 2;
+        break;
+      case 'High Purple':
+        belt_info[0] = 'Blue';
+        belt_info[1] = 'Level 2';
+        belt_info[1] = 2;
+        break;
+      case 'Blue':
+        belt_info[0] = 'High Blue';
+        belt_info[1] = 'Level 2';
+        belt_info[1] = 2;
+        break;
+      case 'High Blue':
+        belt_info[0] = 'Red';
+        belt_info[1] = 'Level 3';
+        belt_info[1] = 3;
+        break;
+      case 'Red':
+        belt_info[0] = 'High Red';
+        belt_info[1] = 'Level 3';
+        belt_info[1] = 3;
+        break;
+      case 'High Red':
+        belt_info[0] = 'Brown';
+        belt_info[1] = 'Level 3';
+        belt_info[1] = 3;
+        break;
+      case 'Brown':
+        belt_info[0] = 'High Brown';
+        belt_info[1] = 'Level 3';
+        belt_info[1] = 3;
+        break;
+      case 'High Brown':
+        belt_info[0] = 'Prep';
+        belt_info[1] = 'Prep';
+        belt_info[1] = 4;
+        break;
+      case 'Prep':
+        belt_info[0] = 'Conditional';
+        belt_info[1] = 'Conditional';
+        belt_info[2] = 4;
+        break;
+      case 'Conditional':
+        belt_info[0] = 'Black Belt';
+        belt_info[1] = 'Black Belt';
+        belt_info[2] = 5;
+        break;
+      default:
+        console.log('Unknown belt color: ' + belt_color);
+        belt_info = ['?', '?', 999];
+        break;
+    }
+  } else {
+    switch (current_color) {
+      case 'Dragons White':
+        belt_info[0] = 'Dragons White';
+        belt_info[1] = 'Dragons';
+        belt_info[2] = -1;
+        break;
+      case 'Dragons Gold':
+        belt_info[0] = 'Dragons Gold';
+        belt_info[1] = 'Dragons';
+        belt_info[2] = -1;
+        break;
+      case 'Dragons Orange':
+        belt_info[0] = 'Dragons Orange';
+        belt_info[1] = 'Dragons';
+        belt_info[2] = -1;
+        break;
+      case 'Dragons Green':
+        belt_info[0] = 'Dragons Green';
+        belt_info[1] = 'Dragons';
+        belt_info[2] = -1;
+        break;
+      case 'Dragons Purple':
+        belt_info[0] = 'Dragons Purple';
+        belt_info[1] = 'Dragons';
+        belt_info[2] = -1;
+        break;
+      case 'Dragons Blue':
+        belt_info[0] = 'Dragons Blue';
+        belt_info[1] = 'Dragons';
+        belt_info[2] = -1;
+        break;
+      case 'Dragons Red':
+        belt_info[0] = 'Dragons Red';
+        belt_info[1] = 'Dragons';
+        belt_info[2] = -1;
+        break;
+      case 'Dragons Brown':
+        belt_info[0] = 'Dragons Brown';
+        belt_info[1] = 'Dragons';
+        belt_info[2] = -1;
+        break;
+      case 'White':
+        belt_info[0] = 'White';
+        belt_info[1] = 'Basic';
+        belt_info[1] = 0;
+        break;
+      case 'Gold':
+        belt_info[0] = 'Gold';
+        belt_info[1] = 'Basic';
+        belt_info[1] = 0;
+        break;
+      case 'Orange':
+        belt_info[0] = 'Orange';
+        belt_info[1] = 'Level 1';
+        belt_info[1] = 1;
+        break;
+      case 'High Orange':
+        belt_info[0] = 'High Orange';
+        belt_info[1] = 'Level 1';
+        belt_info[1] = 1;
+        break;
+      case 'Green':
+        belt_info[0] = 'Green';
+        belt_info[1] = 'Level 1';
+        belt_info[1] = 1;
+        break;
+      case 'High Green':
+        belt_info[0] = 'High Green';
+        belt_info[1] = 'Level 1';
+        belt_info[1] = 1;
+        break;
+      case 'Purple':
+        belt_info[0] = 'Purple';
+        belt_info[1] = 'Level 2';
+        belt_info[1] = 2;
+        break;
+      case 'High Purple':
+        belt_info[0] = 'High Purple';
+        belt_info[1] = 'Level 2';
+        belt_info[1] = 2;
+        break;
+      case 'Blue':
+        belt_info[0] = 'Blue';
+        belt_info[1] = 'Level 2';
+        belt_info[1] = 2;
+        break;
+      case 'High Blue':
+        belt_info[0] = 'High Blue';
+        belt_info[1] = 'Level 2';
+        belt_info[1] = 2;
+        break;
+      case 'Red':
+        belt_info[0] = 'Red';
+        belt_info[1] = 'Level 3';
+        belt_info[1] = 3;
+        break;
+      case 'High Red':
+        belt_info[0] = 'High Red';
+        belt_info[1] = 'Level 3';
+        belt_info[1] = 3;
+        break;
+      case 'Brown':
+        belt_info[0] = 'Brown';
+        belt_info[1] = 'Level 3';
+        belt_info[1] = 3;
+        break;
+      case 'High Brown':
+        belt_info[0] = 'High Brown';
+        belt_info[1] = 'Level 3';
+        belt_info[1] = 3;
+        break;
+      case 'Prep':
+        belt_info[0] = 'Prep';
+        belt_info[1] = 'Prep';
+        belt_info[2] = 4;
+        break;
+      case 'Conditional':
+        belt_info[0] = 'Conditional';
+        belt_info[1] = 'Conditional';
+        belt_info[2] = 4;
+        break;
+      case 'Black Belt':
+        belt_info[0] = 'Black Belt';
+        belt_info[1] = 'Black Belt';
+        belt_info[2] = 5;
+        break;
+      default:
+        console.log('Unknown belt color: ' + belt_color);
+        belt_info = ['?', '?', 999];
+        break;
+    }
+  }
+  return belt_info;
+}
 
 router.get('/adminView', function (req, res) {
   STRIPE_API.getAllProductsAndPlans().then(products => {
@@ -581,7 +848,7 @@ router.post('/create_test', (req, res) => {
   console.log('item.time: ' + item.time);
   const new_test_query = "insert into test_instance (level, test_date, test_time) values (($1)::int, to_date($2, 'Month DD, YYYY'), ($3)::time)";
   db.any(new_test_query, [item.level, built_date, item.time])
-    .then(function(rows){
+    .then(function (rows) {
       switch (item.level) {
         case '-1':
           res.render('create_test', {
@@ -620,7 +887,7 @@ router.post('/create_test', (req, res) => {
           break;
       }
     })
-    .catch(function(err){
+    .catch(function (err) {
       console.log("Error in creating test: " + err);
       req.flash('error', 'Test not created. ERR: ' + err);
       res.render('create_test', {
@@ -630,7 +897,7 @@ router.post('/create_test', (req, res) => {
 })
 
 router.get('/email_lookup', (req, res) => {
-  if (req.headers['x-forwarded-proto'] != 'https'){
+  if (req.headers['x-forwarded-proto'] != 'https') {
     res.redirect('https://ema-planner.herokuapp.com/email_lookup');
   } else {
     res.render('email_lookup', {
@@ -653,57 +920,57 @@ router.get('/classes_email/(:email)', (req, res) => {
   const class_query = "select s.student_name, s.email, s.class_check, s.class_session_id, to_char(c.starts_at, 'Month') || ' ' || to_char(c.starts_at, 'DD') || ' at ' || to_char(c.starts_at, 'HH:MI') as class_instance, c.starts_at, c.class_id from classes c, class_signups s where s.email = $1 and s.class_session_id = c.class_id order by c.starts_at;";
   db.any(class_query, [req.params.email])
     .then(classes => {
-      if (classes.lenth == 0){
+      if (classes.lenth == 0) {
         db.any(test_query, [req.params.email])
-        .then(tests => {
-          if (tests.length == 0){
+          .then(tests => {
+            if (tests.length == 0) {
+              res.render('email_lookup', {
+                email: req.params.email,
+                alert_message: 'No classes or tests associated with the email ' + req.params.email
+              })
+            } else {
+              db.any(test_query, [req.params.email])
+                .then(tests => {
+                  res.render('classes_email', {
+                    email: req.params.email,
+                    class_data: classes,
+                    test_data: tests,
+                    alert_message: ''
+                  })
+                })
+                .catch(err => {
+                  console.log('Unable to pull in tests. ERROR: ' + err);
+                  res.render('email_lookup', {
+                    email: req.params.email,
+                    alert_message: 'Database issue pulling in tests. Please see a staff member.'
+                  })
+                })
+            }
+          })
+          .catch(err => {
+            console.log('Unable to pull in tests. ERROR: ' + err);
             res.render('email_lookup', {
               email: req.params.email,
-              alert_message: 'No classes or tests associated with the email ' + req.params.email
+              alert_message: 'Database issue pulling in tests. Please see a staff member.'
             })
-          } else {
-            db.any(test_query, [req.params.email])
-              .then(tests => {
-                res.render('classes_email', {
-                  email: req.params.email,
-                  class_data: classes,
-                  test_data: tests,
-                  alert_message: ''
-                })
-              })
-              .catch(err => {
-                console.log('Unable to pull in tests. ERROR: ' + err);
-                res.render('email_lookup', {
-                  email: req.params.email,
-                  alert_message: 'Database issue pulling in tests. Please see a staff member.'
-                })
-              })
-          }
-        })
-        .catch(err => {
-          console.log('Unable to pull in tests. ERROR: ' + err);
-          res.render('email_lookup', {
-            email: req.params.email,
-            alert_message: 'Database issue pulling in tests. Please see a staff member.'
           })
-        })
       } else {
         db.any(test_query, [req.params.email])
-        .then(tests => {
-          res.render('classes_email', {
-            email: req.params.email,
-            class_data: classes,
-            test_data: tests,
-            alert_message: ''
+          .then(tests => {
+            res.render('classes_email', {
+              email: req.params.email,
+              class_data: classes,
+              test_data: tests,
+              alert_message: ''
+            })
           })
-        })
-        .catch(err => {
-          console.log('Unable to pull in tests. ERROR: ' + err);
-          res.render('email_lookup', {
-            email: req.params.email,
-            alert_message: 'Database issue pulling in tests. Please see a staff member.'
+          .catch(err => {
+            console.log('Unable to pull in tests. ERROR: ' + err);
+            res.render('email_lookup', {
+              email: req.params.email,
+              alert_message: 'Database issue pulling in tests. Please see a staff member.'
+            })
           })
-        })
       }
     })
     .catch(err => {
@@ -716,7 +983,7 @@ router.get('/classes_email/(:email)', (req, res) => {
 })
 
 app.get('/delete_instance/(:id)/(:email)/(:type)', (req, res) => {
-  switch (req.params.type){ //allows for addition of swat class
+  switch (req.params.type) { //allows for addition of swat class
     case 'test':
       const drop_test = "delete from test_signups where session_id = $1 and email = $2;";
       db.none(drop_test, [req.params.id, req.params.email])
@@ -733,21 +1000,21 @@ app.get('/delete_instance/(:id)/(:email)/(:type)', (req, res) => {
           })
         })
       break;
-    case 'class': 
-        const dropt_class = "delete from class_signups where class_check = $1 and email = $2;";
-        db.none(dropt_class, [req.params.id, req.params.email])
-          .then(rows => {
-            res.redirect('https://ema-planner.herokuapp.com/classes_email/' + req.params.email);
+    case 'class':
+      const dropt_class = "delete from class_signups where class_check = $1 and email = $2;";
+      db.none(dropt_class, [req.params.id, req.params.email])
+        .then(rows => {
+          res.redirect('https://ema-planner.herokuapp.com/classes_email/' + req.params.email);
+        })
+        .catch(err => {
+          console.log('Unable to delete class. ERR: ' + err);
+          res.render('classes_email', {
+            email: req.params.email,
+            class_data: '',
+            test_data: '',
+            alert_message: 'Unable to delete class. Please refresh and try again. Otherwise, please see a staff member.'
           })
-          .catch(err => {
-            console.log('Unable to delete class. ERR: ' + err);
-            res.render('classes_email', {
-              email: req.params.email,
-              class_data: '',
-              test_data: '',
-              alert_message: 'Unable to delete class. Please refresh and try again. Otherwise, please see a staff member.'
-            })
-          })
+        })
       break;
     default:
       console.log('Unknown delete type.');
@@ -757,7 +1024,7 @@ app.get('/delete_instance/(:id)/(:email)/(:type)', (req, res) => {
 })
 
 //TESTING SIGNUP SECTION
-function parse_name(name){
+function parse_name(name) {
   const seperator = name.indexOf('/');
   const values = [];
   values.push(name.substring(0, seperator));
@@ -766,7 +1033,7 @@ function parse_name(name){
 }
 
 router.get('/student_tests', (req, res) => {
-  if (req.headers['x-forwarded-proto'] != 'https'){
+  if (req.headers['x-forwarded-proto'] != 'https') {
     res.redirect('https://ema-planner.herokuapp.com/student_tests');
   } else {
     res.render('student_tests', {
@@ -775,7 +1042,7 @@ router.get('/student_tests', (req, res) => {
 })
 
 router.get('/testing_signup_dragons', (req, res) => {
-  if (req.headers['x-forwarded-proto'] != 'https'){
+  if (req.headers['x-forwarded-proto'] != 'https') {
     res.redirect('https://ema-planner.herokuapp.com/testing_signup_dragons');
   } else {
     const name_query = "select * from get_names(-1);";
@@ -806,7 +1073,7 @@ router.get('/testing_signup_dragons', (req, res) => {
 })
 
 router.get('/testing_signup_basic', (req, res) => {
-  if (req.headers['x-forwarded-proto'] != 'https'){
+  if (req.headers['x-forwarded-proto'] != 'https') {
     res.redirect('https://ema-planner.herokuapp.com/testing_signup_basic');
   } else {
     const name_query = "select * from get_names(0);";
@@ -837,7 +1104,7 @@ router.get('/testing_signup_basic', (req, res) => {
 })
 
 router.get('/testing_signup_level1', (req, res) => {
-  if (req.headers['x-forwarded-proto'] != 'https'){
+  if (req.headers['x-forwarded-proto'] != 'https') {
     res.redirect('https://ema-planner.herokuapp.com/testing_signup_level1');
   } else {
     const name_query = "select * from get_names(1);";
@@ -868,7 +1135,7 @@ router.get('/testing_signup_level1', (req, res) => {
 })
 
 router.get('/testing_signup_level2', (req, res) => {
-  if (req.headers['x-forwarded-proto'] != 'https'){
+  if (req.headers['x-forwarded-proto'] != 'https') {
     res.redirect('https://ema-planner.herokuapp.com/testing_signup_level2');
   } else {
     const name_query = "select * from get_names(2);";
@@ -899,7 +1166,7 @@ router.get('/testing_signup_level2', (req, res) => {
 })
 
 router.get('/testing_signup_level3', (req, res) => {
-  if (req.headers['x-forwarded-proto'] != 'https'){
+  if (req.headers['x-forwarded-proto'] != 'https') {
     res.redirect('https://ema-planner.herokuapp.com/testing_signup_level3');
   } else {
     const name_query = "select * from get_names(1);";
@@ -930,7 +1197,7 @@ router.get('/testing_signup_level3', (req, res) => {
 })
 
 router.get('/testing_signup_weapons', (req, res) => {
-  if (req.headers['x-forwarded-proto'] != 'https'){
+  if (req.headers['x-forwarded-proto'] != 'https') {
     res.redirect('https://ema-planner.herokuapp.com/testing_signup_weapons');
   } else {
     const name_query = "select * from get_names(1);";
@@ -1139,24 +1406,24 @@ router.get('/testing_preview', (req, res) => {
   })
 })
 
-function belt_parser(color){
+function belt_parser(color) {
   const regex_dragon = /Dragons/g;
   const regex_basic = /^White|^Gold/g;
   const regex_level1 = /^Orange|^High Orange|^Green|^High Green/g;
   const regex_level2 = /^Purple|^High Purple|^Blue|^High Blue/g;
   const regex_level3 = /^Red|^High Red|^Brown|^High Brown/g;
   const regex_weapons = /^Weapons/g;
-  if (regex_dragon.test(color)){
+  if (regex_dragon.test(color)) {
     return 'Dragons';
-  } else if (regex_basic.test(color)){
+  } else if (regex_basic.test(color)) {
     return 'Basic';
-  } else if (regex_level1.test(color)){
+  } else if (regex_level1.test(color)) {
     return 'Level 1';
-  } else if (regex_level2.test(color)){
+  } else if (regex_level2.test(color)) {
     return 'Level 2';
-  } else if (regex_level3.test(color)){
+  } else if (regex_level3.test(color)) {
     return 'Level 3';
-  } else if (regex_weapons.test(color)){
+  } else if (regex_weapons.test(color)) {
     return 'Weapons';
   } else {
     return 'Unknown';
@@ -1172,11 +1439,11 @@ router.post('/test_preview', (req, res) => {
     barcode: req.sanitize('barcode').trim(),
     button: req.sanitize('button')
   };
-  if (item.button == 'Submit'){
+  if (item.button == 'Submit') {
     const test_instance = "select TO_CHAR(test_date, 'Month') || ' ' || extract(DAY from test_date) || ' at ' || to_char(test_time, 'HH12:MI PM') as test_instance from test_instance where id = $1;";
     db.any(test_instance, [item.test_id])
       .then(rows => {
-        if (item.email == 'exclusivemartialarts@gmail.com'){
+        if (item.email == 'exclusivemartialarts@gmail.com') {
           res.render('testing_confirmed', {
             student_name: 'Master Young',
             email: 'master_young@ninja.com',
@@ -1210,7 +1477,7 @@ router.post('/test_preview', (req, res) => {
   } else {
     const name_query = "select * from get_names($1);";
     const tests = "select TO_CHAR(test_date, 'Month') || ' ' || extract(DAY from test_date) || ' at ' || to_char(test_time, 'HH12:MI PM') as test_instance, id from test_instance where level = $1 and test_date >= (CURRENT_DATE - INTERVAL '7 hour')::date;";
-    switch (belt_parser(item.belt_color)){
+    switch (belt_parser(item.belt_color)) {
       case 'Dragons':
         db.any(name_query, [-1])
           .then(rows_names => {
@@ -1363,13 +1630,13 @@ router.post('/test_preview', (req, res) => {
 })
 //END TEST SIGNUP SECTION
 router.get('/dragons_signup', (req, res) => {
-  if (req.headers['x-forwarded-proto'] != 'https'){
+  if (req.headers['x-forwarded-proto'] != 'https') {
     res.redirect('https://ema-planner.herokuapp.com/dragons_signup');
   } else {
     const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, level from classes where level = -1 and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
     db.any(class_query)
       .then(rows => {
-        if (rows.length == 0){
+        if (rows.length == 0) {
           res.render('temp_classes', {
             level: 'dragons'
           })
@@ -1399,13 +1666,13 @@ router.get('/dragons_signup', (req, res) => {
 })
 
 router.get('/basic_signup', (req, res) => {
-  if (req.headers['x-forwarded-proto'] != 'https'){
+  if (req.headers['x-forwarded-proto'] != 'https') {
     res.redirect('https://ema-planner.herokuapp.com/basic_signup');
   } else {
     const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, level from classes where level in (0, 0.5) and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
     db.any(class_query)
       .then(rows => {
-        if (rows.length == 0){
+        if (rows.length == 0) {
           res.render('temp_classes', {
             level: 'basic'
           })
@@ -1435,13 +1702,13 @@ router.get('/basic_signup', (req, res) => {
 })
 
 router.get('/level1_signup', (req, res) => {
-  if (req.headers['x-forwarded-proto'] != 'https'){
+  if (req.headers['x-forwarded-proto'] != 'https') {
     res.redirect('https://ema-planner.herokuapp.com/level1_signup');
   } else {
     const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, level from classes where level in (1, 1.5) and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
     db.any(class_query)
       .then(rows => {
-        if (rows.length == 0){
+        if (rows.length == 0) {
           res.render('temp_classes', {
             level: 'level 1'
           })
@@ -1471,13 +1738,13 @@ router.get('/level1_signup', (req, res) => {
 })
 
 router.get('/level2_signup', (req, res) => {
-  if (req.headers['x-forwarded-proto'] != 'https'){
+  if (req.headers['x-forwarded-proto'] != 'https') {
     res.redirect('https://ema-planner.herokuapp.com/level2_signup');
   } else {
     const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, level from classes where level = 2 and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
     db.any(class_query)
       .then(rows => {
-        if (rows.length == 0){
+        if (rows.length == 0) {
           res.render('temp_classes', {
             level: 'level 2'
           })
@@ -1507,13 +1774,13 @@ router.get('/level2_signup', (req, res) => {
 })
 
 router.get('/level3_signup', (req, res) => {
-  if (req.headers['x-forwarded-proto'] != 'https'){
+  if (req.headers['x-forwarded-proto'] != 'https') {
     res.redirect('https://ema-planner.herokuapp.com/level3_signup');
   } else {
     const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, level from classes where level = 3 and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
     db.any(class_query)
       .then(rows => {
-        if (rows.length == 0){
+        if (rows.length == 0) {
           res.render('temp_classes', {
             level: 'level 3'
           })
@@ -1543,13 +1810,13 @@ router.get('/level3_signup', (req, res) => {
 })
 
 router.get('/bb_signup', (req, res) => {
-  if (req.headers['x-forwarded-proto'] != 'https'){
+  if (req.headers['x-forwarded-proto'] != 'https') {
     res.redirect('https://ema-planner.herokuapp.com/bb_signup');
   } else {
     const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, level from classes where level = 5 and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
     db.any(class_query)
       .then(rows => {
-        if (rows.length == 0){
+        if (rows.length == 0) {
           res.render('temp_classes', {
             level: 'black belt'
           })
@@ -1662,18 +1929,18 @@ router.post('/bb_signup', (req, res) => {
   res.redirect(redir_link);
 })
 
-function parseID(id_set){
+function parseID(id_set) {
   var set_id = [];
-    while (id_set.indexOf(",") != -1){
-      var id_idx = id_set.indexOf(",");
-      var id = id_set.substring(0, id_idx);
-      id_set = id_set.substring(id_idx + 1, id_set.length);
-      set_id.push(Number(id));
-    }
-    if ((id_set.indexOf(",") == -1) && (id_set !== '')){
-      set_id.push(Number(id_set));
-      id_set = '';
-    }
+  while (id_set.indexOf(",") != -1) {
+    var id_idx = id_set.indexOf(",");
+    var id = id_set.substring(0, id_idx);
+    id_set = id_set.substring(id_idx + 1, id_set.length);
+    set_id.push(Number(id));
+  }
+  if ((id_set.indexOf(",") == -1) && (id_set !== '')) {
+    set_id.push(Number(id_set));
+    id_set = '';
+  }
   return set_id;
 }
 
@@ -1690,7 +1957,7 @@ router.get('/process_classes/(:student_name)/(:email)/(:belt_group)/(:id_set)', 
         console.log('Err: with element ' + element + '. Err: ' + err);
       })
   });
-  switch(id_set.length){
+  switch (id_set.length) {
     case 1:
       var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance from classes where class_id = $1;"
       db.any(end_query, [id_set[0]])
@@ -1814,20 +2081,20 @@ app.post('/webook_ps', (req, res) => {
         })
       break;
     case 'customer_created':
-        const fname = req.body.first_name;
-        const lname = req.body.last_name;
-        const barcode = req.body.customer_id;
-        const email = req.body.email;
-        const add_query = 'insert into student_list (barcode, first_name, last_name, belt_color, belt_size, email, level_name, belt_order) value ($1, $2, $3, $4, $5, $6, $7, $8);';
-        db.none(add_query, [barcode, fname, lname, 'White', -1, email, 'Basic', 0])
-          .then(row => {
-            console.log('Submitted a new student');
-            res.status(200).send(`Webhook customer_created received.`);
-          })
-          .catch(err => {
-            console.log('customer_created webhook err: ' + err);
-            res.status(400).send(`Webhook Error: ${err.message}`);
-          })
+      const fname = req.body.first_name;
+      const lname = req.body.last_name;
+      const barcode = req.body.customer_id;
+      const email = req.body.email;
+      const add_query = 'insert into student_list (barcode, first_name, last_name, belt_color, belt_size, email, level_name, belt_order) value ($1, $2, $3, $4, $5, $6, $7, $8);';
+      db.none(add_query, [barcode, fname, lname, 'White', -1, email, 'Basic', 0])
+        .then(row => {
+          console.log('Submitted a new student');
+          res.status(200).send(`Webhook customer_created received.`);
+        })
+        .catch(err => {
+          console.log('customer_created webhook err: ' + err);
+          res.status(400).send(`Webhook Error: ${err.message}`);
+        })
       break;
     case 'customer_deleted':
       const studentCode = req.body.data.customer_id;
@@ -1844,7 +2111,7 @@ app.post('/webook_ps', (req, res) => {
     default:
       return response.status(400).end();
   }
-  res.json({received: true})
+  res.json({ received: true })
 })
 
 app.post('/webhook', (request, response) => {
@@ -1876,11 +2143,11 @@ app.post('/webhook', (request, response) => {
           console.log('charge.failed ended with err ' + err)
         })
       break
-      // create database, add details to database, have button on home with failed payments and the number of rows in db
-      // have resolved button that deletes from database
+    // create database, add details to database, have button on home with failed payments and the number of rows in db
+    // have resolved button that deletes from database
 
-      // break;
-      // ... handle other event types
+    // break;
+    // ... handle other event types
     default:
       // Unexpected event type
       return response.status(400).end()
