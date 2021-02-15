@@ -44,11 +44,29 @@
     .chip {
         display: inline-block;
         padding: 0 25px;
-        height: 50px;
+        height: 75px;
         font-size: 18px;
-        line-height: 50px;
+        line-height: 25px;
         border-radius: 25px;
         background-color: #f1f1f1;
+    }
+    .chip_pass {
+        display: inline-block;
+        padding: 0 25px;
+        height: 60px;
+        font-size: 18px;
+        line-height: 20px;
+        border-radius: 25px;
+        background-color: lightgreen;
+    }
+    .chip_fail {
+        display: inline-block;
+        padding: 0 25px;
+        height: 60px;
+        font-size: 18px;
+        line-height: 20px;
+        border-radius: 25px;
+        background-color: lightcoral;
     }
     .chip2 {
         display: inline-block;
@@ -192,8 +210,8 @@
         <h3>Passed</h3>
         {% for student in pass_status %}
           {% if student.pass_status == true %}
-            <div class="chip">
-              {{ student.stud_name }}<br>
+            <div class="chip_pass">
+              {{ student.student_name }}<br>
               {{ student.belt_color }}
             </div>
           {% endif %}
@@ -202,8 +220,8 @@
         <h3>Failed</h3>
         {% for student in pass_status %}
           {% if student.pass_status == false %}
-            <div class="chip">
-              {{ student.stud_name }}<br>
+            <div class="chip_fail">
+              {{ student.student_name }}<br>
               {{ student.belt_color }}
             </div>
           {% endif %}
