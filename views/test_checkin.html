@@ -167,8 +167,9 @@
             <label for="result">Student's Name</label>
             <div class="autocomplete" style="width: 70%;">
               <input id="result" name="result" type="text" placeholder="Student First Name" value="{{ result }}">
-            </div><br>
-            <input type="submit" name="Submit" value="Check-In">
+            </div>
+            <br>
+            <input style="padding-top: 10px;" type="submit" name="Submit" value="Check-In">
           </form>
         </div>
         <hr>
@@ -188,29 +189,25 @@
         <br>
         <hr>
         <div>
-          <div class="column1">
-            <h3>Passed</h3>
-            {% for student in pass_status %}
-              {% if student.pass_status == true %}
-                <div class="chip">
-                  {{ student.stud_name }}<br>
-                  {{ student.belt_color }}
-                </div>
-              {% endif %}
-            {% endfor %}
-          </div>
-          <hr width="1" size="500">
-          <div class="column2">
-            <h3>Failed</h3>
-            {% for student in pass_status %}
-              {% if student.pass_status == false %}
-                <div class="chip">
-                  {{ student.stud_name }}<br>
-                  {{ student.belt_color }}
-                </div>
-              {% endif %}
-            {% endfor %}
-          </div>
+        <h3>Passed</h3>
+        {% for student in pass_status %}
+          {% if student.pass_status == true %}
+            <div class="chip">
+              {{ student.stud_name }}<br>
+              {{ student.belt_color }}
+            </div>
+          {% endif %}
+        {% endfor %}
+        <hr>
+        <h3>Failed</h3>
+        {% for student in pass_status %}
+          {% if student.pass_status == false %}
+            <div class="chip">
+              {{ student.stud_name }}<br>
+              {{ student.belt_color }}
+            </div>
+          {% endif %}
+        {% endfor %}
         </div>
       </div>
     </div>
