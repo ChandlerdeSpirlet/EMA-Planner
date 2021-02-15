@@ -874,9 +874,10 @@ router.get('/test_checkin/(:id)/(:level)', (req, res) => {
 router.post('/test_checkin', (req, res) => {
   const item = {
     test_id: req.sanitize('test_id').trim(),
-    level: req.sanitize('level').trim(),
-    stud_data: req.sanitize('result').trim
+    stud_data: req.sanitize('result').trim(),
+    level: req.sanitize('level').trim()
   }
+  console.log('item.stud_data: ' + item.stud_data);
   const stud_info = parseStudentInfo(item.stud_data);//name, barcode
   const insert_query = "insert into test_signups (student_name, test_id, belt_color, email, barcode) values ($1, $2, (select belt_color from student_list x where x.barcode = $3), (select email from student_list where barcode = $4), $5); on conflict (session_id) do nothing;";
   db.any(insert_query, [stud_info[0], item.test_id, stud_info[1], stud_info[1], stud_info[1]])
