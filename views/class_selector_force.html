@@ -57,7 +57,8 @@
                     <h3 style="font-size: x-large;">{{ class.class_month }} {{ class.class_day }}</h3> <h3>{{ class.class_time }} &mdash; {{ class.end_time }}</h3>
                 </button></a><br>
             {% endfor %}
-        {% else %}
+        {% endif %}
+        {% if data.length == 0 %}
             No classes can be found. Contact a system administrator. Error: c_s:Class
         {% endif %}
         </div>

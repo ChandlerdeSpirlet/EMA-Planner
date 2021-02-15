@@ -671,7 +671,6 @@ router.get('/class_selector_force/(:month)/(:day)', (req, res) => {
 
 router.get('/class_remove/(:barcode)/(:class_id)/(:class_level)/(:class_time)', (req, res) => {
   const remove_query = 'delete from student_classes where class_id = $1 and barcode = $2;'
-  const unsignup = 'update class_signups set checked_in = false where class_session_id'
   db.any(remove_query, [req.params.class_id, req.params.barcode])
     .then(function (rows) {
       res.redirect('https://ema-planner.herokuapp.com/class_checkin/' + req.params.class_id + '/' + req.params.class_level + '/' + req.params.class_time);
@@ -702,7 +701,7 @@ router.get('/update_checkin/(:barcode)/(:class_id)/(:class_level)/(:class_time)/
     })
 })
 
-router.get('/class_checkin/(:class_id)/(:class_level)/(:class_time)', (req, res) => { // query needs to look for barcode not in student_list, but in class_list
+router.get('/class_checkin/(:class_id)/(:class_level)/(:class_time)', (req, res) => {
   const query = "select distinct s.first_name || ' ' || s.last_name as student_name, s.barcode from student_list s, student_classes b where b.class_id = $1 and s.barcode in (select barcode from student_classes where class_id = $2)";
   const query_reserved = "select s.student_name, s.class_check, l.barcode from class_signups s, student_list l where s.student_name like '%' || l.first_name || ' ' || l.last_name || '%' and s.class_check = $1 and s.checked_in = false;";
   db.any(query_reserved, [req.params.class_id])
@@ -797,6 +796,160 @@ router.get('/class_lookup', (req, res) => {
   res.render('class_lookup', {
 
   })
+})
+
+router.get('/test_lookup', (req, res) => {
+  res.render('test_lookup', {
+
+  })
+})
+
+router.post('/test_lookup', (req, res) => {
+  const item = {
+    month: req.sanitize('month_select').trim(),
+    day: req.sanitize('day_select').trim()
+  }
+  const redir_link = 'test_selector_force/' + item.month + '/' + item.day;
+  res.redirect(redir_link);
+})
+
+router.get('/test_selector_force/(:month)/(:day)', (req, res) => {
+  const date_conversion = req.params.month + ' ' + req.params.day;
+  const test_info = "select to_char(test_date, 'Month') as test_month, to_char(test_date, 'DD') as test_day, to_char(test_time, 'HH:MI PM') as testing_time, id, level from test_instance where to_char(test_date, 'Month DD') = to_char(to_date($1, 'Month DD'), 'Month DD');"
+  db.any(test_info, [date_conversion])
+    .then(rows => {
+      res.render('test_selector', {
+        data: rows
+      })
+    })
+    .catch(err => {
+      console.log('error in getting tests ' + err);
+      res.redirect('home');
+    })
+})
+
+router.get('/test_checkin/(:id)/(:level)', (req, res) => {
+  const test_info = "select to_char(test_date, 'Month DD') as test_day, to_char(test_time, 'HH:MI PM') as testing_time, level from test_instance where id = $1;";
+  const student_query = "select distinct session_id, student_name, barcode, belt_color, pass_status from test_signups where test_id = $1 and pass_status is null;";
+  const pass_status = "select distinct session_id, student_name, barcode, belt_color, pass_status from test_signups where test_id = $1 and pass_status is not null;";
+  const stud_names = "select * from get_names($1);";
+  db.any(pass_status, [req.params.id])
+    .then(pass_status => {
+      db.any(student_query, [req.params.id])
+      .then(stud_rows => {
+        db.any(test_info, [req.params.id])
+          .then(rows => {
+            db.any(stud_names, [req.params.level])
+            .then(name_data => {
+              res.render('test_checkin', {
+                test_info: rows,
+                name_data: name_data,
+                pass_status: pass_status,
+                stud_info: stud_rows,
+                test_id: req.params.id,
+                level: req.params.level
+              })
+            })
+            .catch(err => {
+              console.log('Could not get names for search bar. ' + err);
+              res.redirect('home');
+            })
+          })
+          .catch(err => {
+            console.log('Could not get test info with id ' + req.params.id);
+            res.redirect('home');
+          })
+      })
+      .catch(err => {
+        console.log('Could not find tests with id ' + req.params.id);
+        res.redirect('home');
+      })
+    })
+    .catch(err => {
+      console.log('Could not get pass_status: ' + err);
+      res.redirect('home');
+    })
+})
+
+router.post('/test_checkin', (req, res) => {
+  const item = {
+    test_id: req.sanitize('test_id').trim(),
+    level: req.sanitize('level').trim(),
+    stud_data: req.sanitize('result').trim
+  }
+  const stud_info = parseStudentInfo(item.stud_data);//name, barcode
+  const insert_query = "insert into test_signups (student_name, test_id, belt_color, email, barcode) values ($1, $2, (select belt_color from student_list x where x.barcode = $3), (select email from student_list where barcode = $4), $5); on conflict (session_id) do nothing;";
+  db.any(insert_query, [stud_info[0], item.test_id, stud_info[1], stud_info[1], stud_info[1]])
+    .then(rows => {
+      res.redirect('test_checkin/' + item.test_id + '/' + item.level);
+    })
+    .catch(err => {
+      res.redirect('home');
+      console.log('Could not checkin to test.');
+    })
+})
+
+router.get('/test_remove/(:barcode)/(:test_id)', (req, res) => {
+  const remove_query = "delete from test_signups where barcode = $1 and test_id = $2;";
+  db.any(remove_query, [req.params.barcode, req.params.test_id])
+    .then(rows => {
+      res.redirect('https://ema-planner.herokuapp.com/test_checkin/' + req.params.test_id + '/' + req.params.barcode);
+    })
+    .catch('Could not remove person from test: ' + req.params.test_id + ', ' + req.params.barcode);
+    res.redirect('https://ema-planner.herokuapp.com/test_selector_force');
+})
+
+router.get('/update_test_checkin/(:barcode)/(:session_id)/(:test_id)/(:level)', (req, res) => {
+  const insert_query = "insert into student_tests (test_id, barcode) values ($1, $2) on conflict (session_id) do nothing;";
+  const update_status = "update test_signups set checked_in = true where session_id = $1";
+  db.any(insert_query, [req.params.test_id, req.params.barcode])
+    .then(rows => {
+      db.none(update_status, [req.params.session_id])
+        .then(rows => {
+          res.redirect('https://ema-planner.herokuapp.com/test_checkin/' + req.params.test_id + '/' + req.params.level);
+        })
+        .catch(err => {
+          console.log('Could not update checked_in status of ' + req.params.session_id + ': ' + err);
+          res.redirect('https://ema-planner.herokuapp.com/test_checkin/' + req.params.test_id + '/' + req.params.level);
+        })
+    })
+    .catch(err => {
+      console.log('Could not check in person with test_id, barcode ' + req.params.test_id + ', ' + req.params.barcode);
+      res.redirect('https://ema-planner.herokuapp.com/test_selector_force');
+    })
+})
+
+router.get('/pass_test/(:belt_color)/(:barcode)/(:test_id)/(:level)', (req, res) => {
+  const update_status = "update test_signups set pass_status = true where barcode = $1 and test_id = $2;";//color, level, order
+  const belt_info = parseBelt(req.params.belt_color, true);
+  const update_info = "update student_list set belt_color = $1, level_name = $2, belt_order = $3 where barcode = $4;";
+  db.any(update_status, [req.params.barcode, req.params.test_id])
+    .then(rows => {
+      db.any(update_info, [belt_info[0], belt_info[1], belt_info[2], req.params.barcode])
+        .then(rows => {
+          res.redirect('https://ema-planner.herokuapp.com/test_checkin/' + req.params.test_id + '/' + req.params.level);
+        })
+        .catch(err => {
+          console.log('Could not update belt info of student ' + req.params.barcode);
+
+        })
+    })
+    .catch(err => {
+      console.log('Could not update test status of student ' + req.params.barcode);
+      res.redirect('home');
+    })
+})
+
+router.get('/fail_test/(:barcode)/(:test_id)/(:level)', (req, res) => {
+  const update_status = "update test_signups set pass_status = false where barcode = $1 and test_id = $2;";
+  db.any(update_status, [req.params.barcode, req.params.test_id])
+    .then(rows => {
+      res.redirect('https://ema-planner.herokuapp.com/test_checkin/' + req.params.test_id + '/' + req.params.level);
+    })
+    .catch(err => {
+      console.log("Could not update test status of student " + req.params.barcode);
+      res.redirect('home');
+    })
 })
 
 router.post('/class_lookup', (req, res) => {

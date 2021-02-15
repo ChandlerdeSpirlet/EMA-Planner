@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
-    {% set local = 'Students' %}
+    {% set local = 'Tests' %}
     {% extends 'nav_bar.html' %}
     {% block content %}
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="https://ema-planner.herokuapp.com/views/ema.png">
-    <title>Select a Class</title>
+    <title>Select a Test</title>
     <style>
         * {
             font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
@@ -45,16 +45,16 @@
         }
     </style>
     <head>
-        <h1>Class Check-In</h1>
-        <h3>Select a class to check students in.</h3>
+        <h1>Test Check-In</h1>
+        <h3>Select a test to check students in.</h3>
     </head>
     <body>
         <div class="wrapper">
         {% if data %}
-            {% for class in data %}
-                <a href="/class_checkin/{{ class.class_id }}/{{ class.level }}/{{ class.class_month }} {{class.class_day }} {{ class.class_time }} - {{ class.end_time }}"><button class="button"><br>
-                    <h2 style="font-size: xx-large;">{% if class.level == -1 %} Little Dragons {% elif class.level == 0 %} Basic {% elif class.level == 0.5 %} Basic (Floor 2) {% elif class.level == 1 %} Level 1 {% elif class.level == 1.5 %} Level 1 (Floor 2) {% elif class.level == 2 %} Level 2 {% elif class.level == 3 %} Level 3 {% elif class.level == 4 %} Prep Belt {% elif class.level == 5 %} Black Belt {% elif class.level == 6 %} Open Mat {% elif class.level == 7 %} Weapons {% else %} Unknown {% endif %}</h2>
-                    <h3 style="font-size: x-large;">{{ class.class_month }} {{ class.class_day }}</h3> <h3>{{ class.class_time }} &mdash; {{ class.end_time }}</h3>
+            {% for test in data %}
+                <a href="/test_checkin/{{ test.id }}/{{ test.level }}"><button class="button"><br>
+                    <h2 style="font-size: xx-large;">{% if test.level == -1 %} Little Dragons {% elif test.level == 0 %} Basic {% elif test.level == 0.5 %} Basic (Floor 2) {% elif test.level == 1 %} Level 1 {% elif test.level == 1.5 %} Level 1 (Floor 2) {% elif test.level == 2 %} Level 2 {% elif test.level == 3 %} Level 3 {% elif test.level == 4 %} Prep Belt {% elif test.level == 5 %} Black Belt {% elif test.level == 6 %} Open Mat {% elif test.level == 7 %} Weapons {% else %} Unknown {% endif %}</h2>
+                    <h3 style="font-size: x-large;">{{ test.test_month }} {{ test.test_day }}</h3> <h3>{{ test.testing_time }}</h3>
                 </button></a><br>
             {% endfor %}
         {% endif %}

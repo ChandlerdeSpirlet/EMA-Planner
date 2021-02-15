@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+  {% set local = 'Tests' %}
+  {% extends 'nav_bar.html' %}
+  {% block content %}
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" href="https://ema-planner.herokuapp.com/views/ema.png">
+  <title>Test Check-In {{ test_info[0].test_day }} | Level {{ test_info[0].level }} at {{ test_info[0].testing_time }}</title>
+  <style>
+    * {
+        font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
+    }
+    html {
+        background-image: linear-gradient(#0095ff, #9ed7ff);
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+    }
+    h1 {
+        text-align: center;
+    }
+    h3 {
+        text-align: center;
+    }
+    .column {
+        float: left;
+        width: calc(100% / 2);
+        height: 100%;
+        padding: 10px;
+    }
+    #page-container {
+        position: relative;
+        min-height: 90vh;
+    }
+    #content-wrap {
+        
+    }
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+    .chip {
+        display: inline-block;
+        padding: 0 25px;
+        height: 50px;
+        font-size: 18px;
+        line-height: 50px;
+        border-radius: 25px;
+        background-color: #f1f1f1;
+    }
+    .chip2 {
+        display: inline-block;
+        padding: 0 25px;
+        height: 50px;
+        font-size: 18px;
+        line-height: 50px;
+        border-radius: 25px;
+        background-color: #f1f1f1;
+    }
+    .closebtn {
+        padding-left: 10px;
+        color: #888;
+        font-weight: bold;
+        float: right;
+        font-size: 20px;
+        cursor: pointer;
+    }
+    .closebtn:hover {
+        color: #000;
+    }
+    .closebtn2 {
+        padding-left: 10px;
+        color: rgb(14, 170, 9);
+        font-weight: bold;
+        float: right;
+        font-size: 20px;
+        cursor: pointer;
+    }
+    .closebtn2:hover {
+        color: #000;
+    }
+    button, label, input, select {
+        display: block;
+        font-size: 100%;
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        width: 100%;
+        padding: 5px;
+        height: 30px;
+    }
+    input[type="text"], select {
+        box-shadow: inset 1px 1px 3px #ccc;
+        border-radius: 5px;
+    }
+
+    label {
+        margin-bottom: 5px;
+    }
+
+    button {
+        width: 60%;
+        margin: 0 auto;
+    }
+    label{
+        font-weight: bold;
+    }
+    .column1 {
+      float: left;
+      width: calc(80% / 2);
+      height: 100%;
+      padding: 5px;
+      text-align: center;
+    }
+    .column2 {
+      float: right;
+      width: calc(80% / 2);
+      height: 100%;
+      padding: 5px;
+      text-align: center;
+    }
+    .autocomplete {
+      /*the container must be positioned relative:*/
+      position: relative;
+      display: inline-block;
+    }
+    .autocomplete-items {
+      position: absolute;
+      border: 1px solid black;
+      border-bottom: none;
+      border-top: none;
+      z-index: 99;
+      /*position the autocomplete items to be the same width as the container:*/
+      top: 100%;
+      left: 0;
+      right: 0;
+    }
+    .autocomplete-items div {
+      padding: 10px;
+      cursor: pointer;
+      background-color: lightblue; 
+      border-bottom: 1px solid #d4d4d4; 
+    }
+    .autocomplete-items div:hover {
+      /*when hovering an item:*/
+      background-color: darkcyan; 
+    }
+    .autocomplete-active {
+      /*when navigating through the items using the arrow keys:*/
+      background-color: blue !important; 
+      color: black; 
+    }
+  </style>
+  <head>
+    <h1>{% if test_info[0].level == -1 %} Little Dragons {% elif test_info[0].level == 0 %} Basic {% elif test_info[0].level == 0.5 %} Basic (Floor 2) {% elif test_info[0].level == 1 %} Level 1 {% elif test_info[0].level == 1.5 %} Level 1 (Floor 2) {% elif test_info[0].level == 2 %} Level 2 {% elif test_info[0].level == 3 %} Level 3 {% elif test_info[0].level == 4 %} Prep Belt {% elif test_info[0].level == 5 %} Black Belt {% elif test_info[0].level == 6 %} Open Mat {% elif test_info[0].level == 7 %} Weapons {% else %} Unknown {% endif %}</h1>
+  </head>
+  <body>
+    <meta name="name_data" content="{% for student in name_data %} {{ student.student_name }} - {{ student.barcode }} {% endfor %}"/>
+    <div id="page-container">
+      <div id="content-wrap">
+        <div style="align-content: center;">
+          <form action="/test_checkin" method="POST" name="form1" id="testForm" autocomplete="off">
+            <input type="hidden" value="{{ test_id }}">
+            <input type="hidden" value="{{ level }}">
+            <label for="result">Student's Name</label>
+            <div class="autocomplete" style="width: 70%;">
+              <input id="result" name="result" type="text" placeholder="Student First Name" value="{{ result }}">
+            </div><br>
+            <input type="submit" name="Submit" value="Check-In">
+          </form>
+        </div>
+        <hr>
+        <h3>Checked In</h3>
+        <br>
+        <div style="align-content: center;">
+          {% for student in stud_rows %}
+            <div class="chip">
+              {{ student.student_name }}<br>
+              {{ student.belt_color }}
+              <a href="/test_remove/{{ student.barcode }}/{{ test_id }}"><span class="closebtn">&times;</span></a>
+              <br>
+              <a style="color: green;" href="/pass_test/{{ student.belt_color }}/{{ student.barcode }}/{{ test_id }}/{{ level }}">Pass</a> &frasl; <a style="color: red;" href="/fail_test/{{ student.barcode }}/{{ test_id }}/{{ level }}">Fail</a>
+            </div>
+          {% endfor %}
+        </div>
+        <br>
+        <hr>
+        <div>
+          <div class="column1">
+            <h3>Passed</h3>
+            {% for student in pass_status %}
+              {% if student.pass_status == true %}
+                <div class="chip">
+                  {{ student.stud_name }}<br>
+                  {{ student.belt_color }}
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+          <hr width="1" size="500">
+          <div class="column2">
+            <h3>Failed</h3>
+            {% for student in pass_status %}
+              {% if student.pass_status == false %}
+                <div class="chip">
+                  {{ student.stud_name }}<br>
+                  {{ student.belt_color }}
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    //var data1 = document.getElementsByName('name_data')[0].content;
+    var data1 = document.getElementsByName('name_data')[0].content;
+    function parseNames(name_data){
+        var name_arr = []
+        name_data = name_data.substring(1, name_data.length);
+        while (name_data.length > 0){
+            if (name_data.indexOf('  ') != -1){
+                var idx = name_data.indexOf('  ');
+                var stud_name = name_data.substring(0, name_data.indexOf('  '));
+                name_arr.push(stud_name);
+                name_data = name_data.substring(idx + 2, name_data.length);
+            } else {
+                var stud_name = name_data;
+                name_arr.push(stud_name);
+                name_data = '';
+            }
+        }
+        return name_arr;
+    }
+    console.log('data1:');
+    console.log(data1);
+    var names = parseNames(data1);
+    console.log('names:' + names);
+    function autocomplete(inp, arr) {
+    /*the autocomplete function takes two arguments,
+    the text field element and an array of possible autocompleted values:*/
+    var currentFocus;
+    /*execute a function when someone writes in the text field:*/
+    inp.addEventListener("input", function(e) {
+        var a, b, i, val = this.value;
+        /*close any already open lists of autocompleted values*/
+        closeAllLists();
+        if (!val) { return false;}
+        currentFocus = -1;
+        /*create a DIV element that will contain the items (values):*/
+        a = document.createElement("DIV");
+        a.setAttribute("id", this.id + "autocomplete-list");
+        a.setAttribute("class", "autocomplete-items");
+        /*append the DIV element as a child of the autocomplete container:*/
+        this.parentNode.appendChild(a);
+        /*for each item in the array...*/
+        for (i = 0; i < arr.length; i++) {
+            /*check if the item starts with the same letters as the text field value:*/
+            if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+            /*create a DIV element for each matching element:*/
+            b = document.createElement("DIV");
+            /*make the matching letters bold:*/
+            b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+            b.innerHTML += arr[i].substr(val.length);
+            /*insert a input field that will hold the current array item's value:*/
+            b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+            /*execute a function when someone clicks on the item value (DIV element):*/
+                b.addEventListener("click", function(e) {
+                /*insert the value for the autocomplete text field:*/
+                inp.value = this.getElementsByTagName("input")[0].value;
+                /*close the list of autocompleted values,
+                (or any other open lists of autocompleted values:*/
+                closeAllLists();
+            });
+            a.appendChild(b);
+        }
+    }
+});
+/*execute a function presses a key on the keyboard:*/
+inp.addEventListener("keydown", function(e) {
+    var x = document.getElementById(this.id + "autocomplete-list");
+    if (x) x = x.getElementsByTagName("div");
+    if (e.keyCode == 40) {
+        /*If the arrow DOWN key is pressed,
+        increase the currentFocus variable:*/
+        currentFocus++;
+        /*and and make the current item more visible:*/
+        addActive(x);
+    } else if (e.keyCode == 38) { //up
+        /*If the arrow UP key is pressed,
+        decrease the currentFocus variable:*/
+        currentFocus--;
+        /*and and make the current item more visible:*/
+        addActive(x);
+    } else if (e.keyCode == 13) {
+        /*If the ENTER key is pressed, prevent the form from being submitted,*/
+        e.preventDefault();
+        if (currentFocus > -1) {
+            /*and simulate a click on the "active" item:*/
+            if (x) x[currentFocus].click();
+        }
+    }
+});
+function addActive(x) {
+    /*a function to classify an item as "active":*/
+    if (!x) return false;
+    /*start by removing the "active" class on all items:*/
+    removeActive(x);
+    if (currentFocus >= x.length) currentFocus = 0;
+    if (currentFocus < 0) currentFocus = (x.length - 1);
+    /*add class "autocomplete-active":*/
+    x[currentFocus].classList.add("autocomplete-active");
+}
+function removeActive(x) {
+    /*a function to remove the "active" class from all autocomplete items:*/
+    for (var i = 0; i < x.length; i++) {
+        x[i].classList.remove("autocomplete-active");
+    }
+}
+function closeAllLists(elmnt) {
+    /*close all autocomplete lists in the document,
+    except the one passed as an argument:*/
+    var x = document.getElementsByClassName("autocomplete-items");
+    for (var i = 0; i < x.length; i++) {
+        if (elmnt != x[i] && elmnt != inp) {
+            x[i].parentNode.removeChild(x[i]);
+        }
+    }
+}
+/*execute a function when someone clicks in the document:*/
+document.addEventListener("click", function (e) {
+    closeAllLists(e.target);
+});
+}
+</script>
+<script>
+    autocomplete(document.getElementById("result"), names);
+</script>
+</html>
+{% endblock %}

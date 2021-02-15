@@ -1,0 +1,161 @@
+<html>
+    <title>Test Lookup</title>
+    {% set local = 'Tests' %}
+    {% extends 'nav_bar.html' %}
+    {% block content %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="https://ema-planner.herokuapp.com/views/ema.png">
+    <style>
+        html {
+            background-image: linear-gradient(#0095ff, #9ed7ff);
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+        }
+        * {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            box-sizing: border-box;
+        }
+        form > div {
+            margin-bottom: 20px;
+        }
+        button, label, input {
+            display: block;
+            font-size: 100%;
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            width: 100%;
+            padding: 5px;
+            height: 60px;
+            align-content: center;
+            background-color: transparent;
+            border: 1px solid black;
+        }
+        
+        select {
+            -webkit-appearance: none;
+            appearance: none;
+            display: block;
+            font-size: 100%;
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            width: 100%;
+            padding: 5px;
+            height: 60px;
+        }
+        .select-wrapper {
+            position: relative;
+        }
+        .select-wrapper::after {
+            content: "▼";
+            font-size: 1rem;
+            top: 24px;
+            right: 10px;
+            position: absolute;
+        }
+        select {
+            box-shadow: inset 1px 1px 3px #ccc;
+            border-radius: 5px;
+            background-color: transparent;
+        }
+        label {
+            margin-bottom: 5px;
+        }
+        button {
+            width: 60%;
+            margin: 0 auto;
+        }
+        label{
+            font-weight: bold;
+        }
+        p {
+            font-size: 16px;
+        }
+        h1, h3 {
+            text-align: center;
+        }
+        .column1 {
+            float: left;
+            width: 50%;
+            height: 100%;
+            padding-left: 10px;
+            padding-right: 5px;
+        }
+        .column2 {
+            float: right;
+            width: 50%;
+            height: 100%;
+            padding-right: 10px;
+            padding-left: 5px;
+        }
+        #page-container {
+            min-height: 90vh;
+            min-width: 95%;
+            vertical-align: middle;
+        }
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+        .row {
+            height: 10%;
+            min-width: 90%;
+            padding-top: 60px;
+        }
+        .end {
+            max-width: 95%;
+            padding-left: 10px;
+            padding-right: 10px;
+            vertical-align: middle;
+        }
+    </style>
+    <head>
+        <h1>Test Lookup Tool</h1>
+        <h3>Lookup tests by date</h3>
+    </head>
+    <body>
+        <div id="page-container">
+            <form action="/test_lookup" method="POST">
+                <div class="row">
+                    <div class="column1">
+                        <div class="select-wrapper">
+                            <select id="select" name="month_select" required>
+                                <option value="">Month</option>
+                                <option value="January">January</option>
+                                <option value="February">February</option>
+                                <option value="March">March</option>
+                                <option value="April">April</option>
+                                <option value="May">May</option>
+                                <option value="June">June</option>
+                                <option value="July">July</option>
+                                <option value="August">August</option>
+                                <option value="September">September</option>
+                                <option value="October">October</option>
+                                <option value="November">November</option>
+                                <option value="December">December</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="column2">
+                        <div class="select-wrapper">
+                            <select id="select" name="day_select" required>
+                                <option value="">Day</option>
+                                {% for i in range(1, 31 + 1) -%}
+                                    <option value="{{ i }}">{{ i }}</option>
+                                {%- endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <input type="submit" name="Submit" value="Search">
+                </div>
+            </form>
+        </div>
+    </body>
+</html>
+{% endblock %}
