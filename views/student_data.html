@@ -122,22 +122,6 @@
   input[type=checkbox] {
     display: inline;
   }
-
-  a:link {
-    color: white;
-  }
-
-  a:visited {
-    color: white;
-  }
-
-  a:hover {
-    color: white;
-  }
-
-  a:active {
-    color: white;
-  }
 </style>
 
 <head>
@@ -165,7 +149,7 @@
     </div>
     <div>
       <label for="beltSize">Belt Size: </label>
-      <input type="number" inputmode="numeric" name="beltSize" id="beltSize" pattern="\b(00)\b|\b(0*(?:[0-8]?|9))\b" placeholder="Belt Size"
+      <input type="number" inputmode="numeric" name="beltSize" id="beltSize" min="00" max="8" placeholder="Belt Size"
         value="{{ data[0].belt_size }}" required>
     </div>
     <div class="select-wrapper">
