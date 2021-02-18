@@ -924,6 +924,8 @@ router.get('/update_test_checkin/(:barcode)/(:session_id)/(:test_id)/(:level)', 
 router.get('/pass_test/(:belt_color)/(:barcode)/(:test_id)/(:level)', (req, res) => {
   const update_status = "update test_signups set pass_status = true where barcode = $1 and test_id = $2;";//color, level, order
   const belt_info = parseBelt(req.params.belt_color, true);
+  console.log('belt color was: ' + req.params.belt_color);
+  console.log('belt color is ' + belt_info);
   const update_info = "update student_list set belt_color = $1, level_name = $2, belt_order = $3 where barcode = $4;";
   db.any(update_status, [req.params.barcode, req.params.test_id])
     .then(rows => {
