@@ -52,6 +52,14 @@
   select {
     -webkit-appearance: none;
     appearance: none;
+    display: block;
+    font-size: 100%;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 5px;
+    height: 60px;
   }
 
   .desc {
@@ -62,6 +70,11 @@
 
   .select-wrapper {
     position: relative;
+  }
+  select {
+    box-shadow: inset 1px 1px 3px #ccc;
+    border-radius: 5px;
+    background-color: transparent;
   }
 
   .select-wrapper::after {
