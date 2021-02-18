@@ -879,14 +879,15 @@ router.post('/test_checkin', (req, res) => {
   }
   console.log('item.stud_data: ' + item.stud_data);
   const stud_info = parseStudentInfo(item.stud_data);//name, barcode
-  const insert_query = "insert into test_signups (student_name, test_id, belt_color, email, barcode) values ($1, $2, (select belt_color from student_list x where x.barcode = $3), (select email from student_list where barcode = $4), $5); on conflict (session_id) do nothing;";
+  console.log('stud_info: ' + stud_info);
+  const insert_query = "insert into test_signups (student_name, test_id, belt_color, email, barcode) values ($1, $2, (select x.belt_color from student_list x where x.barcode = $3), (select email from student_list where barcode = $4), $5); on conflict (session_id) do nothing;";
   db.any(insert_query, [stud_info[0], item.test_id, stud_info[1], stud_info[1], stud_info[1]])
     .then(rows => {
       res.redirect('test_checkin/' + item.test_id + '/' + item.level);
     })
     .catch(err => {
       res.redirect('home');
-      console.log('Could not checkin to test.');
+      console.log('Could not checkin to test. Error: ' + err);
     })
 })
 
