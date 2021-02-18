@@ -709,7 +709,7 @@ router.get('/class_checkin/(:class_id)/(:class_level)/(:class_time)', (req, res)
     .then(checkedIn => {
       db.any(query_reserved, [req.params.class_id])
         .then(signedup => {
-          db.any(query, [req.params.class_id])
+          db.any(query, [Number(req.params.class_id)])
             .then(function (rows) {
               res.render('class_checkin.html', {
                 name_data: rows,
