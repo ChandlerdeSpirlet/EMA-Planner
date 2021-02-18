@@ -897,8 +897,11 @@ router.get('/test_remove/(:barcode)/(:test_id)', (req, res) => {
     .then(rows => {
       res.redirect('https://ema-planner.herokuapp.com/test_checkin/' + req.params.test_id + '/' + req.params.barcode);
     })
-    .catch('Could not remove person from test: ' + req.params.test_id + ', ' + req.params.barcode);
-    res.redirect('https://ema-planner.herokuapp.com/test_selector_force');
+    .catch(err => {
+      console.log('Could not remove person from test: ' + req.params.test_id + ', ' + req.params.barcode);
+      console.log('test_remove_error: ' + err);
+      res.redirect('https://ema-planner.herokuapp.com/test_selector_force');
+    });
 })
 
 router.get('/update_test_checkin/(:barcode)/(:session_id)/(:test_id)/(:level)', (req, res) => {
