@@ -146,7 +146,7 @@
 
 <body>
   {% if data %}
-  <form name="Form" action="/student_data" method="POST">
+  <form name="Form" onsubmit="return ValidateForm()" action="/student_data" method="POST">
     <input type="hidden" name="barcode" value="{{ barcode }}">
     <div>
       <label for="first_name">First Name: </label>
@@ -212,24 +212,26 @@
   {% endif %}
 </body>
 <script>
-  var fname = document.getElementById('first_name');
-  var lname = document.getElementById('last_name');
-  var email = document.getElementById('id');
-  var test = document.getElementById('beltSize');
-  if (fname == null || fname == ''){
-    alert("Please enter a name.");
-    return false;
-  } else if (lname == null || lname == ''){
+  function ValidateForm(){
+    var fname = document.getElementById('first_name');
+    var lname = document.getElementById('last_name');
+    var email = document.getElementById('id');
+    var test = document.getElementById('beltSize');
+    if (fname == null || fname == ''){
       alert("Please enter a name.");
       return false;
-  } else if (email == null || email == ''){
-      alert('Please enter an email.');
-      return false;
-  } else if (test == '' || test == null){
-      alert('Please enter a belt size that is between 00 and 8');
-      return false;
-  } else {
-    return true;
+    } else if (lname == null || lname == ''){
+        alert("Please enter a name.");
+        return false;
+    } else if (email == null || email == ''){
+        alert('Please enter an email.');
+        return false;
+    } else if (test == '' || test == null){
+        alert('Please enter a belt size that is between 00 and 8');
+        return false;
+    } else {
+      return true;
+    }
   }
 </script>
 {% endblock %}

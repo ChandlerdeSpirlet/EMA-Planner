@@ -159,23 +159,25 @@
   </body>
 </html>
 <script>
-  var name = document.getElementById('student_name');
-  var email = document.getElementById('email');
-  var belts = document.getElementById('belts');
-  var test = document.getElementsByClassName('test_selection');
-  if (name == null || name == ""){
-    alert("Please select a name from the list.");
-    return false;
-  } else if (email == null || email == ""){
-    alert("Please enter an email.");
-    return false;
-  } else if (belts == null || belts == ""){
-    alert("Please pick a belt color.");
-    return false;
-  } else if (test == "" || test == null){
-    alert("Please pick a test day and time.");
-    return false;
-  } else {
-    return true;
+  function ValidateForm(){
+    var name = document.getElementById('student_name');
+    var email = document.getElementById('email');
+    var belts = document.getElementById('belts');
+    var test = document.getElementsByClassName('test_selection');
+    if (name == null || name == ""){
+      alert("Please select a name from the list.");
+      return false;
+    } else if (email == null || email == ""){
+      alert("Please enter an email.");
+      return false;
+    } else if (belts == null || belts == ""){
+      alert("Please pick a belt color.");
+      return false;
+    } else if (test == "" || test == null){
+      alert("Please pick a test day and time.");
+      return false;
+    } else {
+      return true;
+    }
   }
 </script>
