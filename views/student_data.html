@@ -211,5 +211,26 @@
   </form>
   {% endif %}
 </body>
+<script>
+  var fname = document.getElementById('first_name');
+  var lname = document.getElementById('last_name');
+  var email = document.getElementById('id');
+  var test = document.getElementById('beltSize');
+  if (fname == null || fname == ''){
+    alert("Please enter a name.");
+    return false;
+  } else if (lname == null || lname == ''){
+      alert("Please enter a name.");
+      return false;
+  } else if (email == null || email == ''){
+      alert('Please enter an email.');
+      return false;
+  } else if (test == '' || test == null){
+      alert('Please enter a belt size that is between 00 and 8');
+      return false;
+  } else {
+    return true;
+  }
+</script>
 {% endblock %}
 </html>
