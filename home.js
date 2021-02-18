@@ -702,11 +702,11 @@ router.get('/update_checkin/(:barcode)/(:class_id)/(:class_level)/(:class_time)/
 })
 
 router.get('/class_checkin/(:class_id)/(:class_level)/(:class_time)', (req, res) => {
-  const query = "select distinct s.first_name || ' ' || s.last_name as student_name, s.barcode from student_list s, student_classes b where b.class_id = $1 and s.barcode in (select barcode from student_classes where class_id = $2)";
+  const query = "select * from get_class_names($1);";
   const query_reserved = "select s.student_name, s.class_check, l.barcode from class_signups s, student_list l where s.student_name like '%' || l.first_name || ' ' || l.last_name || '%' and s.class_check = $1 and s.checked_in = false;";
   db.any(query_reserved, [req.params.class_id])
     .then(signedup => {
-      db.any(query, [req.params.class_id, req.params.class_id])
+      db.any(query, [req.params.class_id])
         .then(function (rows) {
           res.render('class_checkin.html', {
             data: rows,
@@ -731,12 +731,13 @@ router.get('/class_checkin/(:class_id)/(:class_level)/(:class_time)', (req, res)
 router.post('/class_checkin', (req, res) => {
   const item = {
     class_id: req.sanitize('class_id').trim(),
-    barcode_input: req.sanitize('barcode_input').trim(),
+    stud_data: req.sanitize('result').trim(),
     level: req.sanitize('level').trim(),
     time: req.sanitize('time').trim()
   }
+  const stud_info = parseStudentInfo(item.stud_data);//name, barcode
   const query = 'insert into student_classes (class_id, barcode) values ($1, $2) on conflict (session_id) do nothing;'
-  db.any(query, [item.class_id, item.barcode_input])
+  db.any(query, [item.class_id, stud_info[1]])
     .then(function (rows1) {
       res.redirect('class_checkin/' + item.class_id + '/' + item.level + '/' + item.time)
     })
