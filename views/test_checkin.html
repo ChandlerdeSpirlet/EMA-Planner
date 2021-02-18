@@ -142,6 +142,8 @@
     .autocomplete {
       /*the container must be positioned relative:*/
       position: relative;
+      padding-left: 20%;
+      padding-right: 20%;
       /*display: inline-block;*/
     }
     .autocomplete-items {
@@ -183,7 +185,7 @@
             <input type="hidden" name="test_id" value="{{ test_id }}">
             <input type="hidden" name="level" value="{{ level }}">
             <label for="result">Student's Name</label>
-            <div class="autocomplete" style="width: 70%;">
+            <div class="autocomplete">
               <input id="result" name="result" type="text" placeholder="Student First Name" value="{{ result }}">
             </div>
             <br>
