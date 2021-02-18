@@ -149,7 +149,7 @@
         <h3>{{ time }}</h3>
     </head>
     <body>
-        <meta name="name_data" content="{% for student in data %} {{ student.student_name }} - {{ student.barcode }} {% endfor %}"/>
+        <meta name="name_data" content="{% for student in name_data %} {{ student.student_name }} - {{ student.barcode }} {% endfor %}"/>
         <div id="page-container">
             <div id="content-wrap">
                 <div style="align-content: center;">
@@ -170,7 +170,7 @@
                 <br>
                     <div style="align-content: center;">
 
-                        {% for student in data %}
+                        {% for student in checkedIn %}
                         <div class="chip">
                             {{ student.student_name }}
                             <a href ="/class_remove/{{ student.barcode }}/{{ class_id }}/{{ level }}/{{ time }}"><span class="closebtn">&times;</span></a>

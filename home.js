@@ -703,28 +703,37 @@ router.get('/update_checkin/(:barcode)/(:class_id)/(:class_level)/(:class_time)/
 
 router.get('/class_checkin/(:class_id)/(:class_level)/(:class_time)', (req, res) => {
   const query = "select * from get_class_names($1);";
+  const checked_in = "select distinct s.first_name || ' ' || s.last_name as student_name, s.barcode from student_list s, student_classes b where b.class_id = $1 and s.barcode in (select barcode from student_classes where class_id = $1);"
   const query_reserved = "select s.student_name, s.class_check, l.barcode from class_signups s, student_list l where s.student_name like '%' || l.first_name || ' ' || l.last_name || '%' and s.class_check = $1 and s.checked_in = false;";
-  db.any(query_reserved, [req.params.class_id])
-    .then(signedup => {
-      db.any(query, [req.params.class_id])
-        .then(function (rows) {
-          res.render('class_checkin.html', {
-            data: rows,
-            signedup: signedup,
-            level: req.params.class_level,
-            time: req.params.class_time,
-            class_id: req.params.class_id,
-            alert_message: ''
-          })
+  db.any(checked_in, [req.params.class_id, req.params.class_id])
+    .then(checkedIn => {
+      db.any(query_reserved, [req.params.class_id])
+        .then(signedup => {
+          db.any(query, [req.params.class_id])
+            .then(function (rows) {
+              res.render('class_checkin.html', {
+                name_data: rows,
+                signedup: signedup,
+                checkedIn: checkedIn,
+                level: req.params.class_level,
+                time: req.params.class_time,
+                class_id: req.params.class_id,
+                alert_message: ''
+              })
+            })
+            .catch(function (err) {
+              res.redirect('home')
+              console.log('error finding class with id ' + err)
+            })
         })
-        .catch(function (err) {
-          res.redirect('home')
-          console.log('error finding class with id ' + err)
+        .catch(err => {
+          console.log("Could not pull people signed up for class. Err: " + err);
+          res.redirect('home');
         })
     })
     .catch(err => {
-      console.log("Could not pull people signed up for class. Err: " + err);
-      res.redirect('home');
+      console.log('Could not find people checked in for class. Error: ' + err);
+      res.redirect('https://ema-planner.herokuapp.com/home');
     })
 })
 
