@@ -175,30 +175,33 @@
           <option value="{{ belt_color }}">{{ data[0].belt_color }}</option>
         </optgroup>
         <optgroup label="Little Dragons">
-          <option value="Dragons White">Dragons White</option>
-          <option value="Dragons Gold">Dragons Gold</option>
-          <option value="Dragons Orange">Dragons Orange</option>
-          <option value="Dragons Green">Dragons Green</option>
-          <option value="Dragons Purple">Dragons Purple</option>
-          <option value="Dragons Blue">Dragons Blue</option>
-          <option value="Dragons Red">Dragons Red</option>
-          <option value="Dragons Brown">Dragons Brown</option>
+          <option value="Dragons White" {% if data[0].belt_color == "Dragons White" %} selected="selected" {% endif %}>Dragons White</option>
+          <option value="Dragons Gold" {% if data[0].belt_color == "Dragons Gold" %} selected="selected" {% endif %}>Dragons Gold</option>
+          <option value="Dragons Orange" {% if data[0].belt_color == "Dragons Orange" %} selected="selected" {% endif %}>Dragons Orange</option>
+          <option value="Dragons Green" {% if data[0].belt_color == "Dragons Green" %} selected="selected" {% endif %}>Dragons Green</option>
+          <option value="Dragons Purple" {% if data[0].belt_color == "Dragons Purple" %} selected="selected" {% endif %}>Dragons Purple</option>
+          <option value="Dragons Blue" {% if data[0].belt_color == "Dragons Blue" %} selected="selected" {% endif %}>Dragons Blue</option>
+          <option value="Dragons Red" {% if data[0].belt_color == "Dragons Red" %} selected="selected" {% endif %}>Dragons Red</option>
+          <option value="Dragons Brown" {% if data[0].belt_color == "Dragons Brown" %} selected="selected" {% endif %}>Dragons Brown</option>
         </optgroup>
         <optgroup label="Exclusive">
-          <option value="White" selected="selected">White</option>
-          <option value="Gold">Gold</option>
-          <option value="Orange">Orange</option>
-          <option value="High Orange">High Orange</option>
-          <option value="Green">Green</option>
-          <option value="High Green">High Green</option>
-          <option value="Purple">Purple</option>
-          <option value="High Purple">High Purple</option>
-          <option value="Blue">Blue</option>
-          <option value="High Blue">High Blue</option>
-          <option value="Red">Red</option>
-          <option value="High Red">High Red</option>
-          <option value="Brown">Brown</option>
-          <option value="High Brown">High Brown</option>
+          <option value="White" {% if data[0].belt_color == "White" %} selected="selected" {% endif %}>White</option>
+          <option value="Gold" {% if data[0].belt_color == "Gold" %} selected="selected" {% endif %}>Gold</option>
+          <option value="Orange" {% if data[0].belt_color == "Orange" %} selected="selected" {% endif %}>Orange</option>
+          <option value="High Orange" {% if data[0].belt_color == "High Orange" %} selected="selected" {% endif %}>High Orange</option>
+          <option value="Green" {% if data[0].belt_color == "Green" %} selected="selected" {% endif %}>Green</option>
+          <option value="High Green" {% if data[0].belt_color == "High Green" %} selected="selected" {% endif %}>High Green</option>
+          <option value="Purple" {% if data[0].belt_color == "Purple" %} selected="selected" {% endif %}>Purple</option>
+          <option value="High Purple" {% if data[0].belt_color == "High Purple" %} selected="selected" {% endif %}>High Purple</option>
+          <option value="Blue" {% if data[0].belt_color == "Blue" %} selected="selected" {% endif %}>Blue</option>
+          <option value="High Blue" {% if data[0].belt_color == "High Blue" %} selected="selected" {% endif %}>High Blue</option>
+          <option value="Red" {% if data[0].belt_color == "Red" %} selected="selected" {% endif %}>Red</option>
+          <option value="High Red" {% if data[0].belt_color == "High Red" %} selected="selected" {% endif %}>High Red</option>
+          <option value="Brown" {% if data[0].belt_color == "Brown" %} selected="selected" {% endif %}>Brown</option>
+          <option value="High Brown" {% if data[0].belt_color == "High Brown" %} selected="selected" {% endif %}>High Brown</option>
+          <option value="Prep" {% if data[0].belt_color == "Prep" %} selected="selected" {% endif %}>Prep</option>
+          <option value="Conditional" {% if data[0].belt_color == "Conditional" %} selected="selected" {% endif %}>Conditional</option>
+          <option value="Black Belt" {% if data[0].belt_color == "Black Belt" %} selected="selected" {% endif %}>Black Belt</option>
         </optgroup>
       </select>
     </div>
