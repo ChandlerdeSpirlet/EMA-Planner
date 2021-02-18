@@ -107,10 +107,7 @@
       box-sizing: border-box;
       width: 100%;
       padding: 5px;
-      height: 60px;
-      align-content: center;
-      background-color: transparent;
-      border: 1px solid black;
+      height: 30px;
     }
     input[type="text"], select {
         box-shadow: inset 1px 1px 3px #ccc;
@@ -183,8 +180,8 @@
       <div id="content-wrap">
         <div style="align-content: center;">
           <form action="/test_checkin" method="POST" name="form1" id="testForm" autocomplete="off">
-            <input type="hidden" value="{{ test_id }}">
-            <input type="hidden" value="{{ level }}">
+            <input type="hidden" name="test_id" value="{{ test_id }}">
+            <input type="hidden" name="level" value="{{ level }}">
             <label for="result">Student's Name</label>
             <div class="autocomplete" style="width: 70%;">
               <input id="result" name="result" type="text" placeholder="Student First Name" value="{{ result }}">
