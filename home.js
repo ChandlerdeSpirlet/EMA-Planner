@@ -745,8 +745,9 @@ router.post('/class_checkin', (req, res) => {
     level: req.sanitize('level').trim(),
     time: req.sanitize('time').trim()
   }
-  console.log('stud_info: ' + stud_info);
+  
   const stud_info = parseStudentInfo(item.stud_data);//name, barcode
+  console.log('stud_info: ' + stud_info);
   const query = 'insert into student_classes (class_id, barcode) values ($1, $2) on conflict (session_id) do nothing;'
   db.any(query, [item.class_id, stud_info[1]])
     .then(function (rows1) {
