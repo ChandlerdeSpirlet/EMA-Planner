@@ -696,7 +696,7 @@ router.get('/update_checkin/(:barcode)/(:class_id)/(:class_level)/(:class_time)/
 router.get('/class_checkin/(:class_id)/(:class_level)/(:class_time)', (req, res) => {
   console.log('req.params.class_id = ' + req.params.class_id);
   const query = "select * from get_class_names($1);";
-  const checked_in = "select student_name, barcode, class_check from class_signups where class_session_id = $1"
+  const checked_in = "select student_name, barcode, class_check from class_signups where class_session_id = $1 and checked_in = true;";
   const query_reserved = "select s.student_name, s.class_check, s.barcode from class_signups s where s.checked_in = false and s.class_session_id = $1;";
   db.any(checked_in, [req.params.class_id])
     .then(checkedIn => {
@@ -740,8 +740,9 @@ router.post('/class_checkin', (req, res) => {
   
   const stud_info = parseStudentInfo(item.stud_data);//name, barcode
   console.log('stud_info: ' + stud_info);
-  const query = 'insert into student_classes (class_id, barcode) values ($1, $2) on conflict (session_id) do nothing;'
-  db.any(query, [item.class_id, stud_info[1]])
+  const temp_class_check = stud_info[0].toLowerCase().split(" ").join("") + item.class_id.toString();
+  const query = 'insert into class_signups (student_name, email, class_session_id, barcode, class_check) values ($1, (select lower(email) from student_list where barcode = $2), $3, $4, $5) on conflict (class_check) do nothing;'
+  db.any(query, [stud_info[0], stud_info[1], item.class_id, stud_info[1], temp_class_check])
     .then(function (rows1) {
       res.redirect('class_checkin/' + item.class_id + '/' + item.level + '/' + item.time)
     })
