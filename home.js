@@ -2067,32 +2067,50 @@ router.get('/bb_signup', (req, res) => {
     res.redirect('https://ema-planner.herokuapp.com/bb_signup');
   } else {
     const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, level from classes where level = 5 and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
-    db.any(class_query)
-      .then(rows => {
-        if (rows.length == 0) {
-          res.render('temp_classes', {
-            level: 'black belt'
+    const get_names = "select * from signup_names(5);";
+    db.any(get_names)
+      .then(names => {
+        db.any(class_query)
+          .then(rows => {
+            if (rows.length == 0) {
+              res.render('temp_classes', {
+                level: 'black belt'
+              })
+            } else {
+              res.render('bb_signup', {
+                alert_message: '',
+                fname: '',
+                lname: '',
+                level: '',
+                email: '',
+                classes: rows,
+                names: names
+              })
+            }
           })
-        } else {
-          res.render('bb_signup', {
-            alert_message: '',
-            fname: '',
-            lname: '',
-            level: '',
-            email: '',
-            classes: rows
+          .catch(err => {
+            console.log('Could not render black belt classes. ERROR: ' + err);
+            res.render('bb_signup', {
+              alert_message: 'Could not find black belt classes.',
+              fname: '',
+              lname: '',
+              level: '',
+              email: '',
+              classes: 'Unable to show classes.',
+              names: ''
+            })
           })
-        }
       })
       .catch(err => {
-        console.log('Could not render black belt classes. ERROR: ' + err);
+        console.log('Could not render black belt names. ERROR: ' + err);
         res.render('bb_signup', {
-          alert_message: 'Could not find black belt classes.',
+          alert_message: 'Could not find black belt names to display.',
           fname: '',
           lname: '',
           level: '',
           email: '',
-          classes: 'Unable to show classes.'
+          classes: 'Unable to show classes.',
+          names: ''
         })
       })
   }
@@ -2170,15 +2188,12 @@ router.post('/level3_signup', (req, res) => {
 
 router.post('/bb_signup', (req, res) => {
   const item = {
-    fname: req.sanitize('fname').trim(),
-    lname: req.sanitize('lname').trim(),
-    email: req.sanitize('email').trim(),
+    stud_data: req.sanitize('result').trim(),
     day_time: req.sanitize('day_time')
   }
   belt_group = 'Black Belt';
-  const email = String(item.email).toLowerCase();
-  const student_name = item.fname + ' ' + item.lname;
-  const redir_link = 'process_classes/' + student_name + '/' + email + '/' + belt_group + '/' + item.day_time;
+  const stud_info = parseStudentInfo(item.stud_data);
+  const redir_link = 'process_classes/' + stud_info[0] + '/' + stud_info[1] + '/' + belt_group + '/' + item.day_time;
   res.redirect(redir_link);
 })
 
@@ -2197,12 +2212,13 @@ function parseID(id_set) {
   return set_id;
 }
 
-router.get('/process_classes/(:student_name)/(:email)/(:belt_group)/(:id_set)', (req, res) => {
-  const query_classes = "insert into class_signups (student_name, email, belt, class_session_id, class_check) values ($1, $2, $3, $4, $5);";
+router.get('/process_classes/(:student_name)/(:barcode)/(:belt_group)/(:id_set)', (req, res) => {
+  const query_classes = "insert into class_signups (student_name, email, belt, class_session_id, class_check, barcode) values ($1, lower(select email from student_list where barcode = $2), $3, $4, $5, $6);";
+  const email_info = "select email from student_list where barcode = $1;"
   var id_set = parseID(req.params.id_set);
   id_set.forEach(element => {
     var temp_class_check = req.params.student_name.toLowerCase().split(" ").join("") + element.toString();
-    db.none(query_classes, [req.params.student_name, req.params.email, req.params.belt_group, element, temp_class_check])
+    db.none(query_classes, [req.params.student_name, req.params.barcode, req.params.belt_group, element, temp_class_check, req.params.barcode])
       .then(rows => {
         console.log('Added class with element ' + element);
       })
@@ -2213,77 +2229,117 @@ router.get('/process_classes/(:student_name)/(:email)/(:belt_group)/(:id_set)', 
   switch (id_set.length) {
     case 1:
       var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance from classes where class_id = $1;"
-      db.any(end_query, [id_set[0]])
-        .then(rows => {
-          res.render('class_confirmed', {
-            classes: rows,
-            email: req.params.email,
-            student_name: req.params.student_name,
-            belt_group: req.params.belt_color
-          })
+      db.any(email_info, [req.params.barcode])
+        .then(email => {
+          db.any(end_query, [id_set[0]])
+            .then(rows => {
+              res.render('class_confirmed', {
+                classes: rows,
+                email: email,
+                student_name: req.params.student_name,
+                belt_group: req.params.belt_color
+              })
+            })
+            .catch(err => {
+              console.log('Err in displaying confirmed classes: ' + err);
+              res.render('temp_classes', {
+                alert_message: 'Unable to submit classes for signup.',
+                level: 'none'
+              })
+            })
         })
         .catch(err => {
-          console.log('Err in displaying confirmed classes: ' + err);
+          console.log('Could not find email. Error: ' = err);
           res.render('temp_classes', {
-            alert_message: 'Unable to submit classes for signup.',
-            level: 'none'
+            level: 'none',
+            alert_message: "Could not find an email associated with that student."
           })
         })
       break;
     case 2:
       var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance from classes where class_id in ($1, $2);"
-      db.any(end_query, [id_set[0], id_set[1]])
-        .then(rows => {
-          res.render('class_confirmed', {
-            classes: rows,
-            email: req.params.email,
-            student_name: req.params.student_name,
-            belt_group: req.params.belt_color
-          })
+      db.any(email_info, [req.params.barcode])
+        .then(email => {
+          db.any(end_query, [id_set[0], id_set[1]])
+            .then(rows => {
+              res.render('class_confirmed', {
+                classes: rows,
+                email: email,
+                student_name: req.params.student_name,
+                belt_group: req.params.belt_color
+              })
+            })
+            .catch(err => {
+              console.log('Err in displaying confirmed classes: ' + err);
+              res.render('temp_classes', {
+                alert_message: 'Unable to submit classes for signup.',
+                level: 'none'
+              })
+            })
         })
         .catch(err => {
-          console.log('Err in displaying confirmed classes: ' + err);
+          console.log('Could not find email. Error: ' = err);
           res.render('temp_classes', {
-            alert_message: 'Unable to submit classes for signup.',
-            level: 'none'
+            level: 'none',
+            alert_message: "Could not find an email associated with that student."
           })
         })
       break;
     case 3:
       var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance from classes where class_id in ($1, $2, $3);"
-      db.any(end_query, [id_set[0], id_set[1], id_set[2]])
-        .then(rows => {
-          res.render('class_confirmed', {
-            classes: rows,
-            email: req.params.email,
-            student_name: req.params.student_name,
-            belt_group: req.params.belt_color
-          })
+      db.any(email_info, [req.params.barcode])
+        .then(email => {
+          db.any(end_query, [id_set[0], id_set[1], id_set[2]])
+            .then(rows => {
+              res.render('class_confirmed', {
+                classes: rows,
+                email: email,
+                student_name: req.params.student_name,
+                belt_group: req.params.belt_color
+              })
+            })
+            .catch(err => {
+              console.log('Err in displaying confirmed classes: ' + err);
+              res.render('temp_classes', {
+                alert_message: 'Unable to submit classes for signup.',
+                level: 'none'
+              })
+            })
         })
         .catch(err => {
-          console.log('Err in displaying confirmed classes: ' + err);
+          console.log('Could not find email. Error: ' = err);
           res.render('temp_classes', {
-            alert_message: 'Unable to submit classes for signup.',
-            level: 'none'
+            level: 'none',
+            alert_message: "Could not find an email associated with that student."
           })
         })
       break;
     case 4:
       var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance from classes where class_id in ($1, $2, $3, $4);"
-      db.any(end_query, [id_set[0], id_set[1], id_set[2], id_set[3]])
-        .then(rows => {
-          res.render('class_confirmed', {
-            classes: rows,
-            email: req.params.email,
-            student_name: req.params.student_name,
-            belt_group: req.params.belt_color
-          })
+      db.any(email_info, [req.params.barcode])
+        .then(email => {
+          db.any(end_query, [id_set[0], id_set[1], id_set[2], id_set[3]])
+            .then(rows => {
+              res.render('class_confirmed', {
+                classes: rows,
+                email: email,
+                student_name: req.params.student_name,
+                belt_group: req.params.belt_color
+              })
+            })
+            .catch(err => {
+              console.log('Err in displaying confirmed classes: ' + err);
+              res.render('temp_classes', {
+                alert_message: 'Unable to submit classes for signup.',
+                level: 'none'
+              })
+            })
         })
         .catch(err => {
-          console.log('Err in displaying confirmed classes: ' + err);
+          console.log('Could not find email. Error: ' = err);
           res.render('temp_classes', {
-            alert_message: 'Unable to submit classes for signup.',
-            level: 'none'
+            level: 'none',
+            alert_message: "Could not find an email associated with that student."
           })
         })
       break;
