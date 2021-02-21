@@ -2446,48 +2446,296 @@ router.get('/download_done/(:url)', (req, res) => {
 })
 
 router.post('/build_ics', (req, res) => {
-  const input = {
-    num_events: req.sanitize('num_events').trim(),
-    month: req.sanitize('month_num').trim(),
-    day: req.sanitize('day_num').trim(),
-    start_hour: req.sanitize('hour_num').trim(),
-    start_min: req.sanitize('min_num').trim(),
-    end_hour: req.sanitize('end_hour').trim(),
-    end_min: req.sanitize('end_min').trim(),
-    email: req.sanitize('email').trim(),
-    name: req.sanitize('student_name').trim(),
+  const num_in = {
+    num_events: req.sanitize('num_events').trim()
   }
-  console.log('input: ');
-  console.log(input.num_events);
-  console.log(input.day);
-  console.log(input.email + ' ' + input.name);
+  switch (Number(num_in.num_events)){
+    case 1:
+      var input = {
+        num_events: req.sanitize('num_events').trim(),
+        email: req.sanitize('email').trim(),
+        name: req.sanitize('student_name').trim(),
+        month: req.sanitize('month_num').trim(),
+        day: req.sanitize('day_num').trim(),
+        start_hour: req.sanitize('hour_num').trim(),
+        start_min: req.sanitize('min_num').trim(),
+        end_hour: req.sanitize('end_hour').trim(),
+        end_min: req.sanitize('end_min').trim()
+      }
+      break;
+    case 2:
+      var input = {
+        num_events: req.sanitize('num_events').trim(),
+        email: req.sanitize('email').trim(),
+        name: req.sanitize('student_name').trim(),
+        month: req.sanitize('month_num').trim(),
+        day: req.sanitize('day_num').trim(),
+        start_hour: req.sanitize('hour_num').trim(),
+        start_min: req.sanitize('min_num').trim(),
+        end_hour: req.sanitize('end_hour').trim(),
+        end_min: req.sanitize('end_min').trim(),
+        month_1: req.sanitize('month_num_1').trim(),
+        day_1: req.sanitize('day_num_1').trim(),
+        hour_1: req.sanitize('hour_num_1').trim(),
+        min_1: req.sanitize('min_num_1').trim(),
+        end_hour_1: req.sanitize('end_hour_1').trim(),
+        end_min_1: req.sanitize('end_min_1').trim()
+      }
+      break;
+    case 3:
+      var input = {
+        num_events: req.sanitize('num_events').trim(),
+        email: req.sanitize('email').trim(),
+        name: req.sanitize('student_name').trim(),
+        month: req.sanitize('month_num').trim(),
+        day: req.sanitize('day_num').trim(),
+        start_hour: req.sanitize('hour_num').trim(),
+        start_min: req.sanitize('min_num').trim(),
+        end_hour: req.sanitize('end_hour').trim(),
+        end_min: req.sanitize('end_min').trim(),
+        month_1: req.sanitize('month_num_1').trim(),
+        day_1: req.sanitize('day_num_1').trim(),
+        hour_1: req.sanitize('hour_num_1').trim(),
+        min_1: req.sanitize('min_num_1').trim(),
+        end_hour_1: req.sanitize('end_hour_1').trim(),
+        end_min_1: req.sanitize('end_min_1').trim(),
+        month_2: req.sanitize('month_num_2').trim(),
+        day_2: req.sanitize('day_num_2').trim(),
+        hour_2: req.sanitize('hour_num_2').trim(),
+        min_2: req.sanitize('min_num_2').trim(),
+        end_hour_2: req.sanitize('end_hour_2').trim(),
+        end_min_2: req.sanitize('end_min_2').trim()
+      }
+      break;
+    case 4:
+      var input = {
+        num_events: req.sanitize('num_events').trim(),
+        email: req.sanitize('email').trim(),
+        name: req.sanitize('student_name').trim(),
+        month: req.sanitize('month_num').trim(),
+        day: req.sanitize('day_num').trim(),
+        start_hour: req.sanitize('hour_num').trim(),
+        start_min: req.sanitize('min_num').trim(),
+        end_hour: req.sanitize('end_hour').trim(),
+        end_min: req.sanitize('end_min').trim(),
+        month_1: req.sanitize('month_num_1').trim(),
+        day_1: req.sanitize('day_num_1').trim(),
+        hour_1: req.sanitize('hour_num_1').trim(),
+        min_1: req.sanitize('min_num_1').trim(),
+        end_hour_1: req.sanitize('end_hour_1').trim(),
+        end_min_1: req.sanitize('end_min_1').trim(),
+        month_2: req.sanitize('month_num_2').trim(),
+        day_2: req.sanitize('day_num_2').trim(),
+        hour_2: req.sanitize('hour_num_2').trim(),
+        min_2: req.sanitize('min_num_2').trim(),
+        end_hour_2: req.sanitize('end_hour_2').trim(),
+        end_min_2: req.sanitize('end_min_2').trim(),
+        month_3: req.sanitize('month_num_3').trim(),
+        day_3: req.sanitize('day_num_3').trim(),
+        hour_3: req.sanitize('hour_num_3').trim(),
+        min_3: req.sanitize('min_num_3').trim(),
+        end_hour_3: req.sanitize('end_hour_3').trim(),
+        end_min_3: req.sanitize('end_min_3').trim()
+      }
+      break;
+    default:
+      console.log('No num events');
+      break;
+  }
+  alarms = [];
+  alarms.push({
+    action: 'audio',
+    trigger: {hours:2,minutes:30,before:true},
+    repeat: 2,
+    attachType:'VALUE=URI',
+    attach: 'Glass',
+
+  })
+  const year = new Date().getFullYear();
   switch (Number(input.num_events)){
     case 1:
-      alarms = [];
-      alarms.push({
-        action: 'audio',
-        trigger: {hours:2,minutes:30,before:true},
-        repeat: 2,
-        attachType:'VALUE=URI',
-        attach: 'Glass',
-
-      })
       const {error, value} = ics.createEvents([
         {
           title: input.name + "'s Karate Class",
-          start: [2021, Number(input.month), Number(input.day), Number(input.start_hour), Number(input.start_min)],
+          start: [year, Number(input.month), Number(input.day), Number(input.start_hour), Number(input.start_min)],
+          startInputType: 'local',
+          startOutputType: 'local',
           end: [2021, Number(input.month), Number(input.day), Number(input.end_hour), Number(input.end_min)],
+          endInputType: 'local',
+          endOutputType: 'local',
           url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
           busyStatus: 'BUSY',
           status: 'CONFIRMED',
-          location: 'Exclusive Martial Arts'
+          location: 'Exclusive Martial Arts',
+          alarms: alarms
         }
       ])
       if (error){
         console.log("Error creating calendar events: " + error);
         alert('ERROR: ' + error);
       }
-      console.log('Dir: ' + `${__dirname}`);
+      var filename = input.name.replace(/\s/g, "").toLowerCase() + '.ics';
+      writeFileSync(`${__dirname}/` + filename, value);
+      console.log('File path is ' + `${__dirname}/` + filename);
+      res.redirect('/cal_down/' + filename);
+      break;
+    case 2:
+      const {error, value} = ics.createEvents([
+        {
+          title: input.name + "'s Karate Class",
+          start: [year, Number(input.month), Number(input.day), Number(input.start_hour), Number(input.start_min)],
+          startInputType: 'local',
+          startOutputType: 'local',
+          end: [2021, Number(input.month), Number(input.day), Number(input.end_hour), Number(input.end_min)],
+          endInputType: 'local',
+          endOutputType: 'local',
+          url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
+          busyStatus: 'BUSY',
+          status: 'CONFIRMED',
+          location: 'Exclusive Martial Arts',
+          alarms: alarms
+        },
+        {
+          title: input.name + "'s Karate Class",
+          start: [year, Number(input.month_1), Number(input.day_1), Number(input.hour_1), Number(input.min_1)],
+          startInputType: 'local',
+          startOutputType: 'local',
+          end: [year, Number(input.month_1), Number(input.day_1), Number(input.end_hour_1), Number(input.end_min_1)],
+          endInputType: 'local',
+          endOutputType: 'local',
+          url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
+          busyStatus: 'BUSY',
+          status: 'CONFIRMED',
+          location: 'Exclusive Martial Arts',
+          alarms: alarms
+        }
+      ])
+      if (error){
+        console.log("Error creating calendar events: " + error);
+        alert('ERROR: ' + error);
+      }
+      var filename = input.name.replace(/\s/g, "").toLowerCase() + '.ics';
+      writeFileSync(`${__dirname}/` + filename, value);
+      console.log('File path is ' + `${__dirname}/` + filename);
+      res.redirect('/cal_down/' + filename);
+      break;
+    case 3:
+      const {error, value} = ics.createEvents([
+        {
+          title: input.name + "'s Karate Class",
+          start: [year, Number(input.month), Number(input.day), Number(input.start_hour), Number(input.start_min)],
+          startInputType: 'local',
+          startOutputType: 'local',
+          end: [2021, Number(input.month), Number(input.day), Number(input.end_hour), Number(input.end_min)],
+          endInputType: 'local',
+          endOutputType: 'local',
+          url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
+          busyStatus: 'BUSY',
+          status: 'CONFIRMED',
+          location: 'Exclusive Martial Arts',
+          alarms: alarms
+        },
+        {
+          title: input.name + "'s Karate Class",
+          start: [year, Number(input.month_1), Number(input.day_1), Number(input.hour_1), Number(input.min_1)],
+          startInputType: 'local',
+          startOutputType: 'local',
+          end: [year, Number(input.month_1), Number(input.day_1), Number(input.end_hour_1), Number(input.end_min_1)],
+          endInputType: 'local',
+          endOutputType: 'local',
+          url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
+          busyStatus: 'BUSY',
+          status: 'CONFIRMED',
+          location: 'Exclusive Martial Arts',
+          alarms: alarms
+        },
+        {
+          title: input.name + "'s Karate Class",
+          start: [year, Number(input.month_2), Number(input.day_2), Number(input.hour_2), Number(input.min_2)],
+          startInputType: 'local',
+          startOutputType: 'local',
+          end: [year, Number(input.month_2), Number(input.day_2), Number(input.end_hour_2), Number(input.end_min_2)],
+          endInputType: 'local',
+          endOutputType: 'local',
+          url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
+          busyStatus: 'BUSY',
+          status: 'CONFIRMED',
+          location: 'Exclusive Martial Arts',
+          alarms: alarms
+        }
+      ])
+      if (error){
+        console.log("Error creating calendar events: " + error);
+        alert('ERROR: ' + error);
+      }
+      var filename = input.name.replace(/\s/g, "").toLowerCase() + '.ics';
+      writeFileSync(`${__dirname}/` + filename, value);
+      console.log('File path is ' + `${__dirname}/` + filename);
+      res.redirect('/cal_down/' + filename);
+      break;
+    case 4:
+      const {error, value} = ics.createEvents([
+        {
+          title: input.name + "'s Karate Class",
+          start: [year, Number(input.month), Number(input.day), Number(input.start_hour), Number(input.start_min)],
+          startInputType: 'local',
+          startOutputType: 'local',
+          end: [2021, Number(input.month), Number(input.day), Number(input.end_hour), Number(input.end_min)],
+          endInputType: 'local',
+          endOutputType: 'local',
+          url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
+          busyStatus: 'BUSY',
+          status: 'CONFIRMED',
+          location: 'Exclusive Martial Arts',
+          alarms: alarms
+        },
+        {
+          title: input.name + "'s Karate Class",
+          start: [year, Number(input.month_1), Number(input.day_1), Number(input.hour_1), Number(input.min_1)],
+          startInputType: 'local',
+          startOutputType: 'local',
+          end: [year, Number(input.month_1), Number(input.day_1), Number(input.end_hour_1), Number(input.end_min_1)],
+          endInputType: 'local',
+          endOutputType: 'local',
+          url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
+          busyStatus: 'BUSY',
+          status: 'CONFIRMED',
+          location: 'Exclusive Martial Arts',
+          alarms: alarms
+        },
+        {
+          title: input.name + "'s Karate Class",
+          start: [year, Number(input.month_2), Number(input.day_2), Number(input.hour_2), Number(input.min_2)],
+          startInputType: 'local',
+          startOutputType: 'local',
+          end: [year, Number(input.month_2), Number(input.day_2), Number(input.end_hour_2), Number(input.end_min_2)],
+          endInputType: 'local',
+          endOutputType: 'local',
+          url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
+          busyStatus: 'BUSY',
+          status: 'CONFIRMED',
+          location: 'Exclusive Martial Arts',
+          alarms: alarms
+        },
+        {
+          title: input.name + "'s Karate Class",
+          start: [year, Number(input.month_3), Number(input.day_3), Number(input.hour_3), Number(input.min_3)],
+          startInputType: 'local',
+          startOutputType: 'local',
+          end: [year, Number(input.month_3), Number(input.day_3), Number(input.end_hour_3), Number(input.end_min_3)],
+          endInputType: 'local',
+          endOutputType: 'local',
+          url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
+          busyStatus: 'BUSY',
+          status: 'CONFIRMED',
+          location: 'Exclusive Martial Arts',
+          alarms: alarms
+        }
+      ])
+      if (error){
+        console.log("Error creating calendar events: " + error);
+        alert('ERROR: ' + error);
+      }
       var filename = input.name.replace(/\s/g, "").toLowerCase() + '.ics';
       writeFileSync(`${__dirname}/` + filename, value);
       console.log('File path is ' + `${__dirname}/` + filename);

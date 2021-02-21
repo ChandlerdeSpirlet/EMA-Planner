@@ -74,6 +74,80 @@
         <input type="hidden" name="end_min" value="{{ classes[0].end_min }}"/>
         <input type="hidden" name="email" value="{{ email[0].email }}"/>
         <input type="hidden" name="student_name" value="{{ student_name }}"/>
+      {% elif num_events == '2' or num_events == 2 %}
+        <input type="hidden" name="num_events" value="{{ num_events }}"/>
+        <input type="hidden" name="month_num" value="{{ classes[0].month_num }}"/>
+        <input type="hidden" name="day_num" value="{{ classes[0].day_num }}"/>
+        <input type="hidden" name="hour_num" value="{{ classes[0].hour_num }}"/>
+        <input type="hidden" name="min_num" value="{{ classes[0].min_num }}"/>
+        <input type="hidden" name="end_hour" value="{{ classes[0].end_hour }}"/>
+        <input type="hidden" name="end_min" value="{{ classes[0].end_min }}"/>
+        <input type="hidden" name="email" value="{{ email[0].email }}"/>
+        <input type="hidden" name="student_name" value="{{ student_name }}"/>
+        <!-- Event Seperator -->
+        <input type="hidden" name="month_num_1" value="{{ classes[1].month_num }}"/>
+        <input type="hidden" name="day_num_1" value="{{ classes[1].day_num }}"/>
+        <input type="hidden" name="hour_num_1" value="{{ classes[1].hour_num }}"/>
+        <input type="hidden" name="min_num_1" value="{{ classes[1].min_num }}"/>
+        <input type="hidden" name="end_hour_1" value="{{ classes[1].end_hour }}"/>
+        <input type="hidden" name="end_min_1" value="{{ classes[1].end_min }}"/>
+      {% elif num_events == '3' or num_events == 3 %}
+        <input type="hidden" name="num_events" value="{{ num_events }}"/>
+        <input type="hidden" name="month_num" value="{{ classes[0].month_num }}"/>
+        <input type="hidden" name="day_num" value="{{ classes[0].day_num }}"/>
+        <input type="hidden" name="hour_num" value="{{ classes[0].hour_num }}"/>
+        <input type="hidden" name="min_num" value="{{ classes[0].min_num }}"/>
+        <input type="hidden" name="end_hour" value="{{ classes[0].end_hour }}"/>
+        <input type="hidden" name="end_min" value="{{ classes[0].end_min }}"/>
+        <input type="hidden" name="email" value="{{ email[0].email }}"/>
+        <input type="hidden" name="student_name" value="{{ student_name }}"/>
+        <!-- Event Seperator -->
+        <input type="hidden" name="month_num_1" value="{{ classes[1].month_num }}"/>
+        <input type="hidden" name="day_num_1" value="{{ classes[1].day_num }}"/>
+        <input type="hidden" name="hour_num_1" value="{{ classes[1].hour_num }}"/>
+        <input type="hidden" name="min_num_1" value="{{ classes[1].min_num }}"/>
+        <input type="hidden" name="end_hour_1" value="{{ classes[1].end_hour }}"/>
+        <input type="hidden" name="end_min_1" value="{{ classes[1].end_min }}"/>
+        <!-- Event Seperator -->
+        <input type="hidden" name="month_num_2" value="{{ classes[2].month_num }}"/>
+        <input type="hidden" name="day_num_2" value="{{ classes[2].day_num }}"/>
+        <input type="hidden" name="hour_num_2" value="{{ classes[2].hour_num }}"/>
+        <input type="hidden" name="min_num_2" value="{{ classes[2].min_num }}"/>
+        <input type="hidden" name="end_hour_2" value="{{ classes[2].end_hour }}"/>
+        <input type="hidden" name="end_min_2" value="{{ classes[2].end_min }}"/>
+      {% elif num_events == '4' or num_events == 4 %}
+        <input type="hidden" name="num_events" value="{{ num_events }}"/>
+        <input type="hidden" name="month_num" value="{{ classes[0].month_num }}"/>
+        <input type="hidden" name="day_num" value="{{ classes[0].day_num }}"/>
+        <input type="hidden" name="hour_num" value="{{ classes[0].hour_num }}"/>
+        <input type="hidden" name="min_num" value="{{ classes[0].min_num }}"/>
+        <input type="hidden" name="end_hour" value="{{ classes[0].end_hour }}"/>
+        <input type="hidden" name="end_min" value="{{ classes[0].end_min }}"/>
+        <input type="hidden" name="email" value="{{ email[0].email }}"/>
+        <input type="hidden" name="student_name" value="{{ student_name }}"/>
+        <!-- Event Seperator -->
+        <input type="hidden" name="month_num_1" value="{{ classes[1].month_num }}"/>
+        <input type="hidden" name="day_num_1" value="{{ classes[1].day_num }}"/>
+        <input type="hidden" name="hour_num_1" value="{{ classes[1].hour_num }}"/>
+        <input type="hidden" name="min_num_1" value="{{ classes[1].min_num }}"/>
+        <input type="hidden" name="end_hour_1" value="{{ classes[1].end_hour }}"/>
+        <input type="hidden" name="end_min_1" value="{{ classes[1].end_min }}"/>
+        <!-- Event Seperator -->
+        <input type="hidden" name="month_num_2" value="{{ classes[2].month_num }}"/>
+        <input type="hidden" name="day_num_2" value="{{ classes[2].day_num }}"/>
+        <input type="hidden" name="hour_num_2" value="{{ classes[2].hour_num }}"/>
+        <input type="hidden" name="min_num_2" value="{{ classes[2].min_num }}"/>
+        <input type="hidden" name="end_hour_2" value="{{ classes[2].end_hour }}"/>
+        <input type="hidden" name="end_min_2" value="{{ classes[2].end_min }}"/>
+        <!-- Event Seperator -->
+        <input type="hidden" name="month_num_3" value="{{ classes[3].month_num }}"/>
+        <input type="hidden" name="day_num_3" value="{{ classes[3].day_num }}"/>
+        <input type="hidden" name="hour_num_3" value="{{ classes[3].hour_num }}"/>
+        <input type="hidden" name="min_num_3" value="{{ classes[3].min_num }}"/>
+        <input type="hidden" name="end_hour_3" value="{{ classes[3].end_hour }}"/>
+        <input type="hidden" name="end_min_3" value="{{ classes[3].end_min }}"/>
+      {% else %}
+        <script>console.log("No events to show")</script>
       {% endif %}
       <input type="submit" name="Submit" value="Add to Calendar"/>
     </form>
