@@ -670,7 +670,7 @@ router.get('/class_selector_force/(:month)/(:day)', (req, res) => {
 })
 
 router.get('/class_remove/(:barcode)/(:class_id)/(:class_level)/(:class_time)', (req, res) => {
-  const remove_query = 'delete from student_classes where class_id = $1 and barcode = $2;'
+  const remove_query = 'delete from class_signups where class_session_id = $1 and barcode = $2;'
   db.any(remove_query, [req.params.class_id, req.params.barcode])
     .then(function (rows) {
       res.redirect('https://ema-planner.herokuapp.com/class_checkin/' + req.params.class_id + '/' + req.params.class_level + '/' + req.params.class_time);
@@ -682,22 +682,14 @@ router.get('/class_remove/(:barcode)/(:class_id)/(:class_level)/(:class_time)', 
 })
 
 router.get('/update_checkin/(:barcode)/(:class_id)/(:class_level)/(:class_time)/(:class_check)', (req, res) => {
-  const insert_query = 'insert into student_classes (class_id, barcode) values ($1, $2);';
-  const update_status = 'update class_signups set checked_in = true where class_check = $1;';//UPDATE WITH WORKING VERSION
-  db.any(insert_query, [req.params.class_id, req.params.barcode])
+  const update_status = 'update class_signups set checked_in = true where class_check = $1;';
+  db.none(update_status, [req.params.class_check])
     .then(rows => {
-      db.none(update_status, [req.params.class_check])
-        .then(rows => {
-          res.redirect('https://ema-planner.herokuapp.com/class_checkin/' + req.params.class_id + '/' + req.params.class_level + '/' + req.params.class_time);
-        })
-        .catch(err => {
-          console.log('Could not update checked_in status of ' + req.params.class_session_id);
-          res.redirect('https://ema-planner.herokuapp.com/class_checkin/' + req.params.class_id + '/' + req.params.class_level + '/' + req.params.class_time);
-        })
+      res.redirect('https://ema-planner.herokuapp.com/class_checkin/' + req.params.class_id + '/' + req.params.class_level + '/' + req.params.class_time);
     })
     .catch(err => {
-      console.log('Could not check in person from class with class_id and barcode ' + req.params.class_id + ', ' + req.params.barcode + '. Err: ' + err);
-      res.redirect('https://ema-planner.herokuapp.com/class_selector');
+      console.log('Could not update checked_in status of ' + req.params.class_session_id);
+      res.redirect('https://ema-planner.herokuapp.com/class_checkin/' + req.params.class_id + '/' + req.params.class_level + '/' + req.params.class_time);
     })
 })
 
@@ -2249,7 +2241,7 @@ router.get('/process_classes/(:student_name)/(:barcode)/(:belt_group)/(:id_set)'
             })
         })
         .catch(err => {
-          console.log('Could not find email. Error: ' = err);
+          console.log('Could not find email. Error: ' + err);
           res.render('temp_classes', {
             level: 'none',
             alert_message: "Could not find an email associated with that student."
@@ -2278,7 +2270,7 @@ router.get('/process_classes/(:student_name)/(:barcode)/(:belt_group)/(:id_set)'
             })
         })
         .catch(err => {
-          console.log('Could not find email. Error: ' = err);
+          console.log('Could not find email. Error: ' + err);
           res.render('temp_classes', {
             level: 'none',
             alert_message: "Could not find an email associated with that student."
@@ -2307,7 +2299,7 @@ router.get('/process_classes/(:student_name)/(:barcode)/(:belt_group)/(:id_set)'
             })
         })
         .catch(err => {
-          console.log('Could not find email. Error: ' = err);
+          console.log('Could not find email. Error: ' + err);
           res.render('temp_classes', {
             level: 'none',
             alert_message: "Could not find an email associated with that student."
@@ -2336,7 +2328,7 @@ router.get('/process_classes/(:student_name)/(:barcode)/(:belt_group)/(:id_set)'
             })
         })
         .catch(err => {
-          console.log('Could not find email. Error: ' = err);
+          console.log('Could not find email. Error: ' + err);
           res.render('temp_classes', {
             level: 'none',
             alert_message: "Could not find an email associated with that student."
