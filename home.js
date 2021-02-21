@@ -2554,7 +2554,7 @@ router.post('/build_ics', (req, res) => {
   const year = new Date().getFullYear();
   switch (Number(input.num_events)){
     case 1:
-      const {error, value} = ics.createEvents([
+      var {error, value} = ics.createEvents([
         {
           title: input.name + "'s Karate Class",
           start: [year, Number(input.month), Number(input.day), Number(input.start_hour), Number(input.start_min)],
@@ -2580,7 +2580,7 @@ router.post('/build_ics', (req, res) => {
       res.redirect('/cal_down/' + filename);
       break;
     case 2:
-      const {error, value} = ics.createEvents([
+      var {error, value} = ics.createEvents([
         {
           title: input.name + "'s Karate Class",
           start: [year, Number(input.month), Number(input.day), Number(input.start_hour), Number(input.start_min)],
@@ -2620,7 +2620,7 @@ router.post('/build_ics', (req, res) => {
       res.redirect('/cal_down/' + filename);
       break;
     case 3:
-      const {error, value} = ics.createEvents([
+      var {error, value} = ics.createEvents([
         {
           title: input.name + "'s Karate Class",
           start: [year, Number(input.month), Number(input.day), Number(input.start_hour), Number(input.start_min)],
@@ -2674,7 +2674,7 @@ router.post('/build_ics', (req, res) => {
       res.redirect('/cal_down/' + filename);
       break;
     case 4:
-      const {error, value} = ics.createEvents([
+      var {error, value} = ics.createEvents([
         {
           title: input.name + "'s Karate Class",
           start: [year, Number(input.month), Number(input.day), Number(input.start_hour), Number(input.start_min)],
