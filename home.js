@@ -741,7 +741,7 @@ router.post('/class_checkin', (req, res) => {
   const stud_info = parseStudentInfo(item.stud_data);//name, barcode
   console.log('stud_info: ' + stud_info);
   const temp_class_check = stud_info[0].toLowerCase().split(" ").join("") + item.class_id.toString();
-  const query = 'insert into class_signups (student_name, email, class_session_id, barcode, class_check) values ($1, (select lower(email) from student_list where barcode = $2), $3, $4, $5) on conflict (class_check) do nothing;'
+  const query = 'insert into class_signups (student_name, email, class_session_id, barcode, class_check, checked_in) values ($1, (select lower(email) from student_list where barcode = $2), $3, $4, $5, true) on conflict (class_check) do nothing;'
   db.any(query, [stud_info[0], stud_info[1], item.class_id, stud_info[1], temp_class_check])
     .then(function (rows1) {
       res.redirect('class_checkin/' + item.class_id + '/' + item.level + '/' + item.time)
@@ -2206,12 +2206,12 @@ function parseID(id_set) {
 }
 
 router.get('/process_classes/(:student_name)/(:barcode)/(:belt_group)/(:id_set)', (req, res) => {
-  const query_classes = "insert into class_signups (student_name, email, belt, class_session_id, class_check, barcode) values ($1, (select lower(email) from student_list where barcode = $2), $3, $4, $5, $6);";
+  const query_classes = "insert into class_signups (student_name, email, class_session_id, class_check, barcode) values ($1, (select lower(email) from student_list where barcode = $2), $3, $4, $5);";
   const email_info = "select email from student_list where barcode = $1;"
   var id_set = parseID(req.params.id_set);
   id_set.forEach(element => {
     var temp_class_check = req.params.student_name.toLowerCase().split(" ").join("") + element.toString();
-    db.none(query_classes, [req.params.student_name, req.params.barcode, req.params.belt_group, element, temp_class_check, req.params.barcode])
+    db.none(query_classes, [req.params.student_name, req.params.barcode, element, temp_class_check, req.params.barcode])
       .then(rows => {
         console.log('Added class with element ' + element);
       })
