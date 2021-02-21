@@ -2301,11 +2301,12 @@ router.get('/process_classes/(:student_name)/(:barcode)/(:belt_group)/(:id_set)'
         .then(email => {
           db.any(end_query, [id_set[0]])
             .then(rows => {
-              res.render('class_confirmed/1', {
+              res.render('class_confirmed', {
                 classes: rows,
                 email: email,
                 student_name: req.params.student_name,
-                belt_group: req.params.belt_color
+                belt_group: req.params.belt_color,
+                num_events: 1
               })
             })
             .catch(err => {
@@ -2421,13 +2422,13 @@ router.get('/process_classes/(:student_name)/(:barcode)/(:belt_group)/(:id_set)'
   };
 })
 
-router.get('/class_confirmed/(:num_events)', (req, res) => {
+router.get('/class_confirmed/', (req, res) => {
   res.render('class_confirmed', {
     classes: '',
     email: '',
     student_name: '',
     belt_group: '',
-    num_events: req.params.num_events
+    num_events: ''
   })
 })
 
