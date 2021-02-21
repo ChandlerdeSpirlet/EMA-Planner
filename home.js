@@ -4,6 +4,8 @@ const nunjucks = require('nunjucks')
 const session = require('express-session')
 const exp_val = require('express-validator')
 var flash = require('connect-flash')
+const ics = require('ics')
+const { writeFileSync } = require('fs')
 
 const app = express()
 app.use(flash());
@@ -2430,6 +2432,60 @@ router.get('/class_confirmed/', (req, res) => {
     belt_group: '',
     num_events: ''
   })
+})
+
+router.post('/build_ics', (req, res) => {
+  const input = {
+    num_events: req.sanitize('num_events').trim(),
+    month: req.sanitize('month_num').trim(),
+    day: req.sanitize('day_num').trim(),
+    start_hour: req.sanitize('hour_num').trim(),
+    start_min: req.sanitize('min_num').trim(),
+    end_hour: req.sanitize('end_hour').trim(),
+    end_min: req.sanitize('end_min').trim(),
+    email: req.sanitize('email').trim(),
+    name: req.sanitize('student_name').trim(),
+  }
+  switch (input.num_events){
+    case 1:
+      alarms = [];
+      alarms.push({
+        action: 'audio',
+        trigger: {hours:2,minutes:30,before:true},
+        repeat: 2,
+        attachType:'VALUE=URI',
+        attach: 'Glass',
+
+      })
+      const {error, value} = ics.createEvents([
+        {
+          title: input.name + "'s Karate Class",
+          start: [2021, Number(input.month), Number(input.day), Number(input.start_hour), Number(input.start_min)],
+          end: [2021, Number(input.month), Number(input.day), Number(input.end_hour), Number(input.end_min)],
+          url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
+          busyStatus: 'BUSY',
+          status: 'CONFIRMED',
+          location: 'Exclusive Martial Arts'
+        }
+      ])
+      if (error){
+        console.log("Error creating calendar events: " + error);
+        alert('ERROR: ' + error);
+      }
+      console.log('Dir: ' + `${__dirname}`);
+      var filename = input.name.replace(/\s/g, "").toLowerCase() + '.ics';
+      writeFileSync(`${__dirname}/` + filename, value);
+      res.render('download_page', {
+        url_path: `${__dirname}/` + filename
+      })
+      break;
+    default:
+      console.log('No data to create ics');
+      res.render('temp_classes', {
+        alert_message: "Could not create a calendar event",
+        level: 'calendar issue'
+      })
+  }
 })
 
 router.get('/student_classes', (req, res) => {

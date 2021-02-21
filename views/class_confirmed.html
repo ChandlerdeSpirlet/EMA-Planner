@@ -50,17 +50,6 @@
     }
 </style>
 <body>
-  {% if num_events == '1' %}
-    <meta name="num_events" content="1"/>
-    <meta name="month_num" content="{{ classes[0].month_num }}"/>
-    <meta name="day_num" content="{{ classes[0].day_num }}"/>
-    <meta name="hour_num" content="{{ classes[0].hour_num }}"/>
-    <meta name="min_num" content="{{ classes[0].min_num }}"/>
-    <meta name="end_hour" content="{{ classes[0].end_hour }}"/>
-    <meta name="end_min" content="{{ classes[0].end_min }}"/>
-    <meta name="email" content="{{ email[0].email }}"/>
-    <meta name="student_name" content="{{ student_name }}"/>
-  {% endif %}
   <div id="page-container">
     <div id="content-wrap">
       <h2>{{ student_name }} is signed up for the following classes: </h2>
@@ -72,48 +61,22 @@
         {% endif %}
       </ul>
       <p style="text-emphasis: large;">If you need to take your name off of the list for any particular class, please use the tool on the app under the in-person class signup tab. You can lookup all of your classes using the email: <strong>{{ email[0].email }}</strong></p>
-      <p>(This page will return to the class signup page in 5 seconds.)</p>
     </div>
     <a href="https://ema-planner.herokuapp.com/student_classes"><button type="button">All Done</button></a><br>
-    <button type="button" onclick="javascript: addAlert()" disabled>Add to Calendar</button>
+    <form name="Form" action="/build_ics" method="POST">
+      {% if num_events == '1' %}
+        <input type="hidden" name="num_events" value="{{ num_events }}"/>
+        <input type="hidden" name="month_num" value="{{ classes[0].month_num }}"/>
+        <input type="hidden" name="day_num" value="{{ classes[0].day_num }}"/>
+        <input type="hidden" name="hour_num" value="{{ classes[0].hour_num }}"/>
+        <input type="hidden" name="min_num" value="{{ classes[0].min_num }}"/>
+        <input type="hidden" name="end_hour" value="{{ classes[0].end_hour }}"/>
+        <input type="hidden" name="end_min" value="{{ classes[0].end_min }}"/>
+        <input type="hidden" name="email" value="{{ email[0].email }}"/>
+        <input type="hidden" name="student_name" value="{{ student_name }}"/>
+      {% endif %}
+      <input type="submit" name="Submit" value="Add to Calendar"/>
+    </form>
   </div>
 </body>
 </html>
-<script>
-  function addAlert(){
-    const ics = require('ics');
-    var num_events = document.getElementsByName('num_events')[0].content;
-    var month_num = document.getElementsByName('month_num')[0].content;
-    var day_num = document.getElementsByName('day_num')[0].content;
-    var hour_num = document.getElementsByName('hour_num')[0].content;
-    var min_num = document.getElementsByName('min_num')[0].content;
-    var end_hour = document.getElementsByName('end_hour')[0].content;
-    var end_min = document.getElementsByName('end_min')[0].content;
-    var email = document.getElementsByName('email')[0].content;
-    var student_name = document.getElementsByName('student_name')[0].content;
-    alarms = [];
-    alarms.push({
-      action: 'audio',
-      trigger: {hours:2,minutes:30,before:true},
-      repeat: 2,
-      attachType:'VALUE=URI',
-      attach: 'Glass',
-
-    })
-    const {error, value} = ics.createEvents([
-      {
-        title: student_name + "'s Karate Class",
-        start: [2021, month_num, day_num, hour_num, min_num],
-        end: [2021, month_num, day_num, end_hour, end_min],
-        url: 'https://ema-planner.herokuapp.com/classes_email/' + email,
-        busyStatus: 'BUSY',
-        status: 'CONFIRMED',
-        location: 'Exclusive Martial Arts'
-      }
-    ])
-    if (error){
-      console.log("Error creating calendar events: " + error);
-      alert('ERROR: ' + error);
-    }
-  }
-</script>
