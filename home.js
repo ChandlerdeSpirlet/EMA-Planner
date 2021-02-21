@@ -2338,7 +2338,8 @@ router.get('/process_classes/(:student_name)/(:barcode)/(:belt_group)/(:id_set)'
                 classes: rows,
                 email: email,
                 student_name: req.params.student_name,
-                belt_group: req.params.belt_color
+                belt_group: req.params.belt_color,
+                num_events: 2
               })
             })
             .catch(err => {
@@ -2367,7 +2368,8 @@ router.get('/process_classes/(:student_name)/(:barcode)/(:belt_group)/(:id_set)'
                 classes: rows,
                 email: email,
                 student_name: req.params.student_name,
-                belt_group: req.params.belt_color
+                belt_group: req.params.belt_color,
+                num_events: 3
               })
             })
             .catch(err => {
@@ -2396,7 +2398,8 @@ router.get('/process_classes/(:student_name)/(:barcode)/(:belt_group)/(:id_set)'
                 classes: rows,
                 email: email,
                 student_name: req.params.student_name,
-                belt_group: req.params.belt_color
+                belt_group: req.params.belt_color,
+                num_events: 4
               })
             })
             .catch(err => {
