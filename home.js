@@ -2548,9 +2548,12 @@ router.post('/build_ics', (req, res) => {
     trigger: {hours:2,minutes:30,before:true},
     repeat: 2,
     attachType:'VALUE=URI',
-    attach: 'Glass',
-
+    attach: 'Glass'
   })
+  console.log('num events: ' + Number(input.num_events));
+  console.log('0: ' + input.start_hour);
+  console.log('1: ' + input.hour_1);
+  console.log('2: ' + input.hour_2);
   const year = new Date().getFullYear();
   switch (Number(input.num_events)){
     case 1:
