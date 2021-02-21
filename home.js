@@ -2550,7 +2550,7 @@ router.post('/build_ics', (req, res) => {
     attachType:'VALUE=URI',
     attach: 'Glass'
   })
-  console.log('num events: ' + Number(input.num_events));
+  console.log('num events: ' + Number(num_in.num_events));
   console.log('0: ' + input.start_hour);
   console.log('1: ' + input.hour_1);
   console.log('2: ' + input.hour_2);
