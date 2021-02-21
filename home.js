@@ -2446,7 +2446,11 @@ router.post('/build_ics', (req, res) => {
     email: req.sanitize('email').trim(),
     name: req.sanitize('student_name').trim(),
   }
-  switch (input.num_events){
+  console.log('input: ');
+  console.log(input.num_events);
+  console.log(input.day_num);
+  console.log(input.email + ' ' + input.name);
+  switch (Number(input.num_events)){
     case 1:
       alarms = [];
       alarms.push({
