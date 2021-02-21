@@ -64,7 +64,7 @@
     </div>
     <a href="https://ema-planner.herokuapp.com/student_classes"><button type="button">All Done</button></a><br>
     <form name="Form" action="/build_ics" method="POST">
-      {% if num_events == '1' || num_events == 1 %}
+      {% if num_events == '1' or num_events == 1 %}
         <input type="hidden" name="num_events" value="{{ num_events }}"/>
         <input type="hidden" name="month_num" value="{{ classes[0].month_num }}"/>
         <input type="hidden" name="day_num" value="{{ classes[0].day_num }}"/>
