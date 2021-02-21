@@ -1880,32 +1880,50 @@ router.get('/dragons_signup', (req, res) => {
     res.redirect('https://ema-planner.herokuapp.com/dragons_signup');
   } else {
     const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, level from classes where level = -1 and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
-    db.any(class_query)
-      .then(rows => {
-        if (rows.length == 0) {
-          res.render('temp_classes', {
-            level: 'dragons'
+    const get_names = "select * from signup_names(-1);";
+    db.any(get_names)
+      .then(names => {
+        db.any(class_query)
+          .then(rows => {
+            if (rows.length == 0) {
+              res.render('temp_classes', {
+                level: 'dragons'
+              })
+            } else {
+              res.render('dragons_signup', {
+                alert_message: '',
+                fname: '',
+                lname: '',
+                level: '',
+                email: '',
+                classes: rows,
+                names: names
+              })
+            }
           })
-        } else {
-          res.render('dragons_signup', {
-            alert_message: '',
-            fname: '',
-            lname: '',
-            level: '',
-            email: '',
-            classes: rows
+          .catch(err => {
+            console.log('Could not render Little Dragons classes. ERROR: ' + err);
+            res.render('dragons_signup', {
+              alert_message: 'Could not find Little Dragons classes.',
+              fname: '',
+              lname: '',
+              level: '',
+              email: '',
+              classes: 'Unable to show classes.',
+              names: ''
+            })
           })
-        }
       })
       .catch(err => {
-        console.log('Could not render dragons classes. ERROR: ' + err);
+        console.log('Could not render Little Dragons names. ERROR: ' + err);
         res.render('dragons_signup', {
-          alert_message: 'Could not find dragons classes.',
+          alert_message: 'Could not find dragons names to display.',
           fname: '',
           lname: '',
           level: '',
           email: '',
-          classes: 'Unable to show classes.'
+          classes: 'Unable to show classes.',
+          names: ''
         })
       })
   }
@@ -1916,32 +1934,50 @@ router.get('/basic_signup', (req, res) => {
     res.redirect('https://ema-planner.herokuapp.com/basic_signup');
   } else {
     const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, level from classes where level in (0, 0.5) and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
-    db.any(class_query)
-      .then(rows => {
-        if (rows.length == 0) {
-          res.render('temp_classes', {
-            level: 'basic'
+    const get_names = "select * from signup_names(0);";
+    db.any(get_names)
+      .then(names => {
+        db.any(class_query)
+          .then(rows => {
+            if (rows.length == 0) {
+              res.render('temp_classes', {
+                level: 'basic'
+              })
+            } else {
+              res.render('basic_signup', {
+                alert_message: '',
+                fname: '',
+                lname: '',
+                level: '',
+                email: '',
+                classes: rows,
+                names: names
+              })
+            }
           })
-        } else {
-          res.render('basic_signup', {
-            alert_message: '',
-            fname: '',
-            lname: '',
-            level: '',
-            email: '',
-            classes: rows
+          .catch(err => {
+            console.log('Could not render black belt classes. ERROR: ' + err);
+            res.render('basic_signup', {
+              alert_message: 'Could not find basic classes.',
+              fname: '',
+              lname: '',
+              level: '',
+              email: '',
+              classes: 'Unable to show classes.',
+              names: ''
+            })
           })
-        }
       })
       .catch(err => {
-        console.log('Could not render basic classes. ERROR: ' + err);
+        console.log('Could not render basic names. ERROR: ' + err);
         res.render('basic_signup', {
-          alert_message: 'Could not find basic classes.',
+          alert_message: 'Could not find basic names to display.',
           fname: '',
           lname: '',
           level: '',
           email: '',
-          classes: 'Unable to show classes.'
+          classes: 'Unable to show classes.',
+          names: ''
         })
       })
   }
@@ -1952,32 +1988,50 @@ router.get('/level1_signup', (req, res) => {
     res.redirect('https://ema-planner.herokuapp.com/level1_signup');
   } else {
     const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, level from classes where level in (1, 1.5) and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
-    db.any(class_query)
-      .then(rows => {
-        if (rows.length == 0) {
-          res.render('temp_classes', {
-            level: 'level 1'
+    const get_names = "select * from signup_names(1);";
+    db.any(get_names)
+      .then(names => {
+        db.any(class_query)
+          .then(rows => {
+            if (rows.length == 0) {
+              res.render('temp_classes', {
+                level: 'level 1'
+              })
+            } else {
+              res.render('level1_signup', {
+                alert_message: '',
+                fname: '',
+                lname: '',
+                level: '',
+                email: '',
+                classes: rows,
+                names: names
+              })
+            }
           })
-        } else {
-          res.render('level1_signup', {
-            alert_message: '',
-            fname: '',
-            lname: '',
-            level: '',
-            email: '',
-            classes: rows
+          .catch(err => {
+            console.log('Could not render level 1 classes. ERROR: ' + err);
+            res.render('level1_signup', {
+              alert_message: 'Could not find level 1 classes.',
+              fname: '',
+              lname: '',
+              level: '',
+              email: '',
+              classes: 'Unable to show classes.',
+              names: ''
+            })
           })
-        }
       })
       .catch(err => {
-        console.log('Could not render level 1 classes. ERROR: ' + err);
+        console.log('Could not render level 1 names. ERROR: ' + err);
         res.render('level1_signup', {
-          alert_message: 'Could not find level 1 classes.',
+          alert_message: 'Could not find level 1 names to display.',
           fname: '',
           lname: '',
           level: '',
           email: '',
-          classes: 'Unable to show classes.'
+          classes: 'Unable to show classes.',
+          names: ''
         })
       })
   }
@@ -1988,32 +2042,50 @@ router.get('/level2_signup', (req, res) => {
     res.redirect('https://ema-planner.herokuapp.com/level2_signup');
   } else {
     const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, level from classes where level = 2 and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
-    db.any(class_query)
-      .then(rows => {
-        if (rows.length == 0) {
-          res.render('temp_classes', {
-            level: 'level 2'
+    const get_names = "select * from signup_names(2);";
+    db.any(get_names)
+      .then(names => {
+        db.any(class_query)
+          .then(rows => {
+            if (rows.length == 0) {
+              res.render('temp_classes', {
+                level: 'level 2'
+              })
+            } else {
+              res.render('level2_signup', {
+                alert_message: '',
+                fname: '',
+                lname: '',
+                level: '',
+                email: '',
+                classes: rows,
+                names: names
+              })
+            }
           })
-        } else {
-          res.render('level2_signup', {
-            alert_message: '',
-            fname: '',
-            lname: '',
-            level: '',
-            email: '',
-            classes: rows
+          .catch(err => {
+            console.log('Could not render level 2 classes. ERROR: ' + err);
+            res.render('level2_signup', {
+              alert_message: 'Could not find level 2 classes.',
+              fname: '',
+              lname: '',
+              level: '',
+              email: '',
+              classes: 'Unable to show classes.',
+              names: ''
+            })
           })
-        }
       })
       .catch(err => {
-        console.log('Could not render level 2 classes. ERROR: ' + err);
+        console.log('Could not render level 2 names. ERROR: ' + err);
         res.render('level2_signup', {
-          alert_message: 'Could not find level 2 classes.',
+          alert_message: 'Could not find level 2 names to display.',
           fname: '',
           lname: '',
           level: '',
           email: '',
-          classes: 'Unable to show classes.'
+          classes: 'Unable to show classes.',
+          names: ''
         })
       })
   }
@@ -2024,32 +2096,50 @@ router.get('/level3_signup', (req, res) => {
     res.redirect('https://ema-planner.herokuapp.com/level3_signup');
   } else {
     const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, level from classes where level = 3 and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
-    db.any(class_query)
-      .then(rows => {
-        if (rows.length == 0) {
-          res.render('temp_classes', {
-            level: 'level 3'
+    const get_names = "select * from signup_names(3);";
+    db.any(get_names)
+      .then(names => {
+        db.any(class_query)
+          .then(rows => {
+            if (rows.length == 0) {
+              res.render('temp_classes', {
+                level: 'level 3'
+              })
+            } else {
+              res.render('level3_signup', {
+                alert_message: '',
+                fname: '',
+                lname: '',
+                level: '',
+                email: '',
+                classes: rows,
+                names: names
+              })
+            }
           })
-        } else {
-          res.render('level3_signup', {
-            alert_message: '',
-            fname: '',
-            lname: '',
-            level: '',
-            email: '',
-            classes: rows
+          .catch(err => {
+            console.log('Could not render level 3 classes. ERROR: ' + err);
+            res.render('level3_signup', {
+              alert_message: 'Could not find level 3 classes.',
+              fname: '',
+              lname: '',
+              level: '',
+              email: '',
+              classes: 'Unable to show classes.',
+              names: ''
+            })
           })
-        }
       })
       .catch(err => {
-        console.log('Could not render level 3 classes. ERROR: ' + err);
+        console.log('Could not render level 3 names. ERROR: ' + err);
         res.render('level3_signup', {
-          alert_message: 'Could not find level 3 classes.',
+          alert_message: 'Could not find level 3 names to display.',
           fname: '',
           lname: '',
           level: '',
           email: '',
-          classes: 'Unable to show classes.'
+          classes: 'Unable to show classes.',
+          names: ''
         })
       })
   }
@@ -2111,71 +2201,56 @@ router.get('/bb_signup', (req, res) => {
 
 router.post('/dragons_signup', (req, res) => {
   const item = {
-    fname: req.sanitize('fname').trim(),
-    lname: req.sanitize('lname').trim(),
-    email: req.sanitize('email').trim(),
+    stud_data: req.sanitize('result').trim(),
     day_time: req.sanitize('day_time')
   }
   belt_group = 'Little Dragons';
-  const email = String(item.email).toLowerCase();
-  const student_name = item.fname + ' ' + item.lname;
-  const redir_link = 'process_classes/' + student_name + '/' + email + '/' + belt_group + '/' + item.day_time;
+  const stud_info = parseStudentInfo(item.stud_data);
+  const redir_link = 'process_classes/' + stud_info[0] + '/' + stud_info[1] + '/' + belt_group + '/' + item.day_time;
   res.redirect(redir_link);
 })
 
 router.post('/basic_signup', (req, res) => {
   const item = {
-    fname: req.sanitize('fname').trim(),
-    lname: req.sanitize('lname').trim(),
-    email: req.sanitize('email').trim(),
+    stud_data: req.sanitize('result').trim(),
     day_time: req.sanitize('day_time')
   }
   belt_group = 'Basic';
-  const email = String(item.email).toLowerCase();
-  const student_name = item.fname + ' ' + item.lname;
-  const redir_link = 'process_classes/' + student_name + '/' + email + '/' + belt_group + '/' + item.day_time;
+  const stud_info = parseStudentInfo(item.stud_data);
+  const redir_link = 'process_classes/' + stud_info[0] + '/' + stud_info[1] + '/' + belt_group + '/' + item.day_time;
   res.redirect(redir_link);
 })
 
 router.post('/level1_signup', (req, res) => {
   const item = {
-    fname: req.sanitize('fname').trim(),
-    lname: req.sanitize('lname').trim(),
-    email: req.sanitize('email').trim(),
+    stud_data: req.sanitize('result').trim(),
     day_time: req.sanitize('day_time')
   }
   belt_group = 'Level 1';
-  const email = String(item.email).toLowerCase();
-  const student_name = item.fname + ' ' + item.lname;
-  const redir_link = 'process_classes/' + student_name + '/' + email + '/' + belt_group + '/' + item.day_time;
+  const stud_info = parseStudentInfo(item.stud_data);
+  const redir_link = 'process_classes/' + stud_info[0] + '/' + stud_info[1] + '/' + belt_group + '/' + item.day_time;
   res.redirect(redir_link);
 })
 
 router.post('/level2_signup', (req, res) => {
   const item = {
-    fname: req.sanitize('fname').trim(),
-    lname: req.sanitize('lname').trim(),
-    email: req.sanitize('email').trim(),
+    stud_data: req.sanitize('result').trim(),
     day_time: req.sanitize('day_time')
   }
   belt_group = 'Level 2';
-  const email = String(item.email).toLowerCase();
-  const student_name = item.fname + ' ' + item.lname;
-  const redir_link = 'process_classes/' + student_name + '/' + email + '/' + belt_group + '/' + item.day_time;
+  const stud_info = parseStudentInfo(item.stud_data);
+  const redir_link = 'process_classes/' + stud_info[0] + '/' + stud_info[1] + '/' + belt_group + '/' + item.day_time;
   res.redirect(redir_link);
 })
 
 router.post('/level3_signup', (req, res) => {
   const item = {
-    fname: req.sanitize('fname').trim(),
-    lname: req.sanitize('lname').trim(),
-    email: req.sanitize('email').trim(),
+    stud_data: req.sanitize('result').trim(),
     day_time: req.sanitize('day_time')
   }
   belt_group = 'Level 3';
-  const email = String(item.email).toLowerCase();
-  const student_name = item.fname + ' ' + item.lname;
-  const redir_link = 'process_classes/' + student_name + '/' + email + '/' + belt_group + '/' + item.day_time;
+  const stud_info = parseStudentInfo(item.stud_data);
+  const redir_link = 'process_classes/' + stud_info[0] + '/' + stud_info[1] + '/' + belt_group + '/' + item.day_time;
   res.redirect(redir_link);
 })
 

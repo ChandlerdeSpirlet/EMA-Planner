@@ -99,8 +99,42 @@
     a:active {
       color: white;
     }
+    .autocomplete {
+      /*the container must be positioned relative:*/
+      position: relative;
+      padding-left: 20%;
+      padding-right: 20%;
+      /*display: inline-block;*/
+    }
+    .autocomplete-items {
+      position: absolute;
+      border: 1px solid black;
+      border-bottom: none;
+      border-top: none;
+      z-index: 99;
+      /*position the autocomplete items to be the same width as the container:*/
+      top: 100%;
+      left: 0;
+      right: 0;
+    }
+    .autocomplete-items div {
+      padding: 10px;
+      cursor: pointer;
+      background-color: lightblue; 
+      border-bottom: 1px solid #d4d4d4; 
+    }
+    .autocomplete-items div:hover {
+      /*when hovering an item:*/
+      background-color: darkcyan; 
+    }
+    .autocomplete-active {
+      /*when navigating through the items using the arrow keys:*/
+      background-color: blue !important; 
+      color: black; 
+    }
   </style>
   <head>
+    <meta name="name_data" content="{% for student in names %} {{ student.student_name }} - {{ student.barcode }} {% endfor %}"/>
     <h1>Level 2 Class Signup</h1>
     <p>One person per signup please.</p>
     <p>Basic class times are available at the school at the times below.</p>
@@ -130,18 +164,9 @@
   </ul>
   </head>
   <body>
-    <form onsubmit="return ValidateForm()" name="Form" action="/level2_signup" method="POST">
-      <div>
-        <label for="fname">First Name: </label>
-        <input type="first name" name="fname" id="fname" pattern="[A-z]{1}[A-z ]+" value="{{ fname }}" placeholder="First Name" required>
-      </div><br>
-      <div>
-        <label for="lname">Last Name: </label>
-        <input type="last name" name="lname" id="lname" pattern="[A-z]{1}[A-z ]+" value="{{ lname }}" placeholder="Last Name" required>
-      </div><br>
-      <div>
-        <label for="email">Email: </label>
-        <input type="email" name="email" id="email" pattern="[A-z0-9.]+[@][A-z0-9]{1,}[.]+[A-z]{2,}" value="{{ email }}" placeholder="email" required>
+    <form onsubmit="return ValidateForm()" name="Form" action="/level2_signup" method="POST" autocomplete="off">
+      <div class="autocomplete">
+        <input id="result" name="result" type="text" placeholder="Student's First Name" value="{{ result }}">
       </div><br>
       <label>Class Days and Times: </label>
       {% if classes %}
@@ -175,20 +200,10 @@
     }
   }
   function ValidateForm(){
-        var fname = document.getElementById('fname');
-        var lname = document.getElementById('lname');
-        var email = document.getElementById('email');
+        var name = document.getElementById('result');
         var choice = document.getElementsByClassName('day_time');
-        if (fname == null || fname == ""){
-            alert("First name is required and must contain at least two letters.");
-            return false;
-        }
-        if (lname == null || lname == ""){
-            alert("Last name is required and must contain at least two letters.");
-            return false;
-        }
-        if (email == null || email == ""){
-            alert("An email is required. We use this in case we need to contact you.");
+        if (name == null || name == ""){
+            alert("Student name is required and must contain at least two letters.");
             return false;
         }
         if (choice == null || choice == ""){
@@ -198,3 +213,126 @@
         return true;
     }
 </script>
+<script>
+  var data1 = document.getElementsByName('name_data')[0].content;
+      function parseNames(name_data){
+          var name_arr = []
+          name_data = name_data.substring(1, name_data.length);
+          while (name_data.length > 0){
+              if (name_data.indexOf('  ') != -1){
+                  var idx = name_data.indexOf('  ');
+                  var stud_name = name_data.substring(0, name_data.indexOf('  '));
+                  name_arr.push(stud_name);
+                  name_data = name_data.substring(idx + 2, name_data.length);
+              } else {
+                  var stud_name = name_data;
+                  name_arr.push(stud_name);
+                  name_data = '';
+              }
+          }
+          return name_arr;
+      }
+      console.log('data1:');
+      console.log(data1);
+      var names = parseNames(data1);
+      console.log('names:' + names);
+      function autocomplete(inp, arr) {
+      /*the autocomplete function takes two arguments,
+      the text field element and an array of possible autocompleted values:*/
+      var currentFocus;
+      /*execute a function when someone writes in the text field:*/
+      inp.addEventListener("input", function(e) {
+          var a, b, i, val = this.value;
+          /*close any already open lists of autocompleted values*/
+          closeAllLists();
+          if (!val) { return false;}
+          currentFocus = -1;
+          /*create a DIV element that will contain the items (values):*/
+          a = document.createElement("DIV");
+          a.setAttribute("id", this.id + "autocomplete-list");
+          a.setAttribute("class", "autocomplete-items");
+          /*append the DIV element as a child of the autocomplete container:*/
+          this.parentNode.appendChild(a);
+          /*for each item in the array...*/
+          for (i = 0; i < arr.length; i++) {
+              /*check if the item starts with the same letters as the text field value:*/
+              if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+              /*create a DIV element for each matching element:*/
+              b = document.createElement("DIV");
+              /*make the matching letters bold:*/
+              b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+              b.innerHTML += arr[i].substr(val.length);
+              /*insert a input field that will hold the current array item's value:*/
+              b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+              /*execute a function when someone clicks on the item value (DIV element):*/
+                  b.addEventListener("click", function(e) {
+                  /*insert the value for the autocomplete text field:*/
+                  inp.value = this.getElementsByTagName("input")[0].value;
+                  /*close the list of autocompleted values,
+                  (or any other open lists of autocompleted values:*/
+                  closeAllLists();
+              });
+              a.appendChild(b);
+          }
+      }
+  });
+  /*execute a function presses a key on the keyboard:*/
+  inp.addEventListener("keydown", function(e) {
+      var x = document.getElementById(this.id + "autocomplete-list");
+      if (x) x = x.getElementsByTagName("div");
+      if (e.keyCode == 40) {
+          /*If the arrow DOWN key is pressed,
+          increase the currentFocus variable:*/
+          currentFocus++;
+          /*and and make the current item more visible:*/
+          addActive(x);
+      } else if (e.keyCode == 38) { //up
+          /*If the arrow UP key is pressed,
+          decrease the currentFocus variable:*/
+          currentFocus--;
+          /*and and make the current item more visible:*/
+          addActive(x);
+      } else if (e.keyCode == 13) {
+          /*If the ENTER key is pressed, prevent the form from being submitted,*/
+          e.preventDefault();
+          if (currentFocus > -1) {
+              /*and simulate a click on the "active" item:*/
+              if (x) x[currentFocus].click();
+          }
+      }
+  });
+  function addActive(x) {
+      /*a function to classify an item as "active":*/
+      if (!x) return false;
+      /*start by removing the "active" class on all items:*/
+      removeActive(x);
+      if (currentFocus >= x.length) currentFocus = 0;
+      if (currentFocus < 0) currentFocus = (x.length - 1);
+      /*add class "autocomplete-active":*/
+      x[currentFocus].classList.add("autocomplete-active");
+  }
+  function removeActive(x) {
+      /*a function to remove the "active" class from all autocomplete items:*/
+      for (var i = 0; i < x.length; i++) {
+          x[i].classList.remove("autocomplete-active");
+      }
+  }
+  function closeAllLists(elmnt) {
+      /*close all autocomplete lists in the document,
+      except the one passed as an argument:*/
+      var x = document.getElementsByClassName("autocomplete-items");
+      for (var i = 0; i < x.length; i++) {
+          if (elmnt != x[i] && elmnt != inp) {
+              x[i].parentNode.removeChild(x[i]);
+          }
+      }
+  }
+  /*execute a function when someone clicks in the document:*/
+  document.addEventListener("click", function (e) {
+      closeAllLists(e.target);
+  });
+  }
+  </script>
+  <script>
+      autocomplete(document.getElementById("result"), names);
+  </script>
