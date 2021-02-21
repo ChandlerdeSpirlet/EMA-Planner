@@ -6,6 +6,7 @@ const exp_val = require('express-validator')
 var flash = require('connect-flash')
 const ics = require('ics')
 const { writeFileSync } = require('fs')
+const { readFileSync } = require('fs')
 
 const app = express()
 app.use(flash());
@@ -2502,7 +2503,7 @@ router.post('/build_ics', (req, res) => {
 })
 
 app.get('/cal_down/(:filename)', function (req, res){
-  var data =fs.readFileSync(__dirname + '/' + req.params.filename);
+  var data = readFileSync(__dirname + '/' + req.params.filename);
   res.setHeader("Content-Type", mime.lookup(url));
   res.send(data);
 });
