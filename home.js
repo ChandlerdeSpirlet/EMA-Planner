@@ -2504,7 +2504,7 @@ router.post('/build_ics', (req, res) => {
 
 app.get('/cal_down/(:filename)', function (req, res){
   var data = readFileSync(__dirname + '/' + req.params.filename);
-  res.setHeader("Content-Type", mime.lookup(url));
+  res.contentType("text/calendar")
   res.send(data);
 });
 
