@@ -2490,9 +2490,7 @@ router.post('/build_ics', (req, res) => {
       var filename = input.name.replace(/\s/g, "").toLowerCase() + '.ics';
       writeFileSync(`${__dirname}/` + filename, value);
       console.log('File path is ' + `${__dirname}/` + filename);
-      res.render('download_page', {
-        url_path: `${__dirname}/` + filename
-      })
+      res.redirect('/cal_down/' + filename);
       break;
     default:
       console.log('No data to create ics');
@@ -2502,6 +2500,12 @@ router.post('/build_ics', (req, res) => {
       })
   }
 })
+
+app.get('/cal_down/(:filename)', function (req, res){
+  var data =fs.readFileSync(__dirname + '/' + req.params.filename);
+  res.setHeader("Content-Type", mime.lookup(url));
+  res.send(data);
+});
 
 router.get('/student_classes', (req, res) => {
   res.render('student_classes'), {
