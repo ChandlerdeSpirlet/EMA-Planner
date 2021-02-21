@@ -2489,6 +2489,7 @@ router.post('/build_ics', (req, res) => {
       console.log('Dir: ' + `${__dirname}`);
       var filename = input.name.replace(/\s/g, "").toLowerCase() + '.ics';
       writeFileSync(`${__dirname}/` + filename, value);
+      console.log('File path is ' + `${__dirname}/` + filename);
       res.render('download_page', {
         url_path: `${__dirname}/` + filename
       })
