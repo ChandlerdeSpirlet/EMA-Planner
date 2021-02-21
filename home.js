@@ -2205,7 +2205,7 @@ function parseID(id_set) {
 }
 
 router.get('/process_classes/(:student_name)/(:barcode)/(:belt_group)/(:id_set)', (req, res) => {
-  const query_classes = "insert into class_signups (student_name, email, belt, class_session_id, class_check, barcode) values ($1, lower(select email from student_list where barcode = $2), $3, $4, $5, $6);";
+  const query_classes = "insert into class_signups (student_name, email, belt, class_session_id, class_check, barcode) values ($1, (select lower(email) from student_list where barcode = $2), $3, $4, $5, $6);";
   const email_info = "select email from student_list where barcode = $1;"
   var id_set = parseID(req.params.id_set);
   id_set.forEach(element => {
