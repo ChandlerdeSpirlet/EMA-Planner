@@ -201,20 +201,10 @@
     }
   }
   function ValidateForm(){
-        var fname = document.getElementById('fname');
-        var lname = document.getElementById('lname');
-        var email = document.getElementById('email');
+        var name = document.getElementById('result');
         var choice = document.getElementsByClassName('day_time');
-        if (fname == null || fname == ""){
-            alert("First name is required and must contain at least two letters.");
-            return false;
-        }
-        if (lname == null || lname == ""){
-            alert("Last name is required and must contain at least two letters.");
-            return false;
-        }
-        if (email == null || email == ""){
-            alert("An email is required. We use this in case we need to contact you.");
+        if (name == null || name == ""){
+            alert("Student name is required and must contain at least two letters.");
             return false;
         }
         if (choice == null || choice == ""){
