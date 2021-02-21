@@ -2434,6 +2434,16 @@ router.get('/class_confirmed/', (req, res) => {
   })
 })
 
+router.get('/download_done/(:url)', (req, res) => {
+    fs.unlink(req.params.url, (err) => {
+      if (err) {
+        console.error(err)
+        return
+      }
+  })
+  res.redirect('https://ema-planner.herokuapp.com/student_classes');
+})
+
 router.post('/build_ics', (req, res) => {
   const input = {
     num_events: req.sanitize('num_events').trim(),
@@ -2448,7 +2458,7 @@ router.post('/build_ics', (req, res) => {
   }
   console.log('input: ');
   console.log(input.num_events);
-  console.log(input.day_num);
+  console.log(input.day);
   console.log(input.email + ' ' + input.name);
   switch (Number(input.num_events)){
     case 1:
