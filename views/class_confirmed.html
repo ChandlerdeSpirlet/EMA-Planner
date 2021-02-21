@@ -1,7 +1,6 @@
 <html>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/png" href="https://ema-planner.herokuapp.com/views/ema.png">
-  <meta http-equiv="refresh" content = "5; url = https://ema-planner.herokuapp.com/student_classes"/>
   <title>Class Confirmed for {{ student_name }}</title>
   <style>
     * {
@@ -29,15 +28,25 @@
     #content-wrap {
       padding-bottom: 2.5rem;    /* Footer height */
     }
-    #footer {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      height: 2.5rem;            /* Footer height */
-      color: black;
-    }
     ul {
       color: black;
+    }
+    button {
+      display: block;
+      font-size: 100%;
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+      width: 100%;
+      padding: 5px;
+      height: 60px;
+      align-content: center;
+      background-color: transparent;
+      border: 1px solid black;
+    }
+    button {
+      width: 60%;
+      margin: 0 auto;
     }
 </style>
 <body>
@@ -54,9 +63,13 @@
       <p style="text-emphasis: large;">If you need to take your name off of the list for any particular class, please use the tool on the app under the in-person class signup tab. You can lookup all of your classes using the email: <strong>{{ email[0].email }}</strong></p>
       <p>(This page will return to the class signup page in 5 seconds.)</p>
     </div>
-    <footer id="footer">
-      Intellectual property of Chandler de Spirlet.
-    </footer>
+    <a href="https://ema-planner.herokuapp.com/student_classes"><button type="button">All Done</button></a><br>
+    <button type="button" onclick="javascript: addAlert()" disabled>Add to Calendar</button>
   </div>
 </body>
 </html>
+<script>
+  function addAlert(){
+    alert("hell0");
+  }
+</script>
