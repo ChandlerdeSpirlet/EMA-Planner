@@ -2768,6 +2768,23 @@ router.get('/student_classes', (req, res) => {
   }
 })
 
+router.get('/belt_inventory', (req, res) => {
+  const belt_query = "select * from belt_inventory;";
+  db.any(belt_query)
+    .then(rows => {
+      res.render('belt_inventory', {
+        belts: rows,
+        alert_message: ''
+      })
+    })
+    .catch(err => {
+      res.render('belt_inventory', {
+        belts: '',
+        alert_message: 'ERROR. Could not get any belt data. Error: ' + err
+      })
+    })
+})
+
 app.post('/webook_ps', (req, res) => {
   let event = req.body.event_type;
   try {

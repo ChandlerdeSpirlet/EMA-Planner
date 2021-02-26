@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {% if alert_message != '' %}
+    <script>alert("{{ alert_message }}")</script>
+  {% endif %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+* {
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+/* Set height of body and the document to 100% */
+body, html {
+  min-height: 100%;
+  margin: 0;
+}
+
+/* Style tab links */
+.tablink {
+  background-color: #555;
+  color: white;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  font-size: 17px;
+  width: 25%;
+}
+
+.tablink:hover {
+  background-color: #777;
+}
+
+/* Style the tab content (and add height:100% for full page content) */
+.tabcontent {
+  color: white;
+  display: none;
+  padding: 100px 20px;
+  height: 100%;
+}
+
+#Dragons {
+  background-image: linear-gradient(#43d4e7, #9ed7ff);
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+#L1 {
+  background-image: linear-gradient(#ec925d, #59e477);
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+#L2 {
+  background-image: linear-gradient(#c768f3, #6c8be0);
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+#L3 {
+  background-image: linear-gradient(#f36767, #bb9462);
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+</style>
+</head>
+<body>
+
+<button class="tablink" onclick="openPage('Dragons', this, 'orange')">Home</button>
+<button class="tablink" onclick="openPage('L1', this, 'green')" id="defaultOpen">News</button>
+<button class="tablink" onclick="openPage('L2', this, 'blue')">Contact</button>
+<button class="tablink" onclick="openPage('L3', this, 'red')">About</button>
+
+<div id="Dragons" class="tabcontent">
+  <h3>Little Dragons</h3>
+  <table>
+    <tr>
+      <th>Belt Color</th>
+      <th>Size 0</th>
+    </tr>
+    {% for belt in belts %}
+      {% if belt.belt_id == 'dragonsgold0' %}
+        <tr>
+          <td>{{ belt.color }}</td>
+          <td>{{ belt.quantity }}</td>
+        </tr>
+      {% endif %}
+      {% if belt.belt_id == 'dragonsorange0' %}
+        <tr>
+          <td>{{ belt.color }}</td>
+          <td>{{ belt.quantity }}</td>
+        </tr>
+      {% endif %}
+      {% if belt.belt_id == 'dragonsgreen0' %}
+        <tr>
+          <td>{{ belt.color }}</td>
+          <td>{{ belt.quantity }}</td>
+        </tr>
+      {% endif %}
+      {% if belt.belt_id == 'dragonspurple0' %}
+        <tr>
+          <td>{{ belt.color }}</td>
+          <td>{{ belt.quantity }}</td>
+        </tr>
+      {% endif %}
+      {% if belt.belt_id == 'dragonsblue0' %}
+        <tr>
+          <td>{{ belt.color }}</td>
+          <td>{{ belt.quantity }}</td>
+        </tr>
+      {% endif %}
+      {% if belt.belt_id == 'dragonsred0' %}
+        <tr>
+          <td>{{ belt.color }}</td>
+          <td>{{ belt.quantity }}</td>
+        </tr>
+      {% endif %}
+      {% if belt.belt_id == 'dragonsbrown0' %}
+        <tr>
+          <td>{{ belt.color }}</td>
+          <td>{{ belt.quantity }}</td>
+        </tr>
+      {% endif %}
+    {% endfor %}
+  </table>
+</div>
+
+<div id="News" class="tabcontent">
+  <h3>News</h3>
+  <p>Some news this fine day!</p> 
+</div>
+
+<div id="Contact" class="tabcontent">
+  <h3>Contact</h3>
+  <p>Get in touch, or swing by for a cup of coffee.</p>
+</div>
+
+<div id="About" class="tabcontent">
+  <h3>About</h3>
+  <p>Who we are and what we do.</p>
+</div>
+
+<script>
+function openPage(pageName,elmnt,color) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablink");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].style.backgroundColor = "";
+  }
+  document.getElementById(pageName).style.display = "block";
+  elmnt.style.backgroundColor = color;
+}
+
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+</script>
+   
+</body>
+</html> 
+
