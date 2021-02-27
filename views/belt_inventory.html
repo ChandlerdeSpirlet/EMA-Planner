@@ -2,6 +2,7 @@
 <html>
 <head>
   {% extends 'nav_bar.html' %}
+  {% set local = 'Tests' %}
   {% block content %}
   {% if alert_message != '' %}
     <script>alert("{{ alert_message }}")</script>
@@ -14,7 +15,7 @@
   }
 
 /* Set height of body and the document to 100% */
-body, html {
+html {
   min-height: 100%;
   margin: 0;
 }
@@ -50,6 +51,7 @@ body, html {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+  min-height: 100%;
 }
 #Basic {
   background-image: linear-gradient(#e7e7e7, #fcff67);
@@ -57,6 +59,7 @@ body, html {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+  min-height: 100%;
 }
 #L1 {
   background-image: linear-gradient(#ec925d, #59e477);
@@ -64,6 +67,7 @@ body, html {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+  min-height: 100%;
 }
 #L2 {
   background-image: linear-gradient(#c768f3, #6c8be0);
@@ -71,6 +75,7 @@ body, html {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+  min-height: 100%;
 }
 #L3 {
   background-image: linear-gradient(#f36767, #bb9462);
@@ -78,6 +83,7 @@ body, html {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+  min-height: 100%;
 }
 td, th {
   border: 1px solid black;
@@ -157,47 +163,37 @@ table {
   <h2>Basic</h2>
   <table>
     <tr>
-      <th>Belt Color</th>
-      <th>Size 00</th>
-      <th>Size 0</th>
-      <th>Size 1</th>
-      <th>Size 2</th>
-      <th>Size 3</th>
-      <th>Size 4</th>
-      <th>Size 5</th>
-      <th>Size 6</th>
-      <th>Size 7</th>
-      <th>Size 8</th>
+      <th>Belt Size</th>
+      <th>White Belt</th>
+      <th>Gold Belt</th>
     </tr>
     {% for belt in belts %}
-      {% if belt.color == 'White' %}
+      {% if belt.size == '00' %}
         <tr>
-          <td style="font-weight: bold;">{{ belt.color }}</td>
-          <td>{{ belt.quantity }}</td>
-          <td>{{ belt.quantity }}</td>
-          <td>{{ belt.quantity }}</td>
-          <td>{{ belt.quantity }}</td>
-          <td>{{ belt.quantity }}</td>
-          <td>{{ belt.quantity }}</td>
-          <td>{{ belt.quantity }}</td>
-          <td>{{ belt.quantity }}</td>
-          <td>{{ belt.quantity }}</td>
-          <td>{{ belt.quantity }}</td>
+          <td style="font-weight: bold;">Size 00</td>
+          <td>if {% belt.belt_id == 'white00' %} {{ belt.quantity }} {% endif %}</td>
+          <td></td>
         </tr>
       {% endif %}
-      {% if belt.color == 'Gold' %}
+      {% if belt.size == '0' %}
         <tr>
-          <td style="font-weight: bold;">{{ belt.color }}</td>
-          <td></td>
-          <td>{{ belt.quantity }}</td>
-          <td>{{ belt.quantity }}</td>
-          <td>{{ belt.quantity }}</td>
-          <td>{{ belt.quantity }}</td>
-          <td>{{ belt.quantity }}</td>
-          <td>{{ belt.quantity }}</td>
-          <td>{{ belt.quantity }}</td>
-          <td>{{ belt.quantity }}</td>
-          <td>{{ belt.quantity }}</td>
+          <td style="font-weight: bold;">Size 0</td>
+          <td>if {% belt.belt_id == 'white0' %} {{ belt.quantity }} {% endif %}</td>
+          <td>if {% belt.belt_id == 'gold0' %} {{ belt.quantity }} {% endif %}</td>
+        </tr>
+      {% endif %}
+      {% if belt.size == '1' %}
+        <tr>
+          <td style="font-weight: bold;">Size 0</td>
+          <td>if {% belt.belt_id == 'white1' %} {{ belt.quantity }} {% endif %}</td>
+          <td>if {% belt.belt_id == 'gold1' %} {{ belt.quantity }} {% endif %}</td>
+        </tr>
+      {% endif %}
+      {% if belt.size == '2' %}
+        <tr>
+          <td style="font-weight: bold;">Size 0</td>
+          <td>if {% belt.belt_id == 'white2' %} {{ belt.quantity }} {% endif %}</td>
+          <td>if {% belt.belt_id == 'gold2' %} {{ belt.quantity }} {% endif %}</td>
         </tr>
       {% endif %}
     {% endfor %}

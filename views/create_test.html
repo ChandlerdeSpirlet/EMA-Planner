@@ -1,6 +1,7 @@
 <html>
   <title>Create a Belt Test</title>
   {% extends 'nav_bar.html' %}
+  {% set local = 'Tests' %}
   {% block content %}
   {% if alert_message != '' %}
     <script>alert("{{ alert_message }}")</script>
