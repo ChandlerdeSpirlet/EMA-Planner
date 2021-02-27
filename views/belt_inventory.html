@@ -190,7 +190,7 @@ table {
     <tr>
       <td style="font-weight: bold;">Gold</td>
       {% for belt in belts %}
-        <td></td>
+        <td>{% if belt.belt_id == 'gold00' %} {{ belt.quantity }} {% endif %}</td>
         <td>{% if belt.belt_id == 'gold0' %} {{ belt.quantity }} {% endif %}</td>
         <td>{% if belt.belt_id == 'gold1' %} {{ belt.quantity }} {% endif %}</td>
         <td>{% if belt.belt_id == 'gold2' %} {{ belt.quantity }} {% endif %}</td>
