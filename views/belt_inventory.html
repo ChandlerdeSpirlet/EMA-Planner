@@ -171,29 +171,29 @@ table {
       {% if belt.size == '00' %}
         <tr>
           <td style="font-weight: bold;">Size 00</td>
-          <td>if {% belt.belt_id == 'white00' %} {{ belt.quantity }} {% endif %}</td>
+          <td>{% if belt.belt_id == 'white00' %} {{ belt.quantity }} {% endif %}</td>
           <td></td>
         </tr>
       {% endif %}
       {% if belt.size == '0' %}
         <tr>
           <td style="font-weight: bold;">Size 0</td>
-          <td>if {% belt.belt_id == 'white0' %} {{ belt.quantity }} {% endif %}</td>
-          <td>if {% belt.belt_id == 'gold0' %} {{ belt.quantity }} {% endif %}</td>
+          <td>{% if belt.belt_id == 'white0' %} {{ belt.quantity }} {% endif %}</td>
+          <td>{% if belt.belt_id == 'gold0' %} {{ belt.quantity }} {% endif %}</td>
         </tr>
       {% endif %}
       {% if belt.size == '1' %}
         <tr>
           <td style="font-weight: bold;">Size 0</td>
-          <td>if {% belt.belt_id == 'white1' %} {{ belt.quantity }} {% endif %}</td>
-          <td>if {% belt.belt_id == 'gold1' %} {{ belt.quantity }} {% endif %}</td>
+          <td>{% if belt.belt_id == 'white1' %} {{ belt.quantity }} {% endif %}</td>
+          <td>{% if belt.belt_id == 'gold1' %} {{ belt.quantity }} {% endif %}</td>
         </tr>
       {% endif %}
       {% if belt.size == '2' %}
         <tr>
           <td style="font-weight: bold;">Size 0</td>
-          <td>if {% belt.belt_id == 'white2' %} {{ belt.quantity }} {% endif %}</td>
-          <td>if {% belt.belt_id == 'gold2' %} {{ belt.quantity }} {% endif %}</td>
+          <td>{% if belt.belt_id == 'white2' %} {{ belt.quantity }} {% endif %}</td>
+          <td>{% if belt.belt_id == 'gold2' %} {{ belt.quantity }} {% endif %}</td>
         </tr>
       {% endif %}
     {% endfor %}
