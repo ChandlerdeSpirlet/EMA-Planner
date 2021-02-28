@@ -1166,45 +1166,10 @@ router.post('/email_lookup', (req, res) => {
 
 router.get('/classes_email/(:email)', (req, res) => {
   const test_query = "select s.student_name, s.session_id, s.test_id, s.email, to_char(i.test_date, 'Month') || ' ' || to_char(i.test_date, 'DD') || ' at ' || to_char(i.test_time, 'HH:MI PM') as test_instance from test_signups s, test_instance i where s.email = $1 and i.id = s.test_id order by i.test_date;";
-  const class_query = "select s.student_name, s.email, s.class_check, s.class_session_id, to_char(c.starts_at, 'Month') || ' ' || to_char(c.starts_at, 'DD') || ' at ' || to_char(c.starts_at, 'HH:MI') as class_instance, c.starts_at, c.class_id from classes c, class_signups s where s.email = $1 and s.class_session_id = c.class_id order by c.starts_at;";
-  const swat_query = "select s.student_name, s.email, s.class_check, s.class_session_id, to_char(c.starts_at, 'Month') || ' ' || to_char(c.starts_at, 'DD') || ' at ' || to_char(c.starts_at, 'HH:MI') as class_instance, c.starts_at, c.class_id from classes c, class_signups s where s.email = $1 and s.class_session_id = c.class_id and s.is_swat = true order by c.starts_at;";
+  const class_query = "select s.student_name, s.email, s.class_check, s.class_session_id, s.is_swat, to_char(c.starts_at, 'Month') || ' ' || to_char(c.starts_at, 'DD') || ' at ' || to_char(c.starts_at, 'HH:MI') as class_instance, c.starts_at, c.class_id from classes c, class_signups s where s.email = $1 and s.class_session_id = c.class_id order and s.is_swat = false by c.starts_at;";
+  const swat_query = "select s.student_name, s.email, s.class_check, s.is_swat, s.class_session_id, to_char(c.starts_at, 'Month') || ' ' || to_char(c.starts_at, 'DD') || ' at ' || to_char(c.starts_at, 'HH:MI') as class_instance, c.starts_at, c.class_id from classes c, class_signups s where s.email = $1 and s.class_session_id = c.class_id and s.is_swat = true order by c.starts_at;";
   db.any(class_query, [req.params.email])
     .then(classes => {
-      if (classes.lenth == 0) {
-        db.any(test_query, [req.params.email])
-          .then(tests => {
-            if (tests.length == 0) {
-              res.render('email_lookup', {
-                email: req.params.email,
-                alert_message: 'No classes or tests associated with the email ' + req.params.email
-              })
-            } else {
-              db.any(test_query, [req.params.email])
-                .then(tests => {
-                  res.render('classes_email', {
-                    email: req.params.email,
-                    class_data: classes,
-                    test_data: tests,
-                    alert_message: ''
-                  })
-                })
-                .catch(err => {
-                  console.log('Unable to pull in tests. ERROR: ' + err);
-                  res.render('email_lookup', {
-                    email: req.params.email,
-                    alert_message: 'Database issue pulling in tests. Please see a staff member.'
-                  })
-                })
-            }
-          })
-          .catch(err => {
-            console.log('Unable to pull in tests. ERROR: ' + err);
-            res.render('email_lookup', {
-              email: req.params.email,
-              alert_message: 'Database issue pulling in tests. Please see a staff member.'
-            })
-          })
-      } else {
         db.any(test_query, [req.params.email])
           .then(tests => {
             db.any(swat_query, [req.params.email])
@@ -1224,15 +1189,13 @@ router.get('/classes_email/(:email)', (req, res) => {
                   alert_message: 'Database issue pulling in swats. Please see a staff member.'
                 })
               })
-          })
           .catch(err => {
-            console.log('Unable to pull in tests. ERROR: ' + err);
+            console.log('Unable to pull in tests. Error: ' + err);
             res.render('email_lookup', {
               email: req.params.email,
               alert_message: 'Database issue pulling in tests. Please see a staff member.'
             })
           })
-      }
     })
     .catch(err => {
       console.log('Unable to pull in classes. ERROR: ' + err);
