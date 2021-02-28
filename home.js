@@ -1216,7 +1216,7 @@ router.get('/classes_email/(:email)', (req, res) => {
     })
 })
 
-app.get('/delete_instance/(:id)/(:email)/(:type)', (req, res) => {
+app.get('/delete_instance/(:item_id)/(:id)/(:email)/(:type)', (req, res) => {
   switch (req.params.type) { //allows for addition of swat class
     case 'test':
       const drop_test = "delete from test_signups where session_id = $1 and email = $2;";
@@ -1253,7 +1253,7 @@ app.get('/delete_instance/(:id)/(:email)/(:type)', (req, res) => {
     case 'swat':
       const drop_class = "delete from class_signups where class_check = $1 and email = $2;";
       const update_count = "update classes set swat_count = swat_count - 1 where class_id = $1;"
-      db.none(update_count, [req.params.id])
+      db.none(update_count, [req.params.item_id])
         .then(row => {
           db.none(drop_class, [req.params.id, req.params.email])
             .then(rows => {

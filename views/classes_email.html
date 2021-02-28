@@ -73,7 +73,7 @@
             <tr>
               <td>{{ class.student_name }}</td>
               <td>{{ class.class_instance }}</td>
-              <td><a href="/delete_instance/{{ class.class_check }}/{{ email }}/class">Drop This Class</a></td>
+              <td><a href="/delete_instance/{{ class.class_session_id }}/{{ class.class_check }}/{{ email }}/class">Drop This Class</a></td>
             </tr>
           {% endif %}
         {% endfor %}
@@ -99,7 +99,7 @@
           <tr>
             <td>{{ test.student_name }}</td>
             <td>{{ test.test_instance }}</td>
-            <td><a href="/delete_instance/{{ test.session_id }}/{{ email }}/test">Drop This Test</a></td>
+            <td><a href="/delete_instance/{{ test.test_id }}/{{ test.session_id }}/{{ email }}/test">Drop This Test</a></td>
           </tr>
         {% endfor %}
       {% endif %}
@@ -125,7 +125,7 @@
             <tr>
               <td>{{ class.student_name }}</td>
               <td>{{ class.class_instance }}</td>
-              <td><a href="/delete_instance/{{ class.class_session_id }}/{{ email }}/swat">Drop This Class</a></td>
+              <td><a href="/delete_instance/{{ class.class_session_id }}/{{ class.class_check }}/{{ email }}/swat">Drop This Class</a></td>
             </tr>
           {% endif %}
         {% endfor %}
