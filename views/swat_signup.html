@@ -152,54 +152,54 @@
         <h2>Little Dragons</h2>
         {% for class in classes %}
           <div class="item">
-            <input type="checkbox" class="check" id="{{ class.class_id }}" name="day_time" value="{{ class.class_id }}">
             {% if class.level == '-1.0' %}
               <label for="{{ class.class_id }}" class="desc">{{ class.class_instance }} &mdash; {{ 3 - class.swat_count }} spaces remaining.</label>
+              <input type="checkbox" class="check" id="{{ class.class_id }}" name="day_time" value="{{ class.class_id }}">
             {% endif %}
           </div>
         {% endfor %}
         <h2>Basic</h2>
         {% for class in classes %}
           <div class="item">
-            <input type="checkbox" class="check" id="{{ class.class_id }}" name="day_time" value="{{ class.class_id }}">
             {% if class.level == '0.0' or class.level == '0.5' %}
               <label for="{{ class.class_id }}" class="desc">{{ class.class_instance }} &mdash; {{ 3 - class.swat_count }} spaces remaining.</label>
+              <input type="checkbox" class="check" id="{{ class.class_id }}" name="day_time" value="{{ class.class_id }}">
             {% endif %}
           </div>
         {% endfor %}
         <h2>Level 1</h2>
         {% for class in classes %}
           <div class="item">
-            <input type="checkbox" class="check" id="{{ class.class_id }}" name="day_time" value="{{ class.class_id }}">
             {% if class.level == '1.0' or class.level == '1.5' %}
               <label for="{{ class.class_id }}" class="desc">{{ class.class_instance }} &mdash; {{ 3 - class.swat_count }} spaces remaining.</label>
+              <input type="checkbox" class="check" id="{{ class.class_id }}" name="day_time" value="{{ class.class_id }}">
             {% endif %}
           </div>
         {% endfor %}
         <h2>Level 2</h2>
         {% for class in classes %}
           <div class="item">
-            <input type="checkbox" class="check" id="{{ class.class_id }}" name="day_time" value="{{ class.class_id }}">
             {% if class.level == '2.0' %}
               <label for="{{ class.class_id }}" class="desc">{{ class.class_instance }} &mdash; {{ 3 - class.swat_count }} spaces remaining.</label>
+              <input type="checkbox" class="check" id="{{ class.class_id }}" name="day_time" value="{{ class.class_id }}">
             {% endif %}
           </div>
         {% endfor %}
         <h2>Level 3</h2>
         {% for class in classes %}
           <div class="item">
-            <input type="checkbox" class="check" id="{{ class.class_id }}" name="day_time" value="{{ class.class_id }}">
             {% if class.level == '3.0' %}
               <label for="{{ class.class_id }}" class="desc">{{ class.class_instance }} &mdash; {{ 3 - class.swat_count }} spaces remaining.</label>
+              <input type="checkbox" class="check" id="{{ class.class_id }}" name="day_time" value="{{ class.class_id }}">
             {% endif %}
           </div>
         {% endfor %}
         <h2>Weapons</h2>
         {% for class in classes %}
           <div class="item">
-            <input type="checkbox" class="check" id="{{ class.class_id }}" name="day_time" value="{{ class.class_id }}">
             {% if class.level == '7.0' %}
               <label for="{{ class.class_id }}" class="desc">{{ class.class_instance }} &mdash; {{ 3 - class.swat_count }} spaces remaining.</label>
+              <input type="checkbox" class="check" id="{{ class.class_id }}" name="day_time" value="{{ class.class_id }}">
             {% endif %}
           </div>
         {% endfor %}
