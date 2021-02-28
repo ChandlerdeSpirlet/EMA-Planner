@@ -1250,6 +1250,35 @@ app.get('/delete_instance/(:id)/(:email)/(:type)', (req, res) => {
           })
         })
       break;
+    case 'swat':
+      const drop_class = "delete from class_signups where class_check = $1 and email = $2;";
+      const update_count = "update classes set swat_count = swat_count - 1 where class_id = $1;"
+      db.none(update_count, [req.params.id])
+        .then(row => {
+          db.none(drop_class, [req.params.id, req.params.email])
+            .then(rows => {
+              res.redirect('https://ema-planner.herokuapp.com/classes_email/' + req.params.email);
+            })
+            .catch(err => {
+              console.log('Unable to delete swat. ERR: ' + err);
+              res.render('classes_email', {
+                email: req.params.email,
+                class_data: '',
+                test_data: '',
+                alert_message: 'Unable to delete swat. Please refresh and try again. Otherwise, please see a staff member.'
+              })
+            })
+        })
+        .catch(err => {
+          console.log('Unable to update swat count. ERR: ' + err);
+          res.render('classes_email', {
+            email: req.params.email,
+            class_data: '',
+            test_data: '',
+            alert_message: 'Unable to delete swat count. Please refresh and try again. Otherwise, please see a staff member.'
+          })
+        })
+      break;
     default:
       console.log('Unknown delete type.');
       res.redirect('https://ema-planner.herokuapp.com/classes_email/' + req.params.email);
