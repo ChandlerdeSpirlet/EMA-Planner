@@ -69,11 +69,13 @@
       </tr>
       {% if class_data %}
         {% for class in class_data %}
-          <tr>
-            <td>{{ class.student_name }}</td>
-            <td>{{ class.class_instance }}</td>
-            <td><a href="/delete_instance/{{ class.class_check }}/{{ email }}/class">Drop This Class</a></td>
-          </tr>
+          {% if class.is_swat == 'false' %}
+            <tr>
+              <td>{{ class.student_name }}</td>
+              <td>{{ class.class_instance }}</td>
+              <td><a href="/delete_instance/{{ class.class_check }}/{{ email }}/class">Drop This Class</a></td>
+            </tr>
+          {% endif %}
         {% endfor %}
       {% endif %}
       {% if class_data.length == 0 %}
@@ -119,11 +121,13 @@
         </tr>
         {% if swat_data %}
         {% for class in swat_data %}
-          <tr>
-            <td>{{ class.student_name }}</td>
-            <td>{{ class.class_instance }}</td>
-            <td><a href="/delete_instance/{{ class.class_check }}/{{ email }}/class">Drop This Class</a></td>
-          </tr>
+          {% if class.is_swat == 'true' %}
+            <tr>
+              <td>{{ class.student_name }}</td>
+              <td>{{ class.class_instance }}</td>
+              <td><a href="/delete_instance/{{ class.class_check }}/{{ email }}/class">Drop This Class</a></td>
+            </tr>
+          {% endif %}
         {% endfor %}
       {% endif %}
       </table>

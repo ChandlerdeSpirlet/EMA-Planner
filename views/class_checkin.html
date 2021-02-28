@@ -182,10 +182,12 @@
                 <h3>Signed Up</h3>
                     <div style="align-content: center;">
                         {% for person in signedup %}
-                        <div class="chip2">
-                            {{ person.student_name}}
-                            <a href="/update_checkin/{{ person.barcode }}/{{ class_id }}/{{ level }}/{{ time }}/{{ person.class_check }}"><span class="closebtn2">&#x2713;</span></a>
-                        </div>
+                            {% if person.is_swat == false %}
+                                <div class="chip2">
+                                    {{ person.student_name}}
+                                    <a href="/update_checkin/{{ person.barcode }}/{{ class_id }}/{{ level }}/{{ time }}/{{ person.class_check }}"><span class="closebtn2">&#x2713;</span></a>
+                                </div>
+                            {% endif %}
                         {% endfor %}
                     </div>
                 <br>
@@ -193,7 +195,7 @@
                 <h3>Swatters</h3>
                     <div style="align-content: center;">
                         {% for person in signedup %}
-                            {% if person.is_swat == 'true' %}
+                            {% if person.is_swat == true %}
                                 <div class="chip2">
                                     {{ person.student_name}}
                                 </div>
