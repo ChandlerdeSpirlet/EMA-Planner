@@ -2338,14 +2338,21 @@ router.get('/process_classes/(:student_name)/(:barcode)/(:belt_group)/(:id_set)/
     const query_classes = "insert into class_signups (student_name, email, class_session_id, class_check, barcode, is_swat) values ($1, (select lower(email) from student_list where barcode = $2), $3, $4, $5, true) on conflict (class_check) do nothing;";
     const email_info = "select email from student_list where barcode = $1;"
     var id_set = parseID(req.params.id_set);
+    const swat_count = "update classes set swat_count = swat_count + 1 where class_id = $1;";
     id_set.forEach(element => {
       var temp_class_check = req.params.student_name.toLowerCase().split(" ").join("") + element.toString();
-      db.none(query_classes, [req.params.student_name, req.params.barcode, element, temp_class_check, req.params.barcode])
-        .then(rows => {
-          console.log('Added swat class with element ' + element);
+      db.none(swat_count, [element])
+        .then(row => {
+          db.none(query_classes, [req.params.student_name, req.params.barcode, element, temp_class_check, req.params.barcode])
+            .then(rows => {
+              console.log('Added swat class with element ' + element);
+            })
+            .catch(err => {
+              console.log('Err: with swat element ' + element + '. Err: ' + err);
+            })
         })
         .catch(err => {
-          console.log('Err: with swat element ' + element + '. Err: ' + err);
+          console.log('Could not update swat_count');
         })
     });
     switch (id_set.length) {
