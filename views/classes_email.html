@@ -109,5 +109,24 @@
           </tr>
       {% endif %}
     </table>
+    {% if swat_data.length > 0 %}
+      <h2>Swats</h2>
+      <table id="tests">
+        <tr>
+          <th>Student Name</th>
+          <th>Class Day/Time</th>
+          <th>Drop Class</th>
+        </tr>
+        {% if swat_data %}
+        {% for class in swat_data %}
+          <tr>
+            <td>{{ class.student_name }}</td>
+            <td>{{ class.class_instance }}</td>
+            <td><a href="/delete_instance/{{ class.class_check }}/{{ email }}/class">Drop This Class</a></td>
+          </tr>
+        {% endfor %}
+      {% endif %}
+      </table>
+    {% endif %}
   </body>
 </html>

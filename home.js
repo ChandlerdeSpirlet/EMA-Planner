@@ -700,7 +700,7 @@ router.get('/class_checkin/(:class_id)/(:class_level)/(:class_time)', (req, res)
   console.log('req.params.class_id = ' + req.params.class_id);
   const query = "select * from get_class_names($1);";
   const checked_in = "select student_name, barcode, class_check from class_signups where class_session_id = $1 and checked_in = true;";
-  const query_reserved = "select s.student_name, s.class_check, s.barcode from class_signups s where s.checked_in = false and s.class_session_id = $1;";
+  const query_reserved = "select s.student_name, s.class_check, s.barcode, s.is_swat from class_signups s where s.checked_in = false and s.class_session_id = $1;";
   db.any(checked_in, [req.params.class_id])
     .then(checkedIn => {
       db.any(query_reserved, [req.params.class_id])
@@ -1167,6 +1167,7 @@ router.post('/email_lookup', (req, res) => {
 router.get('/classes_email/(:email)', (req, res) => {
   const test_query = "select s.student_name, s.session_id, s.test_id, s.email, to_char(i.test_date, 'Month') || ' ' || to_char(i.test_date, 'DD') || ' at ' || to_char(i.test_time, 'HH:MI PM') as test_instance from test_signups s, test_instance i where s.email = $1 and i.id = s.test_id order by i.test_date;";
   const class_query = "select s.student_name, s.email, s.class_check, s.class_session_id, to_char(c.starts_at, 'Month') || ' ' || to_char(c.starts_at, 'DD') || ' at ' || to_char(c.starts_at, 'HH:MI') as class_instance, c.starts_at, c.class_id from classes c, class_signups s where s.email = $1 and s.class_session_id = c.class_id order by c.starts_at;";
+  const swat_query = "select s.student_name, s.email, s.class_check, s.class_session_id, to_char(c.starts_at, 'Month') || ' ' || to_char(c.starts_at, 'DD') || ' at ' || to_char(c.starts_at, 'HH:MI') as class_instance, c.starts_at, c.class_id from classes c, class_signups s where s.email = $1 and s.class_session_id = c.class_id and s.is_swat = true order by c.starts_at;";
   db.any(class_query, [req.params.email])
     .then(classes => {
       if (classes.lenth == 0) {
@@ -1206,12 +1207,23 @@ router.get('/classes_email/(:email)', (req, res) => {
       } else {
         db.any(test_query, [req.params.email])
           .then(tests => {
-            res.render('classes_email', {
-              email: req.params.email,
-              class_data: classes,
-              test_data: tests,
-              alert_message: ''
-            })
+            db.any(swat_query, [req.params.email])
+              .then(swats => {
+                res.render('classes_email', {
+                  email: req.params.email,
+                  class_data: classes,
+                  test_data: tests,
+                  swat_data: swats,
+                  alert_message: ''
+                })
+              })
+              .catch(err => {
+                console.log('Unable to pull in swats. Error: ' + err);
+                res.render('email_lookup', {
+                  email: req.params.email,
+                  alert_message: 'Database issue pulling in swats. Please see a staff member.'
+                })
+              })
           })
           .catch(err => {
             console.log('Unable to pull in tests. ERROR: ' + err);
@@ -2202,6 +2214,60 @@ router.get('/bb_signup', (req, res) => {
   }
 })
 
+router.get('/swat_signup', (req, res) => {
+  if (req.headers['x-forwarded-proto'] != 'https') {
+    res.redirect('https://ema-planner.herokuapp.com/swat_signup');
+  } else {
+    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, level, swat_count from classes where level in (7, 0.5, 2, 3, 1.5, 0, 1, -1) and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date and swat_count < 3 order by starts_at;";
+    const get_names = "select * from signup_names(5);";
+    db.any(get_names)
+      .then(names => {
+        db.any(class_query)
+          .then(rows => {
+            if (rows.length == 0) {
+              res.render('temp_classes', {
+                level: 'swat'
+              })
+            } else {
+              res.render('swat_signup', {
+                alert_message: '',
+                fname: '',
+                lname: '',
+                level: '',
+                email: '',
+                classes: rows,
+                names: names
+              })
+            }
+          })
+          .catch(err => {
+            console.log('Could not render swat classes. ERROR: ' + err);
+            res.render('swat_signup', {
+              alert_message: 'Could not find swat classes.',
+              fname: '',
+              lname: '',
+              level: '',
+              email: '',
+              classes: 'Unable to show classes.',
+              names: ''
+            })
+          })
+      })
+      .catch(err => {
+        console.log('Could not render swat names. ERROR: ' + err);
+        res.render('swat_signup', {
+          alert_message: 'Could not find swat names to display.',
+          fname: '',
+          lname: '',
+          level: '',
+          email: '',
+          classes: 'Unable to show classes.',
+          names: ''
+        })
+      })
+  }
+})
+
 router.post('/dragons_signup', (req, res) => {
   const item = {
     stud_data: req.sanitize('result').trim(),
@@ -2209,7 +2275,7 @@ router.post('/dragons_signup', (req, res) => {
   }
   belt_group = 'Little Dragons';
   const stud_info = parseStudentInfo(item.stud_data);
-  const redir_link = 'process_classes/' + stud_info[0] + '/' + stud_info[1] + '/' + belt_group + '/' + item.day_time;
+  const redir_link = 'process_classes/' + stud_info[0] + '/' + stud_info[1] + '/' + belt_group + '/' + item.day_time + '/not_swat';
   res.redirect(redir_link);
 })
 
@@ -2220,7 +2286,7 @@ router.post('/basic_signup', (req, res) => {
   }
   belt_group = 'Basic';
   const stud_info = parseStudentInfo(item.stud_data);
-  const redir_link = 'process_classes/' + stud_info[0] + '/' + stud_info[1] + '/' + belt_group + '/' + item.day_time;
+  const redir_link = 'process_classes/' + stud_info[0] + '/' + stud_info[1] + '/' + belt_group + '/' + item.day_time + '/not_swat';
   res.redirect(redir_link);
 })
 
@@ -2231,7 +2297,7 @@ router.post('/level1_signup', (req, res) => {
   }
   belt_group = 'Level 1';
   const stud_info = parseStudentInfo(item.stud_data);
-  const redir_link = 'process_classes/' + stud_info[0] + '/' + stud_info[1] + '/' + belt_group + '/' + item.day_time;
+  const redir_link = 'process_classes/' + stud_info[0] + '/' + stud_info[1] + '/' + belt_group + '/' + item.day_time + '/not_swat';
   res.redirect(redir_link);
 })
 
@@ -2242,7 +2308,7 @@ router.post('/level2_signup', (req, res) => {
   }
   belt_group = 'Level 2';
   const stud_info = parseStudentInfo(item.stud_data);
-  const redir_link = 'process_classes/' + stud_info[0] + '/' + stud_info[1] + '/' + belt_group + '/' + item.day_time;
+  const redir_link = 'process_classes/' + stud_info[0] + '/' + stud_info[1] + '/' + belt_group + '/' + item.day_time + '/not_swat';
   res.redirect(redir_link);
 })
 
@@ -2253,7 +2319,7 @@ router.post('/level3_signup', (req, res) => {
   }
   belt_group = 'Level 3';
   const stud_info = parseStudentInfo(item.stud_data);
-  const redir_link = 'process_classes/' + stud_info[0] + '/' + stud_info[1] + '/' + belt_group + '/' + item.day_time;
+  const redir_link = 'process_classes/' + stud_info[0] + '/' + stud_info[1] + '/' + belt_group + '/' + item.day_time + '/not_swat';
   res.redirect(redir_link);
 })
 
@@ -2264,7 +2330,18 @@ router.post('/bb_signup', (req, res) => {
   }
   belt_group = 'Black Belt';
   const stud_info = parseStudentInfo(item.stud_data);
-  const redir_link = 'process_classes/' + stud_info[0] + '/' + stud_info[1] + '/' + belt_group + '/' + item.day_time;
+  const redir_link = 'process_classes/' + stud_info[0] + '/' + stud_info[1] + '/' + belt_group + '/' + item.day_time + '/not_swat';
+  res.redirect(redir_link);
+})
+
+router.post('/swat_signup', (req, res) => {
+  const item = {
+    stud_data: req.sanitize('result').trim(),
+    day_time: req.sanitize('day_time')
+  }
+  belt_group = 'Swat';
+  const stud_info = parseStudentInfo(item.stud_data);
+  const redir_link = 'process_classes/' + stud_info[0] + '/' + stud_info[1] + '/' + belt_group + '/' + item.day_time + '/is_swat';
   res.redirect(redir_link);
 })
 
@@ -2283,149 +2360,302 @@ function parseID(id_set) {
   return set_id;
 }
 
-router.get('/process_classes/(:student_name)/(:barcode)/(:belt_group)/(:id_set)', (req, res) => {
-  const query_classes = "insert into class_signups (student_name, email, class_session_id, class_check, barcode) values ($1, (select lower(email) from student_list where barcode = $2), $3, $4, $5) on conflict (class_check) do nothing;";
-  const email_info = "select email from student_list where barcode = $1;"
-  var id_set = parseID(req.params.id_set);
-  id_set.forEach(element => {
-    var temp_class_check = req.params.student_name.toLowerCase().split(" ").join("") + element.toString();
-    db.none(query_classes, [req.params.student_name, req.params.barcode, element, temp_class_check, req.params.barcode])
-      .then(rows => {
-        console.log('Added class with element ' + element);
-      })
-      .catch(err => {
-        console.log('Err: with element ' + element + '. Err: ' + err);
-      })
-  });
-  switch (id_set.length) {
-    case 1:
-      var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id = $1;"
-      db.any(email_info, [req.params.barcode])
-        .then(email => {
-          db.any(end_query, [id_set[0]])
-            .then(rows => {
-              res.render('class_confirmed', {
-                classes: rows,
-                email: email,
-                student_name: req.params.student_name,
-                belt_group: req.params.belt_color,
-                num_events: 1
-              })
-            })
-            .catch(err => {
-              console.log('Err in displaying confirmed classes: ' + err);
-              res.render('temp_classes', {
-                alert_message: 'Unable to submit classes for signup.',
-                level: 'none'
-              })
-            })
+router.get('/process_classes/(:student_name)/(:barcode)/(:belt_group)/(:id_set)/(:swat)', (req, res) => {
+  if (req.params.swat == 'is_swat'){
+    const query_classes = "insert into class_signups (student_name, email, class_session_id, class_check, barcode, is_swat) values ($1, (select lower(email) from student_list where barcode = $2), $3, $4, $5, true) on conflict (class_check) do nothing;";
+    const email_info = "select email from student_list where barcode = $1;"
+    var id_set = parseID(req.params.id_set);
+    id_set.forEach(element => {
+      var temp_class_check = req.params.student_name.toLowerCase().split(" ").join("") + element.toString();
+      db.none(query_classes, [req.params.student_name, req.params.barcode, element, temp_class_check, req.params.barcode])
+        .then(rows => {
+          console.log('Added swat class with element ' + element);
         })
         .catch(err => {
-          console.log('Could not find email. Error: ' + err);
-          res.render('temp_classes', {
-            level: 'none',
-            alert_message: "Could not find an email associated with that student."
-          })
+          console.log('Err: with swat element ' + element + '. Err: ' + err);
         })
-      break;
-    case 2:
-      var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id in ($1, $2);"
-      db.any(email_info, [req.params.barcode])
-        .then(email => {
-          db.any(end_query, [id_set[0], id_set[1]])
-            .then(rows => {
-              res.render('class_confirmed', {
-                classes: rows,
-                email: email,
-                student_name: req.params.student_name,
-                belt_group: req.params.belt_color,
-                num_events: 2
+    });
+    switch (id_set.length) {
+      case 1:
+        var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id = $1;"
+        db.any(email_info, [req.params.barcode])
+          .then(email => {
+            db.any(end_query, [id_set[0]])
+              .then(rows => {
+                res.render('class_confirmed', {
+                  classes: rows,
+                  email: email,
+                  student_name: req.params.student_name,
+                  belt_group: req.params.belt_color,
+                  class_type: 'swat',
+                  num_events: 1
+                })
               })
-            })
-            .catch(err => {
-              console.log('Err in displaying confirmed classes: ' + err);
-              res.render('temp_classes', {
-                alert_message: 'Unable to submit classes for signup.',
-                level: 'none'
+              .catch(err => {
+                console.log('Err in displaying confirmed classes: ' + err);
+                res.render('temp_classes', {
+                  alert_message: 'Unable to submit classes for signup.',
+                  level: 'none'
+                })
               })
+          })
+          .catch(err => {
+            console.log('Could not find email. Error: ' + err);
+            res.render('temp_classes', {
+              level: 'none',
+              alert_message: "Could not find an email associated with that student."
             })
+          })
+        break;
+      case 2:
+        var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id in ($1, $2);"
+        db.any(email_info, [req.params.barcode])
+          .then(email => {
+            db.any(end_query, [id_set[0], id_set[1]])
+              .then(rows => {
+                res.render('class_confirmed', {
+                  classes: rows,
+                  email: email,
+                  student_name: req.params.student_name,
+                  belt_group: req.params.belt_color,
+                  class_type: 'swat',
+                  num_events: 2
+                })
+              })
+              .catch(err => {
+                console.log('Err in displaying confirmed classes: ' + err);
+                res.render('temp_classes', {
+                  alert_message: 'Unable to submit classes for signup.',
+                  level: 'none'
+                })
+              })
+          })
+          .catch(err => {
+            console.log('Could not find email. Error: ' + err);
+            res.render('temp_classes', {
+              level: 'none',
+              alert_message: "Could not find an email associated with that student."
+            })
+          })
+        break;
+      case 3:
+        var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id in ($1, $2, $3);"
+        db.any(email_info, [req.params.barcode])
+          .then(email => {
+            db.any(end_query, [id_set[0], id_set[1], id_set[2]])
+              .then(rows => {
+                res.render('class_confirmed', {
+                  classes: rows,
+                  email: email,
+                  student_name: req.params.student_name,
+                  belt_group: req.params.belt_color,
+                  class_type: 'swat',
+                  num_events: 3
+                })
+              })
+              .catch(err => {
+                console.log('Err in displaying confirmed classes: ' + err);
+                res.render('temp_classes', {
+                  alert_message: 'Unable to submit classes for signup.',
+                  level: 'none'
+                })
+              })
+          })
+          .catch(err => {
+            console.log('Could not find email. Error: ' + err);
+            res.render('temp_classes', {
+              level: 'none',
+              alert_message: "Could not find an email associated with that student."
+            })
+          })
+        break;
+      case 4:
+        var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id in ($1, $2, $3, $4);"
+        db.any(email_info, [req.params.barcode])
+          .then(email => {
+            db.any(end_query, [id_set[0], id_set[1], id_set[2], id_set[3]])
+              .then(rows => {
+                res.render('class_confirmed', {
+                  classes: rows,
+                  email: email,
+                  student_name: req.params.student_name,
+                  belt_group: req.params.belt_color,
+                  class_type: 'swat',
+                  num_events: 4
+                })
+              })
+              .catch(err => {
+                console.log('Err in displaying confirmed classes: ' + err);
+                res.render('temp_classes', {
+                  alert_message: 'Unable to submit classes for signup.',
+                  level: 'none'
+                })
+              })
+          })
+          .catch(err => {
+            console.log('Could not find email. Error: ' + err);
+            res.render('temp_classes', {
+              level: 'none',
+              alert_message: "Could not find an email associated with that student."
+            })
+          })
+        break;
+      default:
+        console.log('Length of id_set not within [1,4]. id_set is ' + id_set + ' with length of ' + id_set.length);
+        res.render('temp_classes', {
+          alert_message: 'Class IDs not properly set. Classes NOT signed up for.',
+          level: 'none'
+        })
+        break;
+    };
+  } else {
+    const query_classes = "insert into class_signups (student_name, email, class_session_id, class_check, barcode) values ($1, (select lower(email) from student_list where barcode = $2), $3, $4, $5) on conflict (class_check) do nothing;";
+    const email_info = "select email from student_list where barcode = $1;"
+    var id_set = parseID(req.params.id_set);
+    id_set.forEach(element => {
+      var temp_class_check = req.params.student_name.toLowerCase().split(" ").join("") + element.toString();
+      db.none(query_classes, [req.params.student_name, req.params.barcode, element, temp_class_check, req.params.barcode])
+        .then(rows => {
+          console.log('Added class with element ' + element);
         })
         .catch(err => {
-          console.log('Could not find email. Error: ' + err);
-          res.render('temp_classes', {
-            level: 'none',
-            alert_message: "Could not find an email associated with that student."
+          console.log('Err: with element ' + element + '. Err: ' + err);
+        })
+    });
+    switch (id_set.length) {
+      case 1:
+        var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id = $1;"
+        db.any(email_info, [req.params.barcode])
+          .then(email => {
+            db.any(end_query, [id_set[0]])
+              .then(rows => {
+                res.render('class_confirmed', {
+                  classes: rows,
+                  email: email,
+                  student_name: req.params.student_name,
+                  belt_group: req.params.belt_color,
+                  class_type: 'class',
+                  num_events: 1
+                })
+              })
+              .catch(err => {
+                console.log('Err in displaying confirmed classes: ' + err);
+                res.render('temp_classes', {
+                  alert_message: 'Unable to submit classes for signup.',
+                  level: 'none'
+                })
+              })
           })
-        })
-      break;
-    case 3:
-      var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id in ($1, $2, $3);"
-      db.any(email_info, [req.params.barcode])
-        .then(email => {
-          db.any(end_query, [id_set[0], id_set[1], id_set[2]])
-            .then(rows => {
-              res.render('class_confirmed', {
-                classes: rows,
-                email: email,
-                student_name: req.params.student_name,
-                belt_group: req.params.belt_color,
-                num_events: 3
-              })
+          .catch(err => {
+            console.log('Could not find email. Error: ' + err);
+            res.render('temp_classes', {
+              level: 'none',
+              alert_message: "Could not find an email associated with that student."
             })
-            .catch(err => {
-              console.log('Err in displaying confirmed classes: ' + err);
-              res.render('temp_classes', {
-                alert_message: 'Unable to submit classes for signup.',
-                level: 'none'
-              })
-            })
-        })
-        .catch(err => {
-          console.log('Could not find email. Error: ' + err);
-          res.render('temp_classes', {
-            level: 'none',
-            alert_message: "Could not find an email associated with that student."
           })
-        })
-      break;
-    case 4:
-      var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id in ($1, $2, $3, $4);"
-      db.any(email_info, [req.params.barcode])
-        .then(email => {
-          db.any(end_query, [id_set[0], id_set[1], id_set[2], id_set[3]])
-            .then(rows => {
-              res.render('class_confirmed', {
-                classes: rows,
-                email: email,
-                student_name: req.params.student_name,
-                belt_group: req.params.belt_color,
-                num_events: 4
+        break;
+      case 2:
+        var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id in ($1, $2);"
+        db.any(email_info, [req.params.barcode])
+          .then(email => {
+            db.any(end_query, [id_set[0], id_set[1]])
+              .then(rows => {
+                res.render('class_confirmed', {
+                  classes: rows,
+                  email: email,
+                  student_name: req.params.student_name,
+                  belt_group: req.params.belt_color,
+                  class_type: 'class',
+                  num_events: 2
+                })
               })
-            })
-            .catch(err => {
-              console.log('Err in displaying confirmed classes: ' + err);
-              res.render('temp_classes', {
-                alert_message: 'Unable to submit classes for signup.',
-                level: 'none'
+              .catch(err => {
+                console.log('Err in displaying confirmed classes: ' + err);
+                res.render('temp_classes', {
+                  alert_message: 'Unable to submit classes for signup.',
+                  level: 'none'
+                })
               })
-            })
-        })
-        .catch(err => {
-          console.log('Could not find email. Error: ' + err);
-          res.render('temp_classes', {
-            level: 'none',
-            alert_message: "Could not find an email associated with that student."
           })
+          .catch(err => {
+            console.log('Could not find email. Error: ' + err);
+            res.render('temp_classes', {
+              level: 'none',
+              alert_message: "Could not find an email associated with that student."
+            })
+          })
+        break;
+      case 3:
+        var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id in ($1, $2, $3);"
+        db.any(email_info, [req.params.barcode])
+          .then(email => {
+            db.any(end_query, [id_set[0], id_set[1], id_set[2]])
+              .then(rows => {
+                res.render('class_confirmed', {
+                  classes: rows,
+                  email: email,
+                  student_name: req.params.student_name,
+                  belt_group: req.params.belt_color,
+                  class_type: 'class',
+                  num_events: 3
+                })
+              })
+              .catch(err => {
+                console.log('Err in displaying confirmed classes: ' + err);
+                res.render('temp_classes', {
+                  alert_message: 'Unable to submit classes for signup.',
+                  level: 'none'
+                })
+              })
+          })
+          .catch(err => {
+            console.log('Could not find email. Error: ' + err);
+            res.render('temp_classes', {
+              level: 'none',
+              alert_message: "Could not find an email associated with that student."
+            })
+          })
+        break;
+      case 4:
+        var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id in ($1, $2, $3, $4);"
+        db.any(email_info, [req.params.barcode])
+          .then(email => {
+            db.any(end_query, [id_set[0], id_set[1], id_set[2], id_set[3]])
+              .then(rows => {
+                res.render('class_confirmed', {
+                  classes: rows,
+                  email: email,
+                  student_name: req.params.student_name,
+                  belt_group: req.params.belt_color,
+                  class_type: 'class',
+                  num_events: 4
+                })
+              })
+              .catch(err => {
+                console.log('Err in displaying confirmed classes: ' + err);
+                res.render('temp_classes', {
+                  alert_message: 'Unable to submit classes for signup.',
+                  level: 'none'
+                })
+              })
+          })
+          .catch(err => {
+            console.log('Could not find email. Error: ' + err);
+            res.render('temp_classes', {
+              level: 'none',
+              alert_message: "Could not find an email associated with that student."
+            })
+          })
+        break;
+      default:
+        console.log('Length of id_set not within [1,4]. id_set is ' + id_set + ' with length of ' + id_set.length);
+        res.render('temp_classes', {
+          alert_message: 'Class IDs not properly set. Classes NOT signed up for.',
+          level: 'none'
         })
-      break;
-    default:
-      console.log('Length of id_set not within [1,4]. id_set is ' + id_set + ' with length of ' + id_set.length);
-      res.render('temp_classes', {
-        alert_message: 'Class IDs not properly set. Classes NOT signed up for.',
-        level: 'none'
-      })
-      break;
-  };
+        break;
+    };
+  }
 })
 
 router.get('/class_confirmed/', (req, res) => {
@@ -2434,6 +2664,7 @@ router.get('/class_confirmed/', (req, res) => {
     email: '',
     student_name: '',
     belt_group: '',
+    class_type: '',
     num_events: ''
   })
 })
@@ -2450,7 +2681,8 @@ router.get('/download_done/(:url)', (req, res) => {
 
 router.post('/build_ics', (req, res) => {
   const num_in = {
-    num_events: req.sanitize('num_events').trim()
+    num_events: req.sanitize('num_events').trim(),
+    class_type: req.sanitize('class_type').trim()
   }
   switch (Number(num_in.num_events)){
     case 1:
@@ -2558,201 +2790,400 @@ router.post('/build_ics', (req, res) => {
   console.log('1: ' + input.hour_1);
   console.log('2: ' + input.hour_2);
   const year = new Date().getFullYear();
-  switch (Number(input.num_events)){
-    case 1:
-      var {error, value} = ics.createEvents([
-        {
-          title: input.name + "'s Karate Class",
-          start: [year, Number(input.month), Number(input.day), Number(input.start_hour), Number(input.start_min)],
-          startInputType: 'local',
-          startOutputType: 'local',
-          end: [2021, Number(input.month), Number(input.day), Number(input.end_hour), Number(input.end_min)],
-          endInputType: 'local',
-          endOutputType: 'local',
-          url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
-          busyStatus: 'BUSY',
-          status: 'CONFIRMED',
-          location: 'Exclusive Martial Arts',
-          alarms: alarms
+  if (num_in.class_type == 'swat'){
+    switch (Number(input.num_events)){
+      case 1:
+        var {error, value} = ics.createEvents([
+          {
+            title: input.name + "'s Swat Class",
+            start: [year, Number(input.month), Number(input.day), Number(input.start_hour), Number(input.start_min)],
+            startInputType: 'local',
+            startOutputType: 'local',
+            end: [2021, Number(input.month), Number(input.day), Number(input.end_hour), Number(input.end_min)],
+            endInputType: 'local',
+            endOutputType: 'local',
+            url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
+            busyStatus: 'BUSY',
+            status: 'CONFIRMED',
+            location: 'Exclusive Martial Arts',
+            alarms: alarms
+          }
+        ])
+        if (error){
+          console.log("Error creating calendar events: " + error);
+          alert('ERROR: ' + error);
         }
-      ])
-      if (error){
-        console.log("Error creating calendar events: " + error);
-        alert('ERROR: ' + error);
-      }
-      var filename = input.name.replace(/\s/g, "").toLowerCase() + '.ics';
-      writeFileSync(`${__dirname}/` + filename, value);
-      console.log('File path is ' + `${__dirname}/` + filename);
-      res.redirect('/cal_down/' + filename);
-      break;
-    case 2:
-      var {error, value} = ics.createEvents([
-        {
-          title: input.name + "'s Karate Class",
-          start: [year, Number(input.month), Number(input.day), Number(input.start_hour), Number(input.start_min)],
-          startInputType: 'local',
-          startOutputType: 'local',
-          end: [2021, Number(input.month), Number(input.day), Number(input.end_hour), Number(input.end_min)],
-          endInputType: 'local',
-          endOutputType: 'local',
-          url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
-          busyStatus: 'BUSY',
-          status: 'CONFIRMED',
-          location: 'Exclusive Martial Arts',
-          alarms: alarms
-        },
-        {
-          title: input.name + "'s Karate Class",
-          start: [year, Number(input.month_1), Number(input.day_1), Number(input.hour_1), Number(input.min_1)],
-          startInputType: 'local',
-          startOutputType: 'local',
-          end: [year, Number(input.month_1), Number(input.day_1), Number(input.end_hour_1), Number(input.end_min_1)],
-          endInputType: 'local',
-          endOutputType: 'local',
-          url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
-          busyStatus: 'BUSY',
-          status: 'CONFIRMED',
-          location: 'Exclusive Martial Arts',
-          alarms: alarms
+        var filename = input.name.replace(/\s/g, "").toLowerCase() + '.ics';
+        writeFileSync(`${__dirname}/` + filename, value);
+        console.log('File path is ' + `${__dirname}/` + filename);
+        res.redirect('/cal_down/' + filename);
+        break;
+      case 2:
+        var {error, value} = ics.createEvents([
+          {
+            title: input.name + "'s Swat Class",
+            start: [year, Number(input.month), Number(input.day), Number(input.start_hour), Number(input.start_min)],
+            startInputType: 'local',
+            startOutputType: 'local',
+            end: [2021, Number(input.month), Number(input.day), Number(input.end_hour), Number(input.end_min)],
+            endInputType: 'local',
+            endOutputType: 'local',
+            url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
+            busyStatus: 'BUSY',
+            status: 'CONFIRMED',
+            location: 'Exclusive Martial Arts',
+            alarms: alarms
+          },
+          {
+            title: input.name + "'s Swat Class",
+            start: [year, Number(input.month_1), Number(input.day_1), Number(input.hour_1), Number(input.min_1)],
+            startInputType: 'local',
+            startOutputType: 'local',
+            end: [year, Number(input.month_1), Number(input.day_1), Number(input.end_hour_1), Number(input.end_min_1)],
+            endInputType: 'local',
+            endOutputType: 'local',
+            url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
+            busyStatus: 'BUSY',
+            status: 'CONFIRMED',
+            location: 'Exclusive Martial Arts',
+            alarms: alarms
+          }
+        ])
+        if (error){
+          console.log("Error creating calendar events: " + error);
+          alert('ERROR: ' + error);
         }
-      ])
-      if (error){
-        console.log("Error creating calendar events: " + error);
-        alert('ERROR: ' + error);
-      }
-      var filename = input.name.replace(/\s/g, "").toLowerCase() + '.ics';
-      writeFileSync(`${__dirname}/` + filename, value);
-      console.log('File path is ' + `${__dirname}/` + filename);
-      res.redirect('/cal_down/' + filename);
-      break;
-    case 3:
-      var {error, value} = ics.createEvents([
-        {
-          title: input.name + "'s Karate Class",
-          start: [year, Number(input.month), Number(input.day), Number(input.start_hour), Number(input.start_min)],
-          startInputType: 'local',
-          startOutputType: 'local',
-          end: [2021, Number(input.month), Number(input.day), Number(input.end_hour), Number(input.end_min)],
-          endInputType: 'local',
-          endOutputType: 'local',
-          url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
-          busyStatus: 'BUSY',
-          status: 'CONFIRMED',
-          location: 'Exclusive Martial Arts',
-          alarms: alarms
-        },
-        {
-          title: input.name + "'s Karate Class",
-          start: [year, Number(input.month_1), Number(input.day_1), Number(input.hour_1), Number(input.min_1)],
-          startInputType: 'local',
-          startOutputType: 'local',
-          end: [year, Number(input.month_1), Number(input.day_1), Number(input.end_hour_1), Number(input.end_min_1)],
-          endInputType: 'local',
-          endOutputType: 'local',
-          url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
-          busyStatus: 'BUSY',
-          status: 'CONFIRMED',
-          location: 'Exclusive Martial Arts',
-          alarms: alarms
-        },
-        {
-          title: input.name + "'s Karate Class",
-          start: [year, Number(input.month_2), Number(input.day_2), Number(input.hour_2), Number(input.min_2)],
-          startInputType: 'local',
-          startOutputType: 'local',
-          end: [year, Number(input.month_2), Number(input.day_2), Number(input.end_hour_2), Number(input.end_min_2)],
-          endInputType: 'local',
-          endOutputType: 'local',
-          url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
-          busyStatus: 'BUSY',
-          status: 'CONFIRMED',
-          location: 'Exclusive Martial Arts',
-          alarms: alarms
+        var filename = input.name.replace(/\s/g, "").toLowerCase() + '.ics';
+        writeFileSync(`${__dirname}/` + filename, value);
+        console.log('File path is ' + `${__dirname}/` + filename);
+        res.redirect('/cal_down/' + filename);
+        break;
+      case 3:
+        var {error, value} = ics.createEvents([
+          {
+            title: input.name + "'s Swat Class",
+            start: [year, Number(input.month), Number(input.day), Number(input.start_hour), Number(input.start_min)],
+            startInputType: 'local',
+            startOutputType: 'local',
+            end: [2021, Number(input.month), Number(input.day), Number(input.end_hour), Number(input.end_min)],
+            endInputType: 'local',
+            endOutputType: 'local',
+            url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
+            busyStatus: 'BUSY',
+            status: 'CONFIRMED',
+            location: 'Exclusive Martial Arts',
+            alarms: alarms
+          },
+          {
+            title: input.name + "'s Swat Class",
+            start: [year, Number(input.month_1), Number(input.day_1), Number(input.hour_1), Number(input.min_1)],
+            startInputType: 'local',
+            startOutputType: 'local',
+            end: [year, Number(input.month_1), Number(input.day_1), Number(input.end_hour_1), Number(input.end_min_1)],
+            endInputType: 'local',
+            endOutputType: 'local',
+            url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
+            busyStatus: 'BUSY',
+            status: 'CONFIRMED',
+            location: 'Exclusive Martial Arts',
+            alarms: alarms
+          },
+          {
+            title: input.name + "'s Swat Class",
+            start: [year, Number(input.month_2), Number(input.day_2), Number(input.hour_2), Number(input.min_2)],
+            startInputType: 'local',
+            startOutputType: 'local',
+            end: [year, Number(input.month_2), Number(input.day_2), Number(input.end_hour_2), Number(input.end_min_2)],
+            endInputType: 'local',
+            endOutputType: 'local',
+            url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
+            busyStatus: 'BUSY',
+            status: 'CONFIRMED',
+            location: 'Exclusive Martial Arts',
+            alarms: alarms
+          }
+        ])
+        if (error){
+          console.log("Error creating calendar events: " + error);
+          alert('ERROR: ' + error);
         }
-      ])
-      if (error){
-        console.log("Error creating calendar events: " + error);
-        alert('ERROR: ' + error);
-      }
-      var filename = input.name.replace(/\s/g, "").toLowerCase() + '.ics';
-      writeFileSync(`${__dirname}/` + filename, value);
-      console.log('File path is ' + `${__dirname}/` + filename);
-      res.redirect('/cal_down/' + filename);
-      break;
-    case 4:
-      var {error, value} = ics.createEvents([
-        {
-          title: input.name + "'s Karate Class",
-          start: [year, Number(input.month), Number(input.day), Number(input.start_hour), Number(input.start_min)],
-          startInputType: 'local',
-          startOutputType: 'local',
-          end: [2021, Number(input.month), Number(input.day), Number(input.end_hour), Number(input.end_min)],
-          endInputType: 'local',
-          endOutputType: 'local',
-          url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
-          busyStatus: 'BUSY',
-          status: 'CONFIRMED',
-          location: 'Exclusive Martial Arts',
-          alarms: alarms
-        },
-        {
-          title: input.name + "'s Karate Class",
-          start: [year, Number(input.month_1), Number(input.day_1), Number(input.hour_1), Number(input.min_1)],
-          startInputType: 'local',
-          startOutputType: 'local',
-          end: [year, Number(input.month_1), Number(input.day_1), Number(input.end_hour_1), Number(input.end_min_1)],
-          endInputType: 'local',
-          endOutputType: 'local',
-          url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
-          busyStatus: 'BUSY',
-          status: 'CONFIRMED',
-          location: 'Exclusive Martial Arts',
-          alarms: alarms
-        },
-        {
-          title: input.name + "'s Karate Class",
-          start: [year, Number(input.month_2), Number(input.day_2), Number(input.hour_2), Number(input.min_2)],
-          startInputType: 'local',
-          startOutputType: 'local',
-          end: [year, Number(input.month_2), Number(input.day_2), Number(input.end_hour_2), Number(input.end_min_2)],
-          endInputType: 'local',
-          endOutputType: 'local',
-          url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
-          busyStatus: 'BUSY',
-          status: 'CONFIRMED',
-          location: 'Exclusive Martial Arts',
-          alarms: alarms
-        },
-        {
-          title: input.name + "'s Karate Class",
-          start: [year, Number(input.month_3), Number(input.day_3), Number(input.hour_3), Number(input.min_3)],
-          startInputType: 'local',
-          startOutputType: 'local',
-          end: [year, Number(input.month_3), Number(input.day_3), Number(input.end_hour_3), Number(input.end_min_3)],
-          endInputType: 'local',
-          endOutputType: 'local',
-          url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
-          busyStatus: 'BUSY',
-          status: 'CONFIRMED',
-          location: 'Exclusive Martial Arts',
-          alarms: alarms
+        var filename = input.name.replace(/\s/g, "").toLowerCase() + '.ics';
+        writeFileSync(`${__dirname}/` + filename, value);
+        console.log('File path is ' + `${__dirname}/` + filename);
+        res.redirect('/cal_down/' + filename);
+        break;
+      case 4:
+        var {error, value} = ics.createEvents([
+          {
+            title: input.name + "'s Swat Class",
+            start: [year, Number(input.month), Number(input.day), Number(input.start_hour), Number(input.start_min)],
+            startInputType: 'local',
+            startOutputType: 'local',
+            end: [2021, Number(input.month), Number(input.day), Number(input.end_hour), Number(input.end_min)],
+            endInputType: 'local',
+            endOutputType: 'local',
+            url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
+            busyStatus: 'BUSY',
+            status: 'CONFIRMED',
+            location: 'Exclusive Martial Arts',
+            alarms: alarms
+          },
+          {
+            title: input.name + "'s Swat Class",
+            start: [year, Number(input.month_1), Number(input.day_1), Number(input.hour_1), Number(input.min_1)],
+            startInputType: 'local',
+            startOutputType: 'local',
+            end: [year, Number(input.month_1), Number(input.day_1), Number(input.end_hour_1), Number(input.end_min_1)],
+            endInputType: 'local',
+            endOutputType: 'local',
+            url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
+            busyStatus: 'BUSY',
+            status: 'CONFIRMED',
+            location: 'Exclusive Martial Arts',
+            alarms: alarms
+          },
+          {
+            title: input.name + "'s Swat Class",
+            start: [year, Number(input.month_2), Number(input.day_2), Number(input.hour_2), Number(input.min_2)],
+            startInputType: 'local',
+            startOutputType: 'local',
+            end: [year, Number(input.month_2), Number(input.day_2), Number(input.end_hour_2), Number(input.end_min_2)],
+            endInputType: 'local',
+            endOutputType: 'local',
+            url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
+            busyStatus: 'BUSY',
+            status: 'CONFIRMED',
+            location: 'Exclusive Martial Arts',
+            alarms: alarms
+          },
+          {
+            title: input.name + "'s Swat Class",
+            start: [year, Number(input.month_3), Number(input.day_3), Number(input.hour_3), Number(input.min_3)],
+            startInputType: 'local',
+            startOutputType: 'local',
+            end: [year, Number(input.month_3), Number(input.day_3), Number(input.end_hour_3), Number(input.end_min_3)],
+            endInputType: 'local',
+            endOutputType: 'local',
+            url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
+            busyStatus: 'BUSY',
+            status: 'CONFIRMED',
+            location: 'Exclusive Martial Arts',
+            alarms: alarms
+          }
+        ])
+        if (error){
+          console.log("Error creating calendar events: " + error);
+          alert('ERROR: ' + error);
         }
-      ])
-      if (error){
-        console.log("Error creating calendar events: " + error);
-        alert('ERROR: ' + error);
-      }
-      var filename = input.name.replace(/\s/g, "").toLowerCase() + '.ics';
-      writeFileSync(`${__dirname}/` + filename, value);
-      console.log('File path is ' + `${__dirname}/` + filename);
-      res.redirect('/cal_down/' + filename);
-      break;
-    default:
-      console.log('No data to create ics');
-      res.render('temp_classes', {
-        alert_message: "Could not create a calendar event",
-        level: 'calendar issue'
-      })
+        var filename = input.name.replace(/\s/g, "").toLowerCase() + '.ics';
+        writeFileSync(`${__dirname}/` + filename, value);
+        console.log('File path is ' + `${__dirname}/` + filename);
+        res.redirect('/cal_down/' + filename);
+        break;
+      default:
+        console.log('No data to create ics');
+        res.render('temp_classes', {
+          alert_message: "Could not create a calendar event",
+          level: 'calendar issue'
+        })
+    }
+  } else {
+    switch (Number(input.num_events)){
+      case 1:
+        var {error, value} = ics.createEvents([
+          {
+            title: input.name + "'s Karate Class",
+            start: [year, Number(input.month), Number(input.day), Number(input.start_hour), Number(input.start_min)],
+            startInputType: 'local',
+            startOutputType: 'local',
+            end: [2021, Number(input.month), Number(input.day), Number(input.end_hour), Number(input.end_min)],
+            endInputType: 'local',
+            endOutputType: 'local',
+            url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
+            busyStatus: 'BUSY',
+            status: 'CONFIRMED',
+            location: 'Exclusive Martial Arts',
+            alarms: alarms
+          }
+        ])
+        if (error){
+          console.log("Error creating calendar events: " + error);
+          alert('ERROR: ' + error);
+        }
+        var filename = input.name.replace(/\s/g, "").toLowerCase() + '.ics';
+        writeFileSync(`${__dirname}/` + filename, value);
+        console.log('File path is ' + `${__dirname}/` + filename);
+        res.redirect('/cal_down/' + filename);
+        break;
+      case 2:
+        var {error, value} = ics.createEvents([
+          {
+            title: input.name + "'s Karate Class",
+            start: [year, Number(input.month), Number(input.day), Number(input.start_hour), Number(input.start_min)],
+            startInputType: 'local',
+            startOutputType: 'local',
+            end: [2021, Number(input.month), Number(input.day), Number(input.end_hour), Number(input.end_min)],
+            endInputType: 'local',
+            endOutputType: 'local',
+            url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
+            busyStatus: 'BUSY',
+            status: 'CONFIRMED',
+            location: 'Exclusive Martial Arts',
+            alarms: alarms
+          },
+          {
+            title: input.name + "'s Karate Class",
+            start: [year, Number(input.month_1), Number(input.day_1), Number(input.hour_1), Number(input.min_1)],
+            startInputType: 'local',
+            startOutputType: 'local',
+            end: [year, Number(input.month_1), Number(input.day_1), Number(input.end_hour_1), Number(input.end_min_1)],
+            endInputType: 'local',
+            endOutputType: 'local',
+            url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
+            busyStatus: 'BUSY',
+            status: 'CONFIRMED',
+            location: 'Exclusive Martial Arts',
+            alarms: alarms
+          }
+        ])
+        if (error){
+          console.log("Error creating calendar events: " + error);
+          alert('ERROR: ' + error);
+        }
+        var filename = input.name.replace(/\s/g, "").toLowerCase() + '.ics';
+        writeFileSync(`${__dirname}/` + filename, value);
+        console.log('File path is ' + `${__dirname}/` + filename);
+        res.redirect('/cal_down/' + filename);
+        break;
+      case 3:
+        var {error, value} = ics.createEvents([
+          {
+            title: input.name + "'s Karate Class",
+            start: [year, Number(input.month), Number(input.day), Number(input.start_hour), Number(input.start_min)],
+            startInputType: 'local',
+            startOutputType: 'local',
+            end: [2021, Number(input.month), Number(input.day), Number(input.end_hour), Number(input.end_min)],
+            endInputType: 'local',
+            endOutputType: 'local',
+            url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
+            busyStatus: 'BUSY',
+            status: 'CONFIRMED',
+            location: 'Exclusive Martial Arts',
+            alarms: alarms
+          },
+          {
+            title: input.name + "'s Karate Class",
+            start: [year, Number(input.month_1), Number(input.day_1), Number(input.hour_1), Number(input.min_1)],
+            startInputType: 'local',
+            startOutputType: 'local',
+            end: [year, Number(input.month_1), Number(input.day_1), Number(input.end_hour_1), Number(input.end_min_1)],
+            endInputType: 'local',
+            endOutputType: 'local',
+            url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
+            busyStatus: 'BUSY',
+            status: 'CONFIRMED',
+            location: 'Exclusive Martial Arts',
+            alarms: alarms
+          },
+          {
+            title: input.name + "'s Karate Class",
+            start: [year, Number(input.month_2), Number(input.day_2), Number(input.hour_2), Number(input.min_2)],
+            startInputType: 'local',
+            startOutputType: 'local',
+            end: [year, Number(input.month_2), Number(input.day_2), Number(input.end_hour_2), Number(input.end_min_2)],
+            endInputType: 'local',
+            endOutputType: 'local',
+            url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
+            busyStatus: 'BUSY',
+            status: 'CONFIRMED',
+            location: 'Exclusive Martial Arts',
+            alarms: alarms
+          }
+        ])
+        if (error){
+          console.log("Error creating calendar events: " + error);
+          alert('ERROR: ' + error);
+        }
+        var filename = input.name.replace(/\s/g, "").toLowerCase() + '.ics';
+        writeFileSync(`${__dirname}/` + filename, value);
+        console.log('File path is ' + `${__dirname}/` + filename);
+        res.redirect('/cal_down/' + filename);
+        break;
+      case 4:
+        var {error, value} = ics.createEvents([
+          {
+            title: input.name + "'s Karate Class",
+            start: [year, Number(input.month), Number(input.day), Number(input.start_hour), Number(input.start_min)],
+            startInputType: 'local',
+            startOutputType: 'local',
+            end: [2021, Number(input.month), Number(input.day), Number(input.end_hour), Number(input.end_min)],
+            endInputType: 'local',
+            endOutputType: 'local',
+            url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
+            busyStatus: 'BUSY',
+            status: 'CONFIRMED',
+            location: 'Exclusive Martial Arts',
+            alarms: alarms
+          },
+          {
+            title: input.name + "'s Karate Class",
+            start: [year, Number(input.month_1), Number(input.day_1), Number(input.hour_1), Number(input.min_1)],
+            startInputType: 'local',
+            startOutputType: 'local',
+            end: [year, Number(input.month_1), Number(input.day_1), Number(input.end_hour_1), Number(input.end_min_1)],
+            endInputType: 'local',
+            endOutputType: 'local',
+            url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
+            busyStatus: 'BUSY',
+            status: 'CONFIRMED',
+            location: 'Exclusive Martial Arts',
+            alarms: alarms
+          },
+          {
+            title: input.name + "'s Karate Class",
+            start: [year, Number(input.month_2), Number(input.day_2), Number(input.hour_2), Number(input.min_2)],
+            startInputType: 'local',
+            startOutputType: 'local',
+            end: [year, Number(input.month_2), Number(input.day_2), Number(input.end_hour_2), Number(input.end_min_2)],
+            endInputType: 'local',
+            endOutputType: 'local',
+            url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
+            busyStatus: 'BUSY',
+            status: 'CONFIRMED',
+            location: 'Exclusive Martial Arts',
+            alarms: alarms
+          },
+          {
+            title: input.name + "'s Karate Class",
+            start: [year, Number(input.month_3), Number(input.day_3), Number(input.hour_3), Number(input.min_3)],
+            startInputType: 'local',
+            startOutputType: 'local',
+            end: [year, Number(input.month_3), Number(input.day_3), Number(input.end_hour_3), Number(input.end_min_3)],
+            endInputType: 'local',
+            endOutputType: 'local',
+            url: 'https://ema-planner.herokuapp.com/classes_email/' + input.email,
+            busyStatus: 'BUSY',
+            status: 'CONFIRMED',
+            location: 'Exclusive Martial Arts',
+            alarms: alarms
+          }
+        ])
+        if (error){
+          console.log("Error creating calendar events: " + error);
+          alert('ERROR: ' + error);
+        }
+        var filename = input.name.replace(/\s/g, "").toLowerCase() + '.ics';
+        writeFileSync(`${__dirname}/` + filename, value);
+        console.log('File path is ' + `${__dirname}/` + filename);
+        res.redirect('/cal_down/' + filename);
+        break;
+      default:
+        console.log('No data to create ics');
+        res.render('temp_classes', {
+          alert_message: "Could not create a calendar event",
+          level: 'calendar issue'
+        })
+    }
   }
 })
 

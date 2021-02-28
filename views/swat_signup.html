@@ -2,7 +2,7 @@
   {% if alert_message != '' %}
     <script>alert("{{ alert_message }}")</script>
   {% endif %}
-  <title>Black Class Signup</title>
+  <title>Swat Signup</title>
   <link rel="icon" type="image/png" href="https://ema-planner.herokuapp.com/views/ema.png">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
@@ -135,47 +135,71 @@
   </style>
   <head>
     <meta name="name_data" content="{% for student in names %} {{ student.student_name }} - {{ student.barcode }} {% endfor %}"/>
-    <h1>Black Belt Class Signup</h1>
+    <h1>Swat Signup</h1>
     <p>One person per signup please.</p>
-    <p>Black Belt class times are available at the school at the times below.</p>
-    <p>*If you are not comfortable with attending class at the school, Virtual Karate will be held during the same times via Zoom.</p>
+    <p>Swat class times are available at the school at the times below.</p>
+    <p>*Swat classes must be done in person.</p>
     <p><strong>BLACK BELT CLASS TIMES</strong></p>
-    <ul>
-      <li>Monday
-        <ul>
-            <li>7:30 PM - 8:15 PM</li>
-        </ul>
-      </li>
-      <li>Wednesday
-        <ul>
-            <li>7:30 PM - 8:15 PM</li>
-        </ul>
-      </li>
-      <li>Friday <b>(Sparring Night, Bring Your Gear)</b>
-        <ul>
-            <li>7:30 PM - 8:15 PM</li>
-        </ul>
-      </li>
-      <li>Saturday <b>(Sparring Night, Bring Your Gear)</b>
-        <ul>
-            <li>11:30 AM - 12:00 PM</li>
-        </ul>
-      </li>
-    </ul>
   </head>
   <body>
-    <form onsubmit="return ValidateForm()" autocomplete="off" name="Form" action="/bb_signup" method="POST">
+    <form onsubmit="return ValidateForm()" autocomplete="off" name="Form" action="/swat_signup" method="POST">
       <div class="autocomplete">
         <input id="result" name="result" type="text" placeholder="Student's First Name" value="{{ result }}">
       </div>
       <br>
       <label>Class Days and Times: </label>
       {% if classes %}
+        <h2>Little Dragons</h2>
         {% for class in classes %}
           <div class="item">
             <input type="checkbox" class="check" id="{{ class.class_id }}" name="day_time" value="{{ class.class_id }}">
-            {% if class.level == '5.0' %}
-              <label for="{{ class.class_id }}" class="desc">{{ class.class_instance }}</label>
+            {% if class.level == '-1.0' %}
+              <label for="{{ class.class_id }}" class="desc">{{ class.class_instance }} &mdash; {{ 3 - class.swat_count }} spaces remaining.</label>
+            {% endif %}
+          </div>
+        {% endfor %}
+        <h2>Basic</h2>
+        {% for class in classes %}
+          <div class="item">
+            <input type="checkbox" class="check" id="{{ class.class_id }}" name="day_time" value="{{ class.class_id }}">
+            {% if class.level == '0.0' or class.level == '0.5' %}
+              <label for="{{ class.class_id }}" class="desc">{{ class.class_instance }} &mdash; {{ 3 - class.swat_count }} spaces remaining.</label>
+            {% endif %}
+          </div>
+        {% endfor %}
+        <h2>Level 1</h2>
+        {% for class in classes %}
+          <div class="item">
+            <input type="checkbox" class="check" id="{{ class.class_id }}" name="day_time" value="{{ class.class_id }}">
+            {% if class.level == '1.0' or class.level == '1.5' %}
+              <label for="{{ class.class_id }}" class="desc">{{ class.class_instance }} &mdash; {{ 3 - class.swat_count }} spaces remaining.</label>
+            {% endif %}
+          </div>
+        {% endfor %}
+        <h2>Level 2</h2>
+        {% for class in classes %}
+          <div class="item">
+            <input type="checkbox" class="check" id="{{ class.class_id }}" name="day_time" value="{{ class.class_id }}">
+            {% if class.level == '2.0' %}
+              <label for="{{ class.class_id }}" class="desc">{{ class.class_instance }} &mdash; {{ 3 - class.swat_count }} spaces remaining.</label>
+            {% endif %}
+          </div>
+        {% endfor %}
+        <h2>Level 3</h2>
+        {% for class in classes %}
+          <div class="item">
+            <input type="checkbox" class="check" id="{{ class.class_id }}" name="day_time" value="{{ class.class_id }}">
+            {% if class.level == '3.0' %}
+              <label for="{{ class.class_id }}" class="desc">{{ class.class_instance }} &mdash; {{ 3 - class.swat_count }} spaces remaining.</label>
+            {% endif %}
+          </div>
+        {% endfor %}
+        <h2>Weapons</h2>
+        {% for class in classes %}
+          <div class="item">
+            <input type="checkbox" class="check" id="{{ class.class_id }}" name="day_time" value="{{ class.class_id }}">
+            {% if class.level == '7.0' %}
+              <label for="{{ class.class_id }}" class="desc">{{ class.class_instance }} &mdash; {{ 3 - class.swat_count }} spaces remaining.</label>
             {% endif %}
           </div>
         {% endfor %}

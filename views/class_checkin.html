@@ -188,6 +188,18 @@
                         </div>
                         {% endfor %}
                     </div>
+                <br>
+                <hr>
+                <h3>Swatters</h3>
+                    <div style="align-content: center;">
+                        {% for person in signedup %}
+                            {% if person.is_swat == 'true' %}
+                                <div class="chip2">
+                                    {{ person.student_name}}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
             </div>
         </div>
     </body>
