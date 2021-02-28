@@ -69,7 +69,7 @@
       </tr>
       {% if class_data %}
         {% for class in class_data %}
-          {% if class.is_swat == 'false' %}
+          {% if class.is_swat == false %}
             <tr>
               <td>{{ class.student_name }}</td>
               <td>{{ class.class_instance }}</td>
@@ -121,7 +121,7 @@
         </tr>
         {% if swat_data %}
         {% for class in swat_data %}
-          {% if class.is_swat == 'true' %}
+          {% if class.is_swat == true %}
             <tr>
               <td>{{ class.student_name }}</td>
               <td>{{ class.class_instance }}</td>
