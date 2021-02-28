@@ -1170,38 +1170,48 @@ router.get('/classes_email/(:email)', (req, res) => {
   const swat_query = "select s.student_name, s.email, s.class_check, s.is_swat, s.class_session_id, to_char(c.starts_at, 'Month') || ' ' || to_char(c.starts_at, 'DD') || ' at ' || to_char(c.starts_at, 'HH:MI') as class_instance, c.starts_at, c.class_id from classes c, class_signups s where s.email = $1 and s.class_session_id = c.class_id and s.is_swat = true order by c.starts_at;";
   db.any(class_query, [req.params.email])
     .then(classes => {
-        db.any(test_query, [req.params.email])
-          .then(tests => {
-            db.any(swat_query, [req.params.email])
-              .then(swats => {
-                res.render('classes_email', {
-                  email: req.params.email,
-                  class_data: classes,
-                  test_data: tests,
-                  swat_data: swats,
-                  alert_message: ''
-                })
+      db.any(test_query, [req.params.email])
+        .then(tests => {
+          db.any(swat_query, [req.params.email])
+            .then(swats => {
+              res.render('classes_email', {
+                email: req.params.email,
+                class_data: classes,
+                test_data: tests,
+                swat_data: swats,
+                alert_message: ''
               })
-              .catch(err => {
-                console.log('Unable to pull in swats. Error: ' + err);
-                res.render('email_lookup', {
-                  email: req.params.email,
-                  alert_message: 'Database issue pulling in swats. Please see a staff member.'
-                })
-              })
-          .catch(err => {
-            console.log('Unable to pull in tests. Error: ' + err);
-            res.render('email_lookup', {
-              email: req.params.email,
-              alert_message: 'Database issue pulling in tests. Please see a staff member.'
             })
+            .catch(err => {
+              console.log('Error pulling in swats. Err: ' + err);
+              res.render('classes_email', {
+                email: req.params.email,
+                class_data: '',
+                test_data: '',
+                swat_data: '',
+                alert_message: 'Error pulling in swats. Please see staff member.'
+              })
+            })
+        })
+        .catch(err => {
+          console.log('Error pulling in tests. Err: ' + err);
+          res.render('classes_email', {
+            email: req.params.email,
+            class_data: '',
+            test_data: '',
+            swat_data: '',
+            alert_message: 'Error pulling in tests. Please see staff member.'
           })
+        })
     })
     .catch(err => {
-      console.log('Unable to pull in classes. ERROR: ' + err);
-      res.render('email_lookup', {
+      console.log('Error pulling in classes. Err: ' + err);
+      res.render('classes_email', {
         email: req.params.email,
-        alert_message: 'Database issue pulling in classes. Please see a staff member.'
+        class_data: '',
+        test_data: '',
+        swat_data: '',
+        alert_message: 'Error pulling in classes. Please see staff member.'
       })
     })
 })
