@@ -1715,27 +1715,35 @@ router.post('/test_preview', (req, res) => {
           })
         } else {
           const insert_query = "insert into test_signups (student_name, test_id, belt_color, email, barcode) values ($1, $2, $3, $4, $5) on conflict(session_id) do nothing;";
+          const add_belt = "update belt_inventory set quantity = quantity + 1 where color = (select belt_color from student_list where barcode = $1) and size = (select belt_size from student_list where barcode = $2)::text;"
           db.any(insert_query, [item.student_name, item.test_id, item.belt_color, item.email, item.barcode])
             .then(rows => {
-              req.flash('success', 'Successfully signed up for testing!');
-              res.render('testing_confirmed', {
-                student_name: item.student_name,
-                email: item.email,
-                belt_color: item.belt_color,
-                test_instance: rows
-              })
+              db.any(add_belt, [item.barcode, item.barcode])
+                .then(row => {
+                  res.render('testing_confirmed', {
+                    student_name: item.student_name,
+                    email: item.email,
+                    belt_color: item.belt_color,
+                    test_instance: rows,
+                    alert_message: 'You have successfully signed up for testing!'
+                  })
+                })
+                .catch(err => {
+                  console.log('Could not add belt. Err: ' + err);
+                  res.redirect('/student_tests');
+                })
             })
             .catch(err => {
               console.log('Could not add to test_signups. ERROR: ' + err);
               req.flash('error', 'Could not sign up for test.');
-              res.redirect('/testing_signup_basic');
+              res.redirect('/student_tests');
             })
         }
       })
       .catch(err => {
         console.log('Could not confirm test. ERROR: ' + err);
         req.flash('error', 'Cound not complete signup. Please see staff member.');
-        res.redirect('/testing_signup_basic');
+        res.redirect('/student_tests');
       })
   } else {
     const name_query = "select * from get_names($1);";
@@ -1890,6 +1898,18 @@ router.post('/test_preview', (req, res) => {
         break;
     }
   }
+})
+
+router.get('/refresh_belts', (req, res) => {
+  const belt_query = "update belt_inventory set quantity = 0;"
+  db.none(belt_query)
+    .then(row => {
+      res.redirect('https://ema-planner.herokuapp.com/belt_inventory');
+    })
+    .catch(err => {
+      console.log('Could not refresh belts');
+      res.redirect('https://ema-planner.herokuapp.com/belt_inventory');
+    })
 })
 //END TEST SIGNUP SECTION
 router.get('/dragons_signup', (req, res) => {

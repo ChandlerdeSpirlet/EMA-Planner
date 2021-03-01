@@ -52,6 +52,25 @@ h2 {
   color: black;
 }
 
+button {
+  display: block;
+  font-size: 100%;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 5px;
+  height: 60px;
+  align-content: center;
+  background-color: transparent;
+  border: 1px solid black;
+}
+
+button {
+  width: 40%;
+  margin: 0 auto;
+}
+
 #Dragons {
   background-image: linear-gradient(#43d4e7, #9ed7ff);
   -webkit-background-size: cover;
@@ -698,6 +717,7 @@ table {
 
 <div id="BB" class="tabcontent">
   <h2>Black Belt</h2>
+  <a href="/refresh_belts"><button onclick="refresh_belts()">Clear Belt</button></a>
   <table>
     <tr>
       <th>Belt Color</th>
@@ -827,7 +847,15 @@ function openPage(pageName,elmnt,color) {
 // Get the element with id="defaultOpen" and click on it
 document.getElementById("defaultOpen").click();
 </script>
-   
+<script>
+  function refresh_belts() {
+    var ask = window.confirm("Are you sure you want to clear the belt numbers?");
+    if (ask) {
+        window.alert("The belt numbers have been reset.");
+        window.location.href = "/belt_refresh";
+    }
+}
+</script>
 </body>
 </html> 
 {% endblock %}

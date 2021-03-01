@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html>
+  {% if alert_message != '' %}
+    <script>alert({{ alert_message }})</script>
+  {% endif %}
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv = "refresh" content = "5; url = https://ema-planner.herokuapp.com/student_tests"/>
   <link rel="icon" type="image/png" href="https://ema-planner.herokuapp.com/views/ema.png">
