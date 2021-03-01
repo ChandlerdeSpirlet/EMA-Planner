@@ -686,9 +686,17 @@ router.get('/class_remove/(:barcode)/(:class_id)/(:class_level)/(:class_time)', 
 
 router.get('/update_checkin/(:barcode)/(:class_id)/(:class_level)/(:class_time)/(:class_check)', (req, res) => {
   const update_status = 'update class_signups set checked_in = true where class_check = $1;';
+  const update_visit = "update student_list set last_visit = (select to_char(starts_at, 'Month DD, YYYY')::date as visit from classes where class_id = $1) where barcode = $2 and (last_visit > (select to_char(starts_at, 'Month DD, YYYY')::date as visit from classes where class_id = $3) or last_visit is null);"
   db.none(update_status, [req.params.class_check])
     .then(rows => {
-      res.redirect('https://ema-planner.herokuapp.com/class_checkin/' + req.params.class_id + '/' + req.params.class_level + '/' + req.params.class_time);
+      db.none(update_visit, [req.params.class_id, req.params.barcode, req.params.class_id])
+        .then(row => {
+          res.redirect('https://ema-planner.herokuapp.com/class_checkin/' + req.params.class_id + '/' + req.params.class_level + '/' + req.params.class_time);
+        })
+        .catch(err => {
+          console.log('Could not update last_visit status of ' + req.params.class_session_id + '>  ' + err);
+          res.redirect('https://ema-planner.herokuapp.com/class_checkin/' + req.params.class_id + '/' + req.params.class_level + '/' + req.params.class_time);
+        })
     })
     .catch(err => {
       console.log('Could not update checked_in status of ' + req.params.class_session_id);
@@ -1017,7 +1025,7 @@ router.post('/student_lookup', (req, res) => {
     student_info: req.sanitize('result').trim()
   }
   const stud_info = parseStudentInfo(items.student_info);
-  const studentInfoQuery = "select * from student_list where barcode = $1 and first_name || ' ' || last_name = $2;";
+  const studentInfoQuery = "select first_name, last_name, email, belt_size, belt_color, to_char(last_visit, 'Month DD, YYYY') as last_visit from student_list where barcode = $1 and first_name || ' ' || last_name = $2;";
   console.log('items.student_info is ' + items.student_info);
   console.log('stud_info: ' + stud_info);
   db.any(studentInfoQuery, [stud_info[1], stud_info[0]])

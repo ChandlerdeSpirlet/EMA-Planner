@@ -126,6 +126,11 @@
 
 <head>
   <h1>Viewing/Editing Information for {{ name }}</h1>
+  {% if data[0].last_visit == NULL %}
+    <h3 style="text-align: center;">Last Visit &mdash; No previous classes</h3>
+  {% else %}
+    <h3 style="text-align: center;">Last Visit &mdash; {{ data[0].last_visit }}</h3>
+  {% endif %}
 </head>
 
 <body>
