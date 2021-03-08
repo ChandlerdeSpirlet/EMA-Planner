@@ -73,10 +73,10 @@ app.get('/', (req, res) => {
             const failure_query = 'select count(id_failed) as failed_num from failed_payments'
             db.one(failure_query)
               .then(function (row) {
-                const checked_in_query = "select count(class_session_id) from class_signups where class_session_id in (select class_id from classes where starts_at >= (now() - interval '7 hours') - interval '7 days' and starts_at < (now() - interval '7 hours'));";
+                const checked_in_query = "select count(class_session_id) as week_count from class_signups where class_session_id in (select class_id from classes where starts_at >= (now() - interval '7 hours') - interval '7 days' and starts_at < (now() - interval '7 hours'));";
                 db.any(checked_in_query)
                   .then(checked_week => {
-                    const day_query = "select count(class_session_id) from class_signups where class_session_id in (select class_id from classes where starts_at >= (now() - interval '7 hours') - interval '2 day' and starts_at < (now() - interval '7 hours'));"
+                    const day_query = "select count(class_session_id) as day_count from class_signups where class_session_id in (select class_id from classes where starts_at >= (now() - interval '7 hours') - interval '2 day' and starts_at < (now() - interval '7 hours'));"
                     db.any(day_query)
                       .then(days => {
                         res.render('home.html', {
