@@ -2414,7 +2414,7 @@ router.get('/process_classes/(:student_name)/(:barcode)/(:belt_group)/(:id_set)/
     });
     switch (id_set.length) {
       case 1:
-        var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id = $1;"
+        var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH24') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH24') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id = $1;"
         db.any(email_info, [req.params.barcode])
           .then(email => {
             db.any(end_query, [id_set[0]])
@@ -2445,7 +2445,7 @@ router.get('/process_classes/(:student_name)/(:barcode)/(:belt_group)/(:id_set)/
           })
         break;
       case 2:
-        var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id in ($1, $2);"
+        var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH24') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH24') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id in ($1, $2);"
         db.any(email_info, [req.params.barcode])
           .then(email => {
             db.any(end_query, [id_set[0], id_set[1]])
@@ -2476,7 +2476,7 @@ router.get('/process_classes/(:student_name)/(:barcode)/(:belt_group)/(:id_set)/
           })
         break;
       case 3:
-        var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id in ($1, $2, $3);"
+        var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH24') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH24') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id in ($1, $2, $3);"
         db.any(email_info, [req.params.barcode])
           .then(email => {
             db.any(end_query, [id_set[0], id_set[1], id_set[2]])
@@ -2507,7 +2507,7 @@ router.get('/process_classes/(:student_name)/(:barcode)/(:belt_group)/(:id_set)/
           })
         break;
       case 4:
-        var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id in ($1, $2, $3, $4);"
+        var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH24') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH24') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id in ($1, $2, $3, $4);"
         db.any(email_info, [req.params.barcode])
           .then(email => {
             db.any(end_query, [id_set[0], id_set[1], id_set[2], id_set[3]])
@@ -2561,7 +2561,7 @@ router.get('/process_classes/(:student_name)/(:barcode)/(:belt_group)/(:id_set)/
     });
     switch (id_set.length) {
       case 1:
-        var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id = $1;"
+        var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH24') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH24') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id = $1;"
         db.any(email_info, [req.params.barcode])
           .then(email => {
             db.any(end_query, [id_set[0]])
@@ -2592,7 +2592,7 @@ router.get('/process_classes/(:student_name)/(:barcode)/(:belt_group)/(:id_set)/
           })
         break;
       case 2:
-        var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id in ($1, $2);"
+        var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH24') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH24') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id in ($1, $2);"
         db.any(email_info, [req.params.barcode])
           .then(email => {
             db.any(end_query, [id_set[0], id_set[1]])
@@ -2623,7 +2623,7 @@ router.get('/process_classes/(:student_name)/(:barcode)/(:belt_group)/(:id_set)/
           })
         break;
       case 3:
-        var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id in ($1, $2, $3);"
+        var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH24') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH24') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id in ($1, $2, $3);"
         db.any(email_info, [req.params.barcode])
           .then(email => {
             db.any(end_query, [id_set[0], id_set[1], id_set[2]])
@@ -2654,7 +2654,7 @@ router.get('/process_classes/(:student_name)/(:barcode)/(:belt_group)/(:id_set)/
           })
         break;
       case 4:
-        var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id in ($1, $2, $3, $4);"
+        var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH24') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH24') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id in ($1, $2, $3, $4);"
         db.any(email_info, [req.params.barcode])
           .then(email => {
             db.any(end_query, [id_set[0], id_set[1], id_set[2], id_set[3]])
