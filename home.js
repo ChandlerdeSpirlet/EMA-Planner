@@ -1174,8 +1174,8 @@ router.post('/email_lookup', (req, res) => {
 
 router.get('/classes_email/(:email)', (req, res) => {
   const test_query = "select s.student_name, s.session_id, s.test_id, s.email, to_char(i.test_date, 'Month') || ' ' || to_char(i.test_date, 'DD') || ' at ' || to_char(i.test_time, 'HH:MI PM') as test_instance from test_signups s, test_instance i where s.email = $1 and i.id = s.test_id order by i.test_date;";
-  const class_query = "select s.student_name, s.email, s.class_check, s.class_session_id, s.is_swat, to_char(c.starts_at, 'Month') || ' ' || to_char(c.starts_at, 'DD') || ' at ' || to_char(c.starts_at, 'HH:MI') as class_instance, c.starts_at, c.class_id from classes c, class_signups s where s.email = $1 and s.class_session_id = c.class_id and s.is_swat = false order by c.starts_at;";
-  const swat_query = "select s.student_name, s.email, s.class_check, s.is_swat, s.class_session_id, to_char(c.starts_at, 'Month') || ' ' || to_char(c.starts_at, 'DD') || ' at ' || to_char(c.starts_at, 'HH:MI') as class_instance, c.starts_at, c.class_id from classes c, class_signups s where s.email = $1 and s.class_session_id = c.class_id and s.is_swat = true order by c.starts_at;";
+  const class_query = "select s.student_name, s.email, s.class_check, s.class_session_id, s.is_swat, to_char(c.starts_at, 'Month') || ' ' || to_char(c.starts_at, 'DD') || ' at ' || to_char(c.starts_at, 'HH:MI PM') as class_instance, c.starts_at, c.class_id from classes c, class_signups s where s.email = $1 and s.class_session_id = c.class_id and s.is_swat = false and c.starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by c.starts_at;";
+  const swat_query = "select s.student_name, s.email, s.class_check, s.is_swat, s.class_session_id, to_char(c.starts_at, 'Month') || ' ' || to_char(c.starts_at, 'DD') || ' at ' || to_char(c.starts_at, 'HH:MI PM') as class_instance, c.starts_at, c.class_id from classes c, class_signups s where s.email = $1 and s.class_session_id = c.class_id and c.starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date and s.is_swat = true order by c.starts_at;";
   db.any(class_query, [req.params.email])
     .then(classes => {
       db.any(test_query, [req.params.email])
@@ -1924,7 +1924,7 @@ router.get('/dragons_signup', (req, res) => {
   if (req.headers['x-forwarded-proto'] != 'https') {
     res.redirect('https://ema-planner.herokuapp.com/dragons_signup');
   } else {
-    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, level from classes where level = -1 and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
+    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, level from classes where level = -1 and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
     const get_names = "select * from signup_names(-1);";
     db.any(get_names)
       .then(names => {
@@ -1978,7 +1978,7 @@ router.get('/basic_signup', (req, res) => {
   if (req.headers['x-forwarded-proto'] != 'https') {
     res.redirect('https://ema-planner.herokuapp.com/basic_signup');
   } else {
-    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, level from classes where level in (0, 0.5) and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
+    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, level from classes where level in (0, 0.5) and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
     const get_names = "select * from signup_names(0);";
     db.any(get_names)
       .then(names => {
@@ -2032,7 +2032,7 @@ router.get('/level1_signup', (req, res) => {
   if (req.headers['x-forwarded-proto'] != 'https') {
     res.redirect('https://ema-planner.herokuapp.com/level1_signup');
   } else {
-    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, level from classes where level in (1, 1.5) and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
+    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, level from classes where level in (1, 1.5) and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
     const get_names = "select * from signup_names(1);";
     db.any(get_names)
       .then(names => {
@@ -2086,7 +2086,7 @@ router.get('/level2_signup', (req, res) => {
   if (req.headers['x-forwarded-proto'] != 'https') {
     res.redirect('https://ema-planner.herokuapp.com/level2_signup');
   } else {
-    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, level from classes where level = 2 and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
+    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, level from classes where level = 2 and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
     const get_names = "select * from signup_names(2);";
     db.any(get_names)
       .then(names => {
@@ -2140,7 +2140,7 @@ router.get('/level3_signup', (req, res) => {
   if (req.headers['x-forwarded-proto'] != 'https') {
     res.redirect('https://ema-planner.herokuapp.com/level3_signup');
   } else {
-    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, level from classes where level = 3 and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
+    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, level from classes where level = 3 and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
     const get_names = "select * from signup_names(3);";
     db.any(get_names)
       .then(names => {
@@ -2194,7 +2194,7 @@ router.get('/bb_signup', (req, res) => {
   if (req.headers['x-forwarded-proto'] != 'https') {
     res.redirect('https://ema-planner.herokuapp.com/bb_signup');
   } else {
-    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, level from classes where level = 5 and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
+    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, level from classes where level = 5 and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
     const get_names = "select * from signup_names(5);";
     db.any(get_names)
       .then(names => {
@@ -2248,7 +2248,7 @@ router.get('/swat_signup', (req, res) => {
   if (req.headers['x-forwarded-proto'] != 'https') {
     res.redirect('https://ema-planner.herokuapp.com/swat_signup');
   } else {
-    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI') as class_instance, level, swat_count from classes where level in (7, 0.5, 2, 3, 1.5, 0, 1, -1) and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date and swat_count < 3 order by starts_at;";
+    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, level, swat_count from classes where level in (7, 0.5, 2, 3, 1.5, 0, 1, -1) and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date and swat_count < 3 order by starts_at;";
     const get_names = "select * from signup_names(5);";
     db.any(get_names)
       .then(names => {
