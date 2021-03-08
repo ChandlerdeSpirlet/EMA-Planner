@@ -170,7 +170,7 @@
   </head>
   <body>
     <form onsubmit="return ValidateForm()" name="Form" action="/level3_signup" method="POST" autocomplete="off">
-      <div class="autocomplete">
+      <div class="autocomplete" required pattern="[A-z- ]*[A-z]{2,} [A-z-]{2,} - [0-9]{5}" oninput="InvalidMsg(this);" oninvalid="InvalidMsg(this);">
         <input id="result" name="result" type="text" placeholder="Student's First Name" value="{{ result }}">
       </div><br>
       <label>Class Days and Times: </label>
@@ -191,6 +191,17 @@
     <p style="font-style: italic;">You can now select up to <strong>4</strong> classes when signup up!</p>
   </body>
 </html>
+<script>
+  function InvalidMsg(textbox) {
+  if(textbox.validity.patternMismatch){
+      textbox.setCustomValidity("Please pick a name from the name options. If you do not see your student's name, please see a staff member.");
+  }    
+  else {
+      textbox.setCustomValidity('');
+  }
+  return true;
+}
+</script>
 <script>
   var checks = document.querySelectorAll(".check");
   var max = 4;

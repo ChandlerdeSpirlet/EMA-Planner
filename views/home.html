@@ -125,8 +125,8 @@
                     <h2>Pending balance: {{ balance_pending }}</h2>
                 </div>
                 <div class="column">
-                    <h2>Students checked-in today: {{ checked_today }}</h2>
-                    <h2>Students checked-in this week: {{ checked_week }}</h2>
+                    <h2>Students checked-in today: {{ checked_today[0].day_count }}</h2>
+                    <h2>Students checked-in in the last 7 days: {{ checked_week[0].week_count }}</h2>
                 </div>
                 <div class="column">
                     <h2>Students by belt group</h2>
