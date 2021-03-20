@@ -240,15 +240,11 @@
             <th>Drop Class</th>
           </tr>
           {% if swat_info %}
-          {% for class in swat_info %}
-            {% if class.is_swat == true %}
-              <tr>
-                <td>None</td>
-                <td>None</td>
-                <td>None</td>
-              </tr>
-            {% endif %}
-          {% endfor %}
+            <tr>
+              <td>None</td>
+              <td>None</td>
+              <td>None</td>
+            </tr>
         {% endif %}
         </table>
       {% endif %}
