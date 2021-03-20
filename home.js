@@ -7,6 +7,7 @@ var flash = require('connect-flash')
 const ics = require('ics')
 const { writeFileSync } = require('fs')
 const { readFileSync } = require('fs')
+const nodemailer = require("nodemailer");
 
 const app = express()
 app.use(flash());
