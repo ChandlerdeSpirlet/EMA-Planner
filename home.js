@@ -698,9 +698,16 @@ router.get('/class_remove/(:barcode)/(:class_id)/(:class_level)/(:class_time)/(:
     console.log('Unrecognized class_type');
     var update_count = 'update student_list set spar_class = spar_class where barcode = $1';
   }
-  db.any(remove_query, [req.params.class_id, req.params.barcode])
-    .then(function (rows) {
-      res.redirect('https://ema-planner.herokuapp.com/class_checkin/' + req.params.class_id + '/' + req.params.class_level + '/' + req.params.class_time + '/' + req.params.class_type);
+  db.none(update_count, [req.params.barcode])
+    .then(update => {
+      db.any(remove_query, [req.params.class_id, req.params.barcode])
+        .then(function (rows) {
+          res.redirect('https://ema-planner.herokuapp.com/class_checkin/' + req.params.class_id + '/' + req.params.class_level + '/' + req.params.class_time + '/' + req.params.class_type);
+        })
+        .catch(function (err) {
+          console.log('Could not remove person from class with class_id and barcode ' + req.params.class_id + ', ' + req.params.barcode + '. Err: ' + err)
+          res.redirect('https://ema-planner.herokuapp.com/class_selector')
+        })
     })
     .catch(function (err) {
       console.log('Could not remove person from class with class_id and barcode ' + req.params.class_id + ', ' + req.params.barcode + '. Err: ' + err)
