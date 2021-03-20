@@ -36,10 +36,18 @@
     margin-bottom: 20px;
   }
 
-  button,
-  label {
+  button {
     display: block;
     font-size: 100%;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 5px;
+    height: 30px;
+  }
+
+  label {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
@@ -66,22 +74,6 @@
     display: inline;
     font-weight: normal;
   }
-
-  .select-wrapper {
-    position: relative;
-  }
-  select {
-    box-shadow: inset 1px 1px 3px #ccc;
-    border-radius: 5px;
-    background-color: transparent;
-  }
-  .select-wrapper::after {
-    content: "▼";
-    font-size: 1rem;
-    top: 6px;
-    right: 10px;
-    position: absolute;
-  }
   input[type="text"],
   [type="first name"],
   [type="last name"],
@@ -101,7 +93,7 @@
   }
   label {
     margin-bottom: 5px;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
   }
   button {
