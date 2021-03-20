@@ -1,0 +1,62 @@
+{% if alert_message != '' %}
+  <script>alert("{{ alert_message }}")</script>
+{% endif %}
+<html>
+  <title>Request Fix</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" href="https://ema-planner.herokuapp.com/views/ema.png">
+  <style>
+    label {
+      font-size: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    html {
+      background-image: linear-gradient(#0095ff, #9ed7ff);
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+      min-height: 100%;
+    }
+    p {
+      font-size: 14px;
+    }
+    input[type="email"], input[type="submit"] {
+      display: block;
+      font-size: 100%;
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+      width: 100%;
+      padding: 5px;
+      height: 30px;
+    }
+    label {
+      margin-bottom: 5px;
+    }
+    button {
+      width: 60%;
+      margin: 0 auto;
+    }
+    label{
+      font-weight: bold;
+    }
+  </style>
+  <head>
+    <h1>Request a Change</h1>
+  </head>
+  <body>
+    <p>Describe what information needs to be changed and a staff member will update the information as soon as possible.</p>
+    <form action="/request_fix" method="POST">
+      <input type="hidden" value="{{ email }}">
+      <textarea name="paragraph_text" cols="50" rows="10" placeholder="What needs to be changed?" required></textarea>
+      <input type="submit" name="Preview" value="Send Change"/>
+    </form>
+  </body>
+</html>

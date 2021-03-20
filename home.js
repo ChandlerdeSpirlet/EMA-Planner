@@ -38,6 +38,7 @@ app.use('/', router)
 
 
 const db = require('./database')
+const { proc } = require('./database')
 
 app.use(session({
   secret: 'ema-Planner',
@@ -1330,6 +1331,48 @@ router.get('/student_portal/(:email)', (req, res) => {
         alert_message: "Could not find a student with the email: " + req.params.email + "\n Please see an instructor to correct this."
       })
     })
+})
+
+router.get('/request_fix/email', (req, res) => {
+  res.render('request_fix', {
+    email: req.params.email,
+    alert_message: ''
+  })
+})
+
+router.post('/request_fix', (req, res) => {
+  var item = {
+    email: req.sanitize('email').trim(),
+    change_data = req.sanitize('paragraph_text')
+  }
+  var transporter = nodemailer.createTransport({
+    service: 'outlook',
+    auth: {
+        user: 'EMA_Classes@outlook.com',
+        pass: process.env.EMAIL
+    }
+  });
+  var mailOptions = {
+      from: item.email,
+      to: 'EMA_Testing@outlook.com',
+      subject: 'Student Data Change Request',
+      html: item.change_data
+  };
+  transporter.sendMail(mailOptions, function(error, info){
+      if (error){
+          console.log(error);
+          res.render('request_fix', {
+            email: req.params.email,
+            alert_message: 'Email was not sent. Please see staff member.'
+          })
+      } else {
+          console.log('Email sent: ' + info.response);
+          res.render('student_portal_login', {
+            email: item.email,
+            alert_message: 'Email send successfully. You should see an update soon!'
+          })
+      }
+  });
 })
 
 router.get('/classes_email/(:email)', (req, res) => {
