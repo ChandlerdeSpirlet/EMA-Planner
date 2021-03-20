@@ -1390,7 +1390,7 @@ app.get('/delete_instance/(:item_id)/(:id)/(:email)/(:type)', (req, res) => {
       const drop_test = "delete from test_signups where session_id = $1 and email = $2;";
       db.none(drop_test, [req.params.id, req.params.email])
         .then(rows => {
-          res.redirect('https://ema-planner.herokuapp.com/classes_email/' + req.params.email);
+          res.redirect('https://ema-planner.herokuapp.com/student_portal/' + req.params.email);
         })
         .catch(err => {
           console.log('Unable to delete test. ERR: ' + err);
@@ -1406,7 +1406,7 @@ app.get('/delete_instance/(:item_id)/(:id)/(:email)/(:type)', (req, res) => {
       const dropt_class = "delete from class_signups where class_check = $1 and email = $2;";
       db.none(dropt_class, [req.params.id, req.params.email])
         .then(rows => {
-          res.redirect('https://ema-planner.herokuapp.com/classes_email/' + req.params.email);
+          res.redirect('https://ema-planner.herokuapp.com/student_portal/' + req.params.email);
         })
         .catch(err => {
           console.log('Unable to delete class. ERR: ' + err);
@@ -1425,7 +1425,7 @@ app.get('/delete_instance/(:item_id)/(:id)/(:email)/(:type)', (req, res) => {
         .then(row => {
           db.none(drop_class, [req.params.id, req.params.email])
             .then(rows => {
-              res.redirect('https://ema-planner.herokuapp.com/classes_email/' + req.params.email);
+              res.redirect('https://ema-planner.herokuapp.com/student_portal/' + req.params.email);
             })
             .catch(err => {
               console.log('Unable to delete swat. ERR: ' + err);
@@ -1449,7 +1449,7 @@ app.get('/delete_instance/(:item_id)/(:id)/(:email)/(:type)', (req, res) => {
       break;
     default:
       console.log('Unknown delete type.');
-      res.redirect('https://ema-planner.herokuapp.com/classes_email/' + req.params.email);
+      res.redirect('https://ema-planner.herokuapp.com/student_portal/' + req.params.email);
       break;
   }
 })
