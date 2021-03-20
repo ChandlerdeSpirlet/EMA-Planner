@@ -142,8 +142,7 @@
   }
 </style>
 <head>
-  <h1>Student Portal</h1>
-  <h3>{{ email }}</h3>
+  <h1>Student Portal &mdash; {{ email }}</h1>
   {% for student in stud_info %}
     {% if student.belt_order | int >= 4 %}
       {% set is_bb = 'true' %}
