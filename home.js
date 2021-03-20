@@ -1333,9 +1333,8 @@ router.get('/student_portal/(:email)', (req, res) => {
     })
 })
 
-router.get('/request_fix/email', (req, res) => {
+router.get('/request_fix', (req, res) => {
   res.render('request_fix', {
-    email: req.params.email,
     alert_message: ''
   })
 })
