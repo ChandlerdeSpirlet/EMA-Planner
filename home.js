@@ -660,7 +660,7 @@ router.post('/processPayment', (req, res) => {
 })
 
 router.get('/class_selector', (req, res) => {
-  const query = "select x.class_id, (select count(class_session_id) from class_signups where class_session_id = x.class_id and checked_in = FALSE) as signed_up, (select count(class_session_id) from class_signups where class_session_id = x.class_id and checked_in = TRUE) as checked_in, to_char(x.starts_at, 'Month') as class_month, to_char(x.starts_at, 'DD') as class_day, to_char(x.starts_at, 'HH:MI PM') as class_time, to_char(x.ends_at, 'HH:MI PM') as end_time, x.level from classes x where to_char(x.starts_at, 'Month DD') = to_char(to_date($1, 'Month DD'), 'Month DD') order by x.starts_at;"
+  const query = "select x.class_id, (select count(class_session_id) from class_signups where class_session_id = x.class_id and checked_in = FALSE) as signed_up, (select count(class_session_id) from class_signups where class_session_id = x.class_id and checked_in = TRUE) as checked_in, to_char(x.starts_at, 'Month') as class_month, to_char(x.starts_at, 'DD') as class_day, to_char(x.starts_at, 'HH:MI PM') as class_time, to_char(x.ends_at, 'HH:MI PM') as end_time, x.level, x.class_type from classes x where to_char(x.starts_at, 'Month DD') = to_char(to_date($1, 'Month DD'), 'Month DD') order by x.starts_at;"
   db.any(query)
     .then(function (rows) {
       res.render('class_selector', {
@@ -675,7 +675,7 @@ router.get('/class_selector', (req, res) => {
 
 router.get('/class_selector_force/(:month)/(:day)', (req, res) => {
   const date_conversion = req.params.month + ' ' + req.params.day
-  const query = "select x.class_id, (select count(class_session_id) from class_signups where class_session_id = x.class_id and checked_in = FALSE) as signed_up, (select count(class_session_id) from class_signups where class_session_id = x.class_id and checked_in = TRUE) as checked_in, to_char(x.starts_at, 'Month') as class_month, to_char(x.starts_at, 'DD') as class_day, to_char(x.starts_at, 'HH:MI PM') as class_time, to_char(x.ends_at, 'HH:MI PM') as end_time, x.level from classes x where to_char(x.starts_at, 'Month DD') = to_char(to_date($1, 'Month DD'), 'Month DD') order by x.starts_at;"
+  const query = "select x.class_id, (select count(class_session_id) from class_signups where class_session_id = x.class_id and checked_in = FALSE) as signed_up, (select count(class_session_id) from class_signups where class_session_id = x.class_id and checked_in = TRUE) as checked_in, to_char(x.starts_at, 'Month') as class_month, to_char(x.starts_at, 'DD') as class_day, to_char(x.starts_at, 'HH:MI PM') as class_time, to_char(x.ends_at, 'HH:MI PM') as end_time, x.level, x.class_type from classes x where to_char(x.starts_at, 'Month DD') = to_char(to_date($1, 'Month DD'), 'Month DD') order by x.starts_at;"
   db.any(query, [date_conversion])
     .then(function (rows) {
       res.render('class_selector', {
@@ -688,11 +688,19 @@ router.get('/class_selector_force/(:month)/(:day)', (req, res) => {
     })
 })
 
-router.get('/class_remove/(:barcode)/(:class_id)/(:class_level)/(:class_time)', (req, res) => {
+router.get('/class_remove/(:barcode)/(:class_id)/(:class_level)/(:class_time)/(:class_type)', (req, res) => {
   const remove_query = 'delete from class_signups where class_session_id = $1 and barcode = $2;'
+  if (req.params.class_type == 'reg'){
+    var update_count = "update student_list set reg_class = reg_class - 1 where barcode = $1";
+  } else if (req.params.class_type == 'spar'){
+    var update_count = "update student_list set spar_class = spar_class - 1 where barcode = $1";
+  } else {
+    console.log('Unrecognized class_type');
+    var update_count = 'update student_list set spar_class = spar_class where barcode = $1';
+  }
   db.any(remove_query, [req.params.class_id, req.params.barcode])
     .then(function (rows) {
-      res.redirect('https://ema-planner.herokuapp.com/class_checkin/' + req.params.class_id + '/' + req.params.class_level + '/' + req.params.class_time);
+      res.redirect('https://ema-planner.herokuapp.com/class_checkin/' + req.params.class_id + '/' + req.params.class_level + '/' + req.params.class_time + '/' + req.params.class_type);
     })
     .catch(function (err) {
       console.log('Could not remove person from class with class_id and barcode ' + req.params.class_id + ', ' + req.params.barcode + '. Err: ' + err)
@@ -700,27 +708,42 @@ router.get('/class_remove/(:barcode)/(:class_id)/(:class_level)/(:class_time)', 
     })
 })
 
-router.get('/update_checkin/(:barcode)/(:class_id)/(:class_level)/(:class_time)/(:class_check)', (req, res) => {
+router.get('/update_checkin/(:barcode)/(:class_id)/(:class_level)/(:class_time)/(:class_check)/(:class_type)', (req, res) => {
   const update_status = 'update class_signups set checked_in = true where class_check = $1;';
   const update_visit = "update student_list set last_visit = (select to_char(starts_at, 'Month DD, YYYY')::date as visit from classes where class_id = $1) where barcode = $2 and (last_visit > (select to_char(starts_at, 'Month DD, YYYY')::date as visit from classes where class_id = $3) or last_visit is null);"
-  db.none(update_status, [req.params.class_check])
-    .then(rows => {
-      db.none(update_visit, [req.params.class_id, req.params.barcode, req.params.class_id])
-        .then(row => {
-          res.redirect('https://ema-planner.herokuapp.com/class_checkin/' + req.params.class_id + '/' + req.params.class_level + '/' + req.params.class_time);
+  if (req.params.class_type == 'reg'){
+    var update_count = "update student_list set reg_class = reg_class + 1 where barcode = $1";
+  } else if (req.params.class_type == 'spar'){
+    var update_count = "update student_list set spar_class = spar_class + 1 where barcode = $1";
+  } else {
+    console.log('Unrecognized class_type');
+    var update_count = 'update student_list set spar_class = spar_class where barcode = $1';
+  }
+  db.none(update_count, [req.params.barcode])
+    .then(update => {
+      db.none(update_status, [req.params.class_check])
+        .then(rows => {
+          db.none(update_visit, [req.params.class_id, req.params.barcode, req.params.class_id])
+            .then(row => {
+              res.redirect('https://ema-planner.herokuapp.com/class_checkin/' + req.params.class_id + '/' + req.params.class_level + '/' + req.params.class_time + '/' + req.params.class_type);
+            })
+            .catch(err => {
+              console.log('Could not update last_visit status of ' + req.params.class_session_id + '>  ' + err);
+              res.redirect('https://ema-planner.herokuapp.com/class_checkin/' + req.params.class_id + '/' + req.params.class_level + '/' + req.params.class_time + '/' + req.params.class_type);
+            })
         })
         .catch(err => {
-          console.log('Could not update last_visit status of ' + req.params.class_session_id + '>  ' + err);
-          res.redirect('https://ema-planner.herokuapp.com/class_checkin/' + req.params.class_id + '/' + req.params.class_level + '/' + req.params.class_time);
+          console.log('Could not update checked_in status of ' + req.params.class_session_id);
+          res.redirect('https://ema-planner.herokuapp.com/class_checkin/' + req.params.class_id + '/' + req.params.class_level + '/' + req.params.class_time + '/' + req.params.class_type);
         })
     })
     .catch(err => {
-      console.log('Could not update checked_in status of ' + req.params.class_session_id);
-      res.redirect('https://ema-planner.herokuapp.com/class_checkin/' + req.params.class_id + '/' + req.params.class_level + '/' + req.params.class_time);
+      console.log('Could not update count of ' req.params.barcode);
+      res.redirect('https://ema-planner.herokuapp.com/class_checkin/' + req.params.class_id + '/' + req.params.class_level + '/' + req.params.class_time + '/' + req.params.class_type);
     })
 })
 
-router.get('/class_checkin/(:class_id)/(:class_level)/(:class_time)', (req, res) => {
+router.get('/class_checkin/(:class_id)/(:class_level)/(:class_time)/(:class_type)', (req, res) => {
   console.log('req.params.class_id = ' + req.params.class_id);
   const query = "select * from get_class_names($1);";
   const checked_in = "select student_name, barcode, class_check from class_signups where class_session_id = $1 and checked_in = true;";
@@ -762,20 +785,43 @@ router.post('/class_checkin', (req, res) => {
     class_id: req.sanitize('class_id').trim(),
     stud_data: req.sanitize('result').trim(),
     level: req.sanitize('level').trim(),
-    time: req.sanitize('time').trim()
+    time: req.sanitize('time').trim(),
+    class_type: req.sanitize('class_type').trim()
   }
-  
+  const update_visit = "update student_list set last_visit = (select to_char(starts_at, 'Month DD, YYYY')::date as visit from classes where class_id = $1) where barcode = $2 and (last_visit > (select to_char(starts_at, 'Month DD, YYYY')::date as visit from classes where class_id = $3) or last_visit is null);"
+  if (item.class_type == 'reg'){
+    var update_count = "update student_list set reg_class = reg_class + 1 where barcode = $1";
+  } else if (item.class_type == 'spar'){
+    var update_count = "update student_list set spar_class = spar_class + 1 where barcode = $1";
+  } else {
+    console.log('Unrecognized class_type');
+    var update_count = 'update student_list set spar_class = spar_class where barcode = $1';
+  }
   const stud_info = parseStudentInfo(item.stud_data);//name, barcode
   console.log('stud_info: ' + stud_info);
   const temp_class_check = stud_info[0].toLowerCase().split(" ").join("") + item.class_id.toString();
   const query = 'insert into class_signups (student_name, email, class_session_id, barcode, class_check, checked_in) values ($1, (select lower(email) from student_list where barcode = $2), $3, $4, $5, true) on conflict (class_check) do nothing;'
-  db.any(query, [stud_info[0], stud_info[1], item.class_id, stud_info[1], temp_class_check])
-    .then(function (rows1) {
-      res.redirect('class_checkin/' + item.class_id + '/' + item.level + '/' + item.time)
+  db.any(update_count, [stud_info[1]])
+    .then(update_c => {
+      db.any(update_visit, [item.class_id, stud_info[1], item.class_id])
+        .then(update => {
+          db.any(query, [stud_info[0], stud_info[1], item.class_id, stud_info[1], temp_class_check])
+            .then(function (rows1) {
+              res.redirect('class_checkin/' + item.class_id + '/' + item.level + '/' + item.time)
+            })
+            .catch(function (err) {
+              res.redirect('home')
+              console.log('Unable to checkin to class ' + err)
+            })
+        })
+        .catch(err => {
+          res.redirect('home')
+          console.log('Unable to update last visit for ' + stud_info + '. Error: ' + err);
+        })
     })
-    .catch(function (err) {
-      res.redirect('home')
-      console.log('Unable to checkin to class ' + err)
+    .catch(err => {
+      res.redirect('home');
+      console.log('Unable to update count for ' + stud_info + '. Error: ' + err);
     })
 })
 

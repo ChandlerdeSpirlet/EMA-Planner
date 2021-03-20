@@ -231,6 +231,26 @@
           {% endfor %}
         {% endif %}
         </table>
+      {% else %}
+        <h2>Swats</h2>
+        <table id="tests">
+          <tr>
+            <th>Student Name</th>
+            <th>Class Day/Time</th>
+            <th>Drop Class</th>
+          </tr>
+          {% if swat_info %}
+          {% for class in swat_info %}
+            {% if class.is_swat == true %}
+              <tr>
+                <td>None</td>
+                <td>None</td>
+                <td>None</td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+        </table>
       {% endif %}
     {% endif %}
     <br>

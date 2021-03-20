@@ -157,6 +157,7 @@
                         <input type="hidden" value="{{ class_id }}" name="class_id"/>
                         <input type="hidden" value="{{ level }}" name="level"/>
                         <input type="hidden" value="{{ time }}" name="time"/>
+                        <input type="hidden" value="{{ class_type }}" name="class_type"/>
                         <label for="result">Student's Name</label>
                         <div class="autocomplete">
                             <input id="result" name="result" type="text" placeholder="Student First Name" value="{{ result }}">
@@ -173,7 +174,7 @@
                         {% for student in checkedIn %}
                         <div class="chip">
                             {{ student.student_name }}
-                            <a href ="/class_remove/{{ student.barcode }}/{{ class_id }}/{{ level }}/{{ time }}"><span class="closebtn">&times;</span></a>
+                            <a href ="/class_remove/{{ student.barcode }}/{{ class_id }}/{{ level }}/{{ time }}/{{ class_type }}"><span class="closebtn">&times;</span></a>
                         </div>
                         {% endfor %}
                     </div>
@@ -185,7 +186,7 @@
                             {% if person.is_swat == false %}
                                 <div class="chip2">
                                     {{ person.student_name}}
-                                    <a href="/update_checkin/{{ person.barcode }}/{{ class_id }}/{{ level }}/{{ time }}/{{ person.class_check }}"><span class="closebtn2">&#x2713;</span></a>
+                                    <a href="/update_checkin/{{ person.barcode }}/{{ class_id }}/{{ level }}/{{ time }}/{{ person.class_check }}/{{ class_type }}"><span class="closebtn2">&#x2713;</span></a>
                                 </div>
                             {% endif %}
                         {% endfor %}

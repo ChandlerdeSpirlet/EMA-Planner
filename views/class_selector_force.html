@@ -52,7 +52,7 @@
         <div class="wrapper">
         {% if data %}
             {% for class in data %}
-                <a href="/class_checkin/{{ class.class_id }}/{{ class.level }}/{{ class.class_month }} {{class.class_day }} {{ class.class_time }} - {{ class.end_time }}"><button class="button"><br>
+                <a href="/class_checkin/{{ class.class_id }}/{{ class.level }}/{{ class.class_month }} {{class.class_day }} {{ class.class_time }} - {{ class.end_time }}/{{ class.class_type }}"><button class="button"><br>
                     <h2 style="font-size: xx-large;">{% if class.level == -1 %} Little Dragons {% elif class.level == 0 %} Basic {% elif class.level == 0.5 %} Basic (Floor 2) {% elif class.level == 1 %} Level 1 {% elif class.level == 1.5 %} Level 1 (Floor 2) {% elif class.level == 2 %} Level 2 {% elif class.level == 3 %} Level 3 {% elif class.level == 4 %} Prep Belt {% elif class.level == 5 %} Black Belt {% elif class.level == 6 %} Open Mat {% elif class.level == 7 %} Weapons {% else %} Unknown {% endif %}</h2>
                     <h3 style="font-size: x-large;">{{ class.class_month }} {{ class.class_day }}</h3> 
                     <h3>Signed up: {{ class.signed_up }}</h3>
