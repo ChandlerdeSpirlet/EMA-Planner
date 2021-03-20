@@ -1341,6 +1341,7 @@ router.get('/request_fix', (req, res) => {
 
 router.post('/request_fix', (req, res) => {
   var item = {
+    student_name: req.sanititze('student_name').trim(),
     email: req.sanitize('email').trim(),
     change_data:  req.sanitize('paragraph_text')
   }
@@ -1354,7 +1355,7 @@ router.post('/request_fix', (req, res) => {
   var mailOptions = {
       from: item.email,
       to: 'EMA_Testing@outlook.com',
-      subject: 'Student Data Change Request',
+      subject: 'Student Data Change Request - ' + item.student_name,
       html: item.change_data
   };
   transporter.sendMail(mailOptions, function(error, info){
