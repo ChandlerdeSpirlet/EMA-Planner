@@ -1280,7 +1280,7 @@ router.get('/student_portal/(:email)', (req, res) => {
                     test_info: tests,
                     swat_info: swats,
                     email: req.params.email,
-                    alert_message: 'Logged in successfully.'
+                    alert_message: ''
                   })
                 })
                 .catch(err => {
