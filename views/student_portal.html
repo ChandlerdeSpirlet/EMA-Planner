@@ -1,0 +1,255 @@
+<html>
+{% set local = 'Students' %}
+{% block content %}
+<title>Student Portal</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="https://ema-planner.herokuapp.com/views/ema.png">
+<style>
+  * {
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  html {
+    background-image: linear-gradient(#0095ff, #9ed7ff);
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    min-height: 100%;
+  }
+
+  h1 {
+    text-align: center;
+  }
+
+  body {
+    font-size: 16px;
+  }
+
+  p,
+  li {
+    font-size: 14px;
+  }
+
+  form>div {
+    margin-bottom: 20px;
+  }
+
+  button,
+  label {
+    display: block;
+    font-size: 100%;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 5px;
+    height: 30px;
+  }
+
+  select {
+    -webkit-appearance: none;
+    appearance: none;
+    display: block;
+    font-size: 100%;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 5px;
+    height: 60px;
+  }
+
+  .desc {
+    font-size: 14px;
+    display: inline;
+    font-weight: normal;
+  }
+
+  .select-wrapper {
+    position: relative;
+  }
+  select {
+    box-shadow: inset 1px 1px 3px #ccc;
+    border-radius: 5px;
+    background-color: transparent;
+  }
+  .select-wrapper::after {
+    content: "▼";
+    font-size: 1rem;
+    top: 6px;
+    right: 10px;
+    position: absolute;
+  }
+  input[type="text"],
+  [type="first name"],
+  [type="last name"],
+  [type="email"],
+  [type="number"],
+  [type="submit"] {
+    box-shadow: inset 1px 1px 3px #ccc;
+    border-radius: 5px;
+    display: block;
+    font-size: 100%;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 5px;
+    height: 30px;
+  }
+  label {
+    margin-bottom: 5px;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  button {
+    width: 60%;
+    margin: 0 auto;
+  }
+  .item {
+    display: block;
+    padding: 5px;
+  }
+  input[type=checkbox] {
+    display: inline;
+  }
+  #tests {
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  #tests td, #tests th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    background-color: transparent;
+    text-align: center;
+  }
+  #tests th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: center;
+    background-blend-mode: hue;
+  }
+  a:link {
+    color: white;
+  }
+  a:visited {
+    color: white;
+  }
+  a:hover {
+    color: white;
+  }
+  a:active {
+    color: white;
+  }
+</style>
+<head>
+  <h1>Student Portal</h1>
+  {% for student in stud_info %}
+    {% if student.belt_order | int >= 4 %}
+      {% set is_bb = 'true' %}
+    {% endif %}
+    <label>Student's Name: </label>{{ student.first_name }} {{ student.last_name }}<br>
+    <label>Student's Email: </label>{{ student.email }}<br>
+    <label>Student's Belt Color and Size: </label>{{ student.belt_color }} - {{ student.belt_size }}<br>
+    <label>Last Visit: </label>{{ student.last_visit }}<br>
+    {% if is_bb == 'true' %}
+      <label>Class Numbers:</label><br>
+      &emsp;<i>Regular Classes: </i>{{ student.reg_class }}<br>
+      &emsp;<i>Sparring Classes: </i>{{ student.spar_class }}
+    {% endif %}
+    <hr>
+  {% endfor %}
+</head>
+<body>
+  <h2>Classes</h2>
+    <table id="tests">
+      <tr>
+        <th>Student Name</th>
+        <th>Class Day/Time</th>
+        <th>Drop Class</th>
+      </tr>
+      {% if class_info %}
+        {% for class in class_info %}
+          {% if class.is_swat == false %}
+            <tr>
+              <td>{{ class.student_name }}</td>
+              <td>{{ class.class_instance }}</td>
+              <td><a href="/delete_instance/{{ class.class_session_id }}/{{ class.class_check }}/{{ email }}/class">Drop This Class</a></td>
+            </tr>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+      {% if class_info.length == 0 %}
+          <tr>
+            <td>None</td>
+            <td>None</td>
+            <td>None</td>
+          </tr>
+      {% endif %}
+    </table>
+    <br>
+    {% if is_bb != 'true' %}
+      <h2>Tests</h2>
+      <table id="tests">
+        <tr>
+          <th>Student Name</th>
+          <th>Test Day/Time</th>
+          <th>Drop Test</th>
+        </tr>
+        {% if test_info %}
+          {% for test in test_info %}
+            <tr>
+              <td>{{ test.student_name }}</td>
+              <td>{{ test.test_instance }}</td>
+              <td><a href="/delete_instance/{{ test.test_id }}/{{ test.session_id }}/{{ email }}/test">Drop This Test</a></td>
+            </tr>
+          {% endfor %}
+        {% endif %}
+        {% if test_info.length == 0 %}
+            <tr>
+              <td>None</td>
+              <td>None</td>
+              <td>None</td>
+            </tr>
+        {% endif %}
+      </table>
+    {% endif %}
+    {% if is_bb == 'true' %}
+      {% if swat_info.length > 0 %}
+        <h2>Swats</h2>
+        <table id="tests">
+          <tr>
+            <th>Student Name</th>
+            <th>Class Day/Time</th>
+            <th>Drop Class</th>
+          </tr>
+          {% if swat_info %}
+          {% for class in swat_info %}
+            {% if class.is_swat == true %}
+              <tr>
+                <td>{{ class.student_name }}</td>
+                <td>{{ class.class_instance }}</td>
+                <td><a href="/delete_instance/{{ class.class_session_id }}/{{ class.class_check }}/{{ email }}/swat">Drop This Class</a></td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+        </table>
+      {% endif %}
+    {% endif %}
+    <br>
+    <hr>
+    <br>
+    <a href="https://ema-planner.herokuapp.com/student_classes"><button>Class Signup</button></a><br>
+    {% if is_bb != 'true' %}
+      <a href="https://ema-planner.herokuapp.com/student_tests"><button>Test Signup</button></a>
+    {% endif %}
+    {% if is_bb == 'true' %}
+      <a href="https://ema-planner.herokuapp.com/swat_signup"><button>SWAT Signup</button></a>
+    {% endif %}
+</body>
+{% endblock %}
+</html>

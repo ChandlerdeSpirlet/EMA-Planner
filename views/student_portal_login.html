@@ -1,0 +1,62 @@
+{% if alert_message != '' %}
+  <script>alert("{{ alert_message }}")</script>
+{% endif %}
+<html>
+  <title>Student Portal Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" href="https://ema-planner.herokuapp.com/views/ema.png">
+  <style>
+    label {
+      font-size: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    html {
+      background-image: linear-gradient(#0095ff, #9ed7ff);
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+      min-height: 100%;
+    }
+    p {
+      font-size: 14px;
+    }
+    input[type="email"], input[type="submit"] {
+      display: block;
+      font-size: 100%;
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+      width: 100%;
+      padding: 5px;
+      height: 30px;
+    }
+    label {
+      margin-bottom: 5px;
+    }
+    button {
+      width: 60%;
+      margin: 0 auto;
+    }
+    label{
+      font-weight: bold;
+    }
+  </style>
+  <head>
+    <h1>Student Portal Login</h1>
+  </head>
+  <body>
+    <p>Enter your email to login to the Student Portal.</p>
+    <form action="/student_portal_login" method="POST">
+      <label for="email">Email: </label>
+      <input type="email" name="email" id="email" pattern="[A-z0-9.]+[@][A-z0-9]{1,}[.]+[A-z]{2,}" value="{{ email }}" required placeholder="Email"><br>
+      <input type="submit" name="Preview" value="Lookup"/>
+    </form>
+  </body>
+</html>
