@@ -1354,10 +1354,10 @@ router.post('/request_fix', (req, res) => {
     }
   });
   var mailOptions = {
-      from: item.email,
+      from: 'EMA_Classes@outlook.com',
       to: 'EMA_Testing@outlook.com',
       subject: 'Student Data Change Request - ' + item.student_name,
-      html: item.change_data
+      text: item.change_data
   };
   transporter.sendMail(mailOptions, function(error, info){
       if (error){
