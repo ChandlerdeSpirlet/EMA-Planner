@@ -745,7 +745,7 @@ router.get('/update_checkin/(:barcode)/(:class_id)/(:class_level)/(:class_time)/
         })
     })
     .catch(err => {
-      console.log('Could not update count of ' req.params.barcode);
+      console.log('Could not update count of ' + req.params.barcode);
       res.redirect('https://ema-planner.herokuapp.com/class_checkin/' + req.params.class_id + '/' + req.params.class_level + '/' + req.params.class_time + '/' + req.params.class_type);
     })
 })
