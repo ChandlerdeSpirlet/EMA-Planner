@@ -1279,6 +1279,7 @@ router.get('/student_portal/(:email)', (req, res) => {
                     class_info: classes,
                     test_info: tests,
                     swat_info: swats,
+                    email: req.params.email,
                     alert_message: 'Logged in successfully.'
                   })
                 })
@@ -1289,6 +1290,7 @@ router.get('/student_portal/(:email)', (req, res) => {
                     class_info: '',
                     test_info: '',
                     swat_info: '',
+                    email: req.params.email,
                     alert_message: "Could not find student swats with the email: " + req.params.email + "\n Please see an instructor to correct this."
                   })
                 })
@@ -1300,6 +1302,7 @@ router.get('/student_portal/(:email)', (req, res) => {
                 class_info: '',
                 test_info: '',
                 swat_info: '',
+                email: req.params.email,
                 alert_message: "Could not find student tests with the email: " + req.params.email + "\n Please see an instructor to correct this."
               })
             })
@@ -1311,6 +1314,7 @@ router.get('/student_portal/(:email)', (req, res) => {
             class_info: '',
             test_info: '',
             swat_info: '',
+            email: req.params.email,
             alert_message: "Could not find student classes with the email: " + req.params.email + "\n Please see an instructor to correct this."
       })
         })
@@ -1322,6 +1326,7 @@ router.get('/student_portal/(:email)', (req, res) => {
         class_info: '',
         test_info: '',
         swat_info: '',
+        email: req.params.email,
         alert_message: "Could not find a student with the email: " + req.params.email + "\n Please see an instructor to correct this."
       })
     })

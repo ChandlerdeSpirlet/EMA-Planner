@@ -2,6 +2,9 @@
 {% set local = 'Students' %}
 {% block content %}
 {% set is_bb = '' %}
+{% if alert_message != '' %}
+  <script>alert("{{ alert_message }}")</script>
+{% endif %}
 <title>Student Portal</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" type="image/png" href="https://ema-planner.herokuapp.com/views/ema.png">
@@ -140,6 +143,7 @@
 </style>
 <head>
   <h1>Student Portal</h1>
+  <h3>{{ email }}</h3>
   {% for student in stud_info %}
     {% if student.belt_order | int >= 4 %}
       {% set is_bb = 'true' %}
