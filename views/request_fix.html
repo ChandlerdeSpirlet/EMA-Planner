@@ -54,10 +54,10 @@
   <body>
     <p>Describe what information needs to be changed and a staff member will update the information as soon as possible.</p>
     <form action="/request_fix" method="POST">
-      <label for="email">Email: </label>
-      <input type="email" name="email" id="email" pattern="[A-z0-9.]+[@][A-z0-9]{1,}[.]+[A-z]{2,}" value="{{ email }}" required placeholder="Email"><br>
       <label for="student_name">Student's Name</label>
       <input type="name" name="student_name" id="student_name" pattern="[A-z- ]{2,}" required placeholder="Student's Name"><br>
+      <label for="email">Email: </label>
+      <input type="email" name="email" id="email" pattern="[A-z0-9.]+[@][A-z0-9]{1,}[.]+[A-z]{2,}" value="{{ email }}" required placeholder="Email"><br>
       <textarea name="paragraph_text" cols="50" rows="10" placeholder="What needs to be changed?" required></textarea>
       <input type="submit" name="Preview" value="Send Change"/>
     </form>

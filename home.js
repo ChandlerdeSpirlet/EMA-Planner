@@ -1341,7 +1341,7 @@ router.get('/request_fix', (req, res) => {
 
 router.post('/request_fix', (req, res) => {
   var item = {
-    student_name: req.sanititze('student_name').trim(),
+    student_name: req.sanitize('student_name').trim(),
     email: req.sanitize('email').trim(),
     change_data:  req.sanitize('paragraph_text')
   }
