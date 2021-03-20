@@ -660,7 +660,7 @@ router.post('/processPayment', (req, res) => {
 })
 
 router.get('/class_selector', (req, res) => {
-  const query = "select x.class_id, (select count(class_session_id) from class_signups where class_session_id = x.class_id and checked_in = FALSE) as signed_up, (select count(class_session_id) from class_signups where class_session_id = x.class_id and checked_in = TRUE) as checked_in, to_char(x.starts_at, 'Month') as class_month, to_char(x.starts_at, 'DD') as class_day, to_char(x.starts_at, 'HH:MI PM') as class_time, to_char(x.ends_at, 'HH:MI PM') as end_time, x.level from classes xwhere to_char(x.starts_at, 'Month DD') = to_char(to_date($1, 'Month DD'), 'Month DD') order by x.starts_at;"
+  const query = "select x.class_id, (select count(class_session_id) from class_signups where class_session_id = x.class_id and checked_in = FALSE) as signed_up, (select count(class_session_id) from class_signups where class_session_id = x.class_id and checked_in = TRUE) as checked_in, to_char(x.starts_at, 'Month') as class_month, to_char(x.starts_at, 'DD') as class_day, to_char(x.starts_at, 'HH:MI PM') as class_time, to_char(x.ends_at, 'HH:MI PM') as end_time, x.level from classes x where to_char(x.starts_at, 'Month DD') = to_char(to_date($1, 'Month DD'), 'Month DD') order by x.starts_at;"
   db.any(query)
     .then(function (rows) {
       res.render('class_selector', {
@@ -675,7 +675,7 @@ router.get('/class_selector', (req, res) => {
 
 router.get('/class_selector_force/(:month)/(:day)', (req, res) => {
   const date_conversion = req.params.month + ' ' + req.params.day
-  const query = "select x.class_id, (select count(class_session_id) from class_signups where class_session_id = x.class_id and checked_in = FALSE) as signed_up, (select count(class_session_id) from class_signups where class_session_id = x.class_id and checked_in = TRUE) as checked_in, to_char(x.starts_at, 'Month') as class_month, to_char(x.starts_at, 'DD') as class_day, to_char(x.starts_at, 'HH:MI PM') as class_time, to_char(x.ends_at, 'HH:MI PM') as end_time, x.level from classes xwhere to_char(x.starts_at, 'Month DD') = to_char(to_date($1, 'Month DD'), 'Month DD') order by x.starts_at;"
+  const query = "select x.class_id, (select count(class_session_id) from class_signups where class_session_id = x.class_id and checked_in = FALSE) as signed_up, (select count(class_session_id) from class_signups where class_session_id = x.class_id and checked_in = TRUE) as checked_in, to_char(x.starts_at, 'Month') as class_month, to_char(x.starts_at, 'DD') as class_day, to_char(x.starts_at, 'HH:MI PM') as class_time, to_char(x.ends_at, 'HH:MI PM') as end_time, x.level from classes x where to_char(x.starts_at, 'Month DD') = to_char(to_date($1, 'Month DD'), 'Month DD') order by x.starts_at;"
   db.any(query, [date_conversion])
     .then(function (rows) {
       res.render('class_selector', {
