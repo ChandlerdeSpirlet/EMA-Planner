@@ -814,7 +814,7 @@ router.post('/class_checkin', (req, res) => {
         .then(update => {
           db.any(query, [stud_info[0], stud_info[1], item.class_id, stud_info[1], temp_class_check])
             .then(function (rows1) {
-              res.redirect('class_checkin/' + item.class_id + '/' + item.level + '/' + item.time)
+              res.redirect('class_checkin/' + item.class_id + '/' + item.level + '/' + item.time + '/' + item.class_type)
             })
             .catch(function (err) {
               res.redirect('home')
