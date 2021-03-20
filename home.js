@@ -717,7 +717,7 @@ router.get('/class_remove/(:barcode)/(:class_id)/(:class_level)/(:class_time)/(:
 
 router.get('/update_checkin/(:barcode)/(:class_id)/(:class_level)/(:class_time)/(:class_check)/(:class_type)', (req, res) => {
   const update_status = 'update class_signups set checked_in = true where class_check = $1;';
-  const update_visit = "update student_list set last_visit = (select to_char(starts_at, 'Month DD, YYYY')::date as visit from classes where class_id = $1) where barcode = $2 and (last_visit > (select to_char(starts_at, 'Month DD, YYYY')::date as visit from classes where class_id = $3) or last_visit is null);"
+  const update_visit = "update student_list set last_visit = (select to_char(starts_at, 'Month DD, YYYY')::date as visit from classes where class_id = $1) where barcode = $2 and (last_visit < (select to_char(starts_at, 'Month DD, YYYY')::date as visit from classes where class_id = $3) or last_visit is null);"
   if (req.params.class_type == 'reg'){
     var update_count = "update student_list set reg_class = reg_class + 1 where barcode = $1";
   } else if (req.params.class_type == 'spar'){
@@ -796,7 +796,7 @@ router.post('/class_checkin', (req, res) => {
     time: req.sanitize('time').trim(),
     class_type: req.sanitize('class_type').trim()
   }
-  const update_visit = "update student_list set last_visit = (select to_char(starts_at, 'Month DD, YYYY')::date as visit from classes where class_id = $1) where barcode = $2 and (last_visit > (select to_char(starts_at, 'Month DD, YYYY')::date as visit from classes where class_id = $3) or last_visit is null);"
+  const update_visit = "update student_list set last_visit = (select to_char(starts_at, 'Month DD, YYYY')::date as visit from classes where class_id = $1) where barcode = $2 and (last_visit < (select to_char(starts_at, 'Month DD, YYYY')::date as visit from classes where class_id = $3) or last_visit is null);"
   if (item.class_type == 'reg'){
     var update_count = "update student_list set reg_class = reg_class + 1 where barcode = $1";
   } else if (item.class_type == 'spar'){
