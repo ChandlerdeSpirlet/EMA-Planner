@@ -768,6 +768,7 @@ router.get('/class_checkin/(:class_id)/(:class_level)/(:class_time)/(:class_type
                 level: req.params.class_level,
                 time: req.params.class_time,
                 class_id: req.params.class_id,
+                class_type: req.params.class_type,
                 alert_message: ''
               })
             })
