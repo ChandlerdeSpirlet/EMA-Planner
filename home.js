@@ -1356,8 +1356,8 @@ router.post('/request_fix', (req, res) => {
   var mailOptions = {
       from: 'EMA_Classes@outlook.com',
       to: 'EMA_Testing@outlook.com',
-      subject: 'Student Data Change Request - ' + item.student_name,
-      text: item.change_data
+      subject: 'Student Data Change Request - ' + String(item.student_name),
+      text: String(item.change_data)
   };
   transporter.sendMail(mailOptions, function(error, info){
       if (error){
