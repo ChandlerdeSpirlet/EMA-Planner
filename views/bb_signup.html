@@ -165,19 +165,16 @@
   </head>
   <body>
     <form onsubmit="return ValidateForm()" autocomplete="off" name="Form" action="/bb_signup" method="POST">
-      <label for="result">Student #1 </label>
       <div class="autocomplete">
-        <input id="result" name="result" type="text" placeholder="Student's First Name (required)" value="{{ result }}" required pattern="[A-z- ]*[A-z]{2,} [A-z-]{2,} - [0-9]{5}" oninput="InvalidMsg(this);" oninvalid="InvalidMsg(this);">
+        <label>Student #1 </label><input id="result" name="result" type="text" placeholder="Student's First Name (required)" value="{{ result }}" required pattern="[A-z- ]*[A-z]{2,} [A-z-]{2,} - [0-9]{5}" oninput="InvalidMsg(this);" oninvalid="InvalidMsg(this);">
       </div>
       <br>
-      <label for="result2">Student #2 </label>
       <div class="autocomplete">
-        <input id="result2" name="result2" type="text" placeholder="Student's First Name #2 (optional)" value="{{ result }}" pattern="[A-z- ]*[A-z]{2,} [A-z-]{2,} - [0-9]{5}" oninput="InvalidMsg(this);" oninvalid="InvalidMsg(this);">
+        <label>Student #2 </label><input id="result2" name="result2" type="text" placeholder="Student's First Name #2 (optional)" value="{{ result }}" pattern="[A-z- ]*[A-z]{2,} [A-z-]{2,} - [0-9]{5}" oninput="InvalidMsg(this);" oninvalid="InvalidMsg(this);">
       </div>
       <br>
-      <label for="result3">Student #3 </label>
       <div class="autocomplete">
-        <input id="result3" name="result3" type="text" placeholder="Student's First Name #3 (optional)" value="{{ result }}" pattern="[A-z- ]*[A-z]{2,} [A-z-]{2,} - [0-9]{5}" oninput="InvalidMsg(this);" oninvalid="InvalidMsg(this);">
+        <label for="result3">Student #3 </label><input id="result3" name="result3" type="text" placeholder="Student's First Name #3 (optional)" value="{{ result }}" pattern="[A-z- ]*[A-z]{2,} [A-z-]{2,} - [0-9]{5}" oninput="InvalidMsg(this);" oninvalid="InvalidMsg(this);">
       </div>
       <br>
       <i>NOTE: You can now sign up 4 family members at a time. Please only sign up your own family as Student #1's email will be used for the Student Portal.</i>
