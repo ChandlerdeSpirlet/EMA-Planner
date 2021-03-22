@@ -2803,7 +2803,7 @@ router.get('/process_classes/(:stud_info)/(:stud_info2)/(:stud_info3)/(:belt_gro
       });
     })
     var name_list = '';
-    switch (student_list.length) {
+    switch (student_info.length) {
       case 1:
         name_list = student_info[0][0];
         break;
