@@ -1370,7 +1370,7 @@ router.post('/request_fix', (req, res) => {
           console.log('Email sent: ' + info.response);
           res.render('student_portal_login', {
             email: item.email,
-            alert_message: 'Email send successfully. You should see an update soon!'
+            alert_message: 'Email sent successfully. You should see an update soon!'
           })
       }
   });
