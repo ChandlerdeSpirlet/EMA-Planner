@@ -170,11 +170,11 @@
       </div>
       <br>
       <div class="autocomplete">
-        <input id="result" name="result2" type="text" placeholder="Student's First Name #2 (optional)" value="{{ result }}" pattern="[A-z- ]*[A-z]{2,} [A-z-]{2,} - [0-9]{5}" oninput="InvalidMsg(this);" oninvalid="InvalidMsg(this);">
+        <input id="result2" name="result2" type="text" placeholder="Student's First Name #2 (optional)" value="{{ result }}" pattern="[A-z- ]*[A-z]{2,} [A-z-]{2,} - [0-9]{5}" oninput="InvalidMsg(this);" oninvalid="InvalidMsg(this);">
       </div>
       <br>
       <div class="autocomplete">
-        <input id="result" name="result3" type="text" placeholder="Student's First Name #3 (optional)" value="{{ result }}" pattern="[A-z- ]*[A-z]{2,} [A-z-]{2,} - [0-9]{5}" oninput="InvalidMsg(this);" oninvalid="InvalidMsg(this);">
+        <input id="result3" name="result3" type="text" placeholder="Student's First Name #3 (optional)" value="{{ result }}" pattern="[A-z- ]*[A-z]{2,} [A-z-]{2,} - [0-9]{5}" oninput="InvalidMsg(this);" oninvalid="InvalidMsg(this);">
       </div>
       <br>
       <label>Class Days and Times: </label>
@@ -355,4 +355,6 @@
   </script>
   <script>
       autocomplete(document.getElementById("result"), names);
+      autocomplete(document.getElementById("result2"), names);
+      autocomplete(document.getElementById("result3"), names);
   </script>
