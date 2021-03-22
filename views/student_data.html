@@ -110,8 +110,16 @@
   }
 
   button {
-    width: 60%;
-    margin: 0 auto;
+    box-shadow: inset 1px 1px 3px #ccc;
+    border-radius: 5px;
+    display: block;
+    font-size: 100%;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 5px;
+    height: 30px;
   }
 
   .item {
@@ -211,6 +219,7 @@
       <input type="submit" name="Submit" value="Save">
     </div>
   </form>
+  <button onclick="delete_student({{ data[0].barcode }})">Delete Student</button>
   {% endif %}
 </body>
 <script>
@@ -235,6 +244,15 @@
       return true;
     }
   }
+</script>
+<script>
+  function delete_student(barcode) {
+    var ask = window.confirm("Are you sure you want to delete this student? This action will clear all of their information and remove them entirely from the system.");
+    if (ask) {
+        window.alert("The student has been permanently deleted.");
+        window.location.href = "/delete_student/" + barcode;
+    }
+}
 </script>
 {% endblock %}
 </html>

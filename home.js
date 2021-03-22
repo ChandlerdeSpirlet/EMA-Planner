@@ -3642,6 +3642,46 @@ router.get('/student_classes', (req, res) => {
   }
 })
 
+router.get('/delete_student/(:barcode)', (req, res) => {
+  const del_query = 'delete from student_list where barcode = $1;';
+  db.none(del_query, [req.params.barcode])
+  .then(row => {
+    const name_query = "select * from get_all_names()"
+    db.any(name_query)
+      .then(function (rows) {
+        res.render('student_lookup', {
+          data: rows,
+          alert_message: 'Successfully deleted the student.'
+        })
+      })
+      .catch(function (err) {
+        console.log('Could not find students: ' + err)
+        res.render('student_lookup', {
+          data: '',
+          alert_message: 'Unable to find student. Please refresh the page and try agin.'
+        })
+      })
+  })
+  .catch(err => {
+    console.log("Unable to delete student with barcode " + req.params.barcode);
+    const name_query = "select * from get_all_names()"
+    db.any(name_query)
+      .then(function (rows) {
+        res.render('student_lookup', {
+          data: rows,
+          alert_message: 'Could not delete student. Please try again or notify Lurch'
+        })
+      })
+      .catch(function (err) {
+        console.log('Could not find students: ' + err)
+        res.render('student_lookup', {
+          data: '',
+          alert_message: 'Unable to find student. Please refresh the page and try agin.'
+        })
+      })
+  })
+})
+
 router.get('/belt_inventory', (req, res) => {
   const belt_query = "select * from belt_inventory;";
   db.any(belt_query)
