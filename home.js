@@ -2568,6 +2568,15 @@ router.post('/bb_signup', (req, res) => {
   console.log('1: ' + item.stud_data);
   console.log('2: ' + item.stud_data2);
   console.log('3: ' + item.stud_data3);
+  if (item.stud_data == ''){
+    item.stud_data = ' ';
+  }
+  if (item.stud_data2 == ''){
+    item.stud_data2 = ' ';
+  }
+  if (item.stud_data3 == ''){
+    item.stud_data3 = ' ';
+  }
   //const stud_info = parseStudentInfo(item.stud_data);
   const redir_link = 'process_classes/' + item.stud_data + '/' + item.stud_data2 + '/' + item.stud_data3 + '/' + belt_group + '/' + item.day_time + '/not_swat';
   res.redirect(redir_link);
@@ -2756,13 +2765,13 @@ router.get('/process_classes/(:stud_info)/(:stud_info2)/(:stud_info3)/(:belt_gro
     };
   } else {
     student_info = []
-    if (req.params.stud_info != ''){
+    if (req.params.stud_info != ' '){
       student_info.push(parseStudentInfo(req.params.stud_info));
     }
-    if (req.params.stud_info2 != ''){
+    if (req.params.stud_info2 != ' '){
       student_info.push(parseStudentInfo(req.params.stud_info2));
     }
-    if (req.params.stud_info3 != ''){
+    if (req.params.stud_info3 != ' '){
       student_info.push(parseStudentInfo(req.params.stud_info3));
     }
     const query_classes = "insert into class_signups (student_name, email, class_session_id, class_check, barcode) values ($1, (select lower(email) from student_list where barcode = $2), $3, $4, $5) on conflict (class_check) do nothing;";
