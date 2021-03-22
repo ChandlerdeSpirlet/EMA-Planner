@@ -143,6 +143,7 @@
 
 <body>
   {% if data %}
+  <meta name="barcode" content="{{ data[0].barcode }}">
   <form name="Form" onsubmit="return ValidateForm()" action="/student_data" method="POST">
     <input type="hidden" name="barcode" value="{{ barcode }}">
     <div>
