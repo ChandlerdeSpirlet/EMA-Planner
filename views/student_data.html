@@ -249,7 +249,7 @@
   function delete_student(barcode) {
     var ask = window.confirm("Are you sure you want to delete this student? This action will clear all of their information and remove them entirely from the system.");
     if (ask) {
-        window.alert("The student has been permanently deleted.");
+        console.log('Barcode: ' + barcode);
         window.location.href = "/delete_student/" + barcode;
     }
 }
