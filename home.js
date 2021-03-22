@@ -2560,11 +2560,16 @@ router.post('/level3_signup', (req, res) => {
 router.post('/bb_signup', (req, res) => {
   const item = {
     stud_data: req.sanitize('result').trim(),
+    stud_data2: req.sanitize('result2').trim(),
+    stud_data3: req.sanitize('result3').trim(),
     day_time: req.sanitize('day_time')
   }
   belt_group = 'Black Belt';
-  const stud_info = parseStudentInfo(item.stud_data);
-  const redir_link = 'process_classes/' + stud_info[0] + '/' + stud_info[1] + '/' + belt_group + '/' + item.day_time + '/not_swat';
+  console.log('1: ' + item.stud_data);
+  console.log('2: ' + item.stud_data2);
+  console.log('3: ' + item.stud_data3);
+  //const stud_info = parseStudentInfo(item.stud_data);
+  const redir_link = 'process_classes/' + item.stud_data + '/' + item.stud_data2 + '/' + item.stud_data3 + '/' + belt_group + '/' + item.day_time + '/not_swat';
   res.redirect(redir_link);
 })
 
@@ -2594,7 +2599,7 @@ function parseID(id_set) {
   return set_id;
 }
 
-router.get('/process_classes/(:student_name)/(:barcode)/(:belt_group)/(:id_set)/(:swat)', (req, res) => {
+router.get('/process_classes/(:stud_info)/(:stud_info2)/(:stud_info3)/(:belt_group)/(:id_set)/(:swat)', (req, res) => {
   if (req.params.swat == 'is_swat'){
     const query_classes = "insert into class_signups (student_name, email, class_session_id, class_check, barcode, is_swat) values ($1, (select lower(email) from student_list where barcode = $2), $3, $4, $5, true) on conflict (class_check) do nothing;";
     const email_info = "select email from student_list where barcode = $1;"
@@ -2750,9 +2755,20 @@ router.get('/process_classes/(:student_name)/(:barcode)/(:belt_group)/(:id_set)/
         break;
     };
   } else {
+    student_info = []
+    if (req.params.stud_info != ''){
+      student_info.push(parseStudentInfo(req.params.stud_info));
+    }
+    if (req.params.stud_info2 != ''){
+      student_info.push(parseStudentInfo(req.params.stud_info2));
+    }
+    if (req.params.stud_info3 != ''){
+      student_info.push(parseStudentInfo(req.params.stud_info3));
+    }
     const query_classes = "insert into class_signups (student_name, email, class_session_id, class_check, barcode) values ($1, (select lower(email) from student_list where barcode = $2), $3, $4, $5) on conflict (class_check) do nothing;";
     const email_info = "select email from student_list where barcode = $1;"
     var id_set = parseID(req.params.id_set);
+    /*
     id_set.forEach(element => {
       var temp_class_check = req.params.student_name.toLowerCase().split(" ").join("") + element.toString();
       db.none(query_classes, [req.params.student_name, req.params.barcode, element, temp_class_check, req.params.barcode])
@@ -2763,17 +2779,46 @@ router.get('/process_classes/(:student_name)/(:barcode)/(:belt_group)/(:id_set)/
           console.log('Err: with element ' + element + '. Err: ' + err);
         })
     });
+    */
+    student_info.forEach(student => {
+      id_set.forEach(element => {
+        var temp_class_check = student[0].toLowerCase().split(" ").join("") + element.toString();
+        db.none(query_classes, [student[0], student[1], element, temp_class_check, student[1]])
+          .then(rows => {
+            console.log('Added class with element ' + element);
+            console.log('Added element for student ' + student);
+          })
+          .catch(err => {
+            console.log('Err: with element ' + element + '. Err: ' + err);
+          })
+      });
+    })
+    var name_list = '';
+    switch (student_list.length) {
+      case 1:
+        name_list = student_info[0][0];
+        break;
+      case 2:
+        name_list = student_info[0][0] + ', ' + student_info[1][0];
+        break;
+      case 3:
+        name_list = student_info[0][0] + ', ' + student_info[1][0] + ', ' + student_info[2][0];
+        break;
+      default:
+        name_list = 'Error finding names'
+        break;
+    }
     switch (id_set.length) {
       case 1:
         var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH24') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH24') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id = $1;"
-        db.any(email_info, [req.params.barcode])
+        db.any(email_info, [student_info[0][1]])
           .then(email => {
             db.any(end_query, [id_set[0]])
               .then(rows => {
                 res.render('class_confirmed', {
                   classes: rows,
                   email: email,
-                  student_name: req.params.student_name,
+                  student_name: name_list,
                   belt_group: req.params.belt_color,
                   class_type: 'class',
                   num_events: 1
@@ -2797,14 +2842,14 @@ router.get('/process_classes/(:student_name)/(:barcode)/(:belt_group)/(:id_set)/
         break;
       case 2:
         var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH24') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH24') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id in ($1, $2);"
-        db.any(email_info, [req.params.barcode])
+        db.any(email_info, [student_info[0][1]])
           .then(email => {
             db.any(end_query, [id_set[0], id_set[1]])
               .then(rows => {
                 res.render('class_confirmed', {
                   classes: rows,
                   email: email,
-                  student_name: req.params.student_name,
+                  student_name: name_list,
                   belt_group: req.params.belt_color,
                   class_type: 'class',
                   num_events: 2
@@ -2828,14 +2873,14 @@ router.get('/process_classes/(:student_name)/(:barcode)/(:belt_group)/(:id_set)/
         break;
       case 3:
         var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH24') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH24') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id in ($1, $2, $3);"
-        db.any(email_info, [req.params.barcode])
+        db.any(email_info, [student_info[0][1]])
           .then(email => {
             db.any(end_query, [id_set[0], id_set[1], id_set[2]])
               .then(rows => {
                 res.render('class_confirmed', {
                   classes: rows,
                   email: email,
-                  student_name: req.params.student_name,
+                  student_name: name_list,
                   belt_group: req.params.belt_color,
                   class_type: 'class',
                   num_events: 3
@@ -2859,14 +2904,14 @@ router.get('/process_classes/(:student_name)/(:barcode)/(:belt_group)/(:id_set)/
         break;
       case 4:
         var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH24') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH24') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id in ($1, $2, $3, $4);"
-        db.any(email_info, [req.params.barcode])
+        db.any(email_info, [student_info[0][1]])
           .then(email => {
             db.any(end_query, [id_set[0], id_set[1], id_set[2], id_set[3]])
               .then(rows => {
                 res.render('class_confirmed', {
                   classes: rows,
                   email: email,
-                  student_name: req.params.student_name,
+                  student_name: name_list,
                   belt_group: req.params.belt_color,
                   class_type: 'class',
                   num_events: 4
