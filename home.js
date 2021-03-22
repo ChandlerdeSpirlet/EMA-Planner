@@ -2505,55 +2505,130 @@ router.get('/swat_signup', (req, res) => {
 router.post('/dragons_signup', (req, res) => {
   const item = {
     stud_data: req.sanitize('result').trim(),
+    stud_data2: req.sanitize('result2').trim(),
+    stud_data3: req.sanitize('result3').trim(),
+    stud_data4: req.sanitize('result4').trim(),
     day_time: req.sanitize('day_time')
+  }
+  if (item.stud_data == ''){
+    item.stud_data = ' ';
+  }
+  if (item.stud_data2 == ''){
+    item.stud_data2 = ' ';
+  }
+  if (item.stud_data3 == ''){
+    item.stud_data3 = ' ';
+  }
+  if (item.stud_data4 == ''){
+    item.stud_data4 = ' ';
   }
   belt_group = 'Little Dragons';
   const stud_info = parseStudentInfo(item.stud_data);
-  const redir_link = 'process_classes/' + stud_info[0] + '/' + stud_info[1] + '/' + belt_group + '/' + item.day_time + '/not_swat';
+  const redir_link = 'process_classes/' + item.stud_data + '/' + item.stud_data2 + '/' + item.stud_data3 + '/' + item.stud_data4 + '/' + belt_group + '/' + item.day_time + '/not_swat';
   res.redirect(redir_link);
 })
 
 router.post('/basic_signup', (req, res) => {
   const item = {
     stud_data: req.sanitize('result').trim(),
+    stud_data2: req.sanitize('result2').trim(),
+    stud_data3: req.sanitize('result3').trim(),
+    stud_data4: req.sanitize('result4').trim(),
     day_time: req.sanitize('day_time')
+  }
+  if (item.stud_data == ''){
+    item.stud_data = ' ';
+  }
+  if (item.stud_data2 == ''){
+    item.stud_data2 = ' ';
+  }
+  if (item.stud_data3 == ''){
+    item.stud_data3 = ' ';
+  }
+  if (item.stud_data4 == ''){
+    item.stud_data4 = ' ';
   }
   belt_group = 'Basic';
   const stud_info = parseStudentInfo(item.stud_data);
-  const redir_link = 'process_classes/' + stud_info[0] + '/' + stud_info[1] + '/' + belt_group + '/' + item.day_time + '/not_swat';
+  const redir_link = 'process_classes/' + item.stud_data + '/' + item.stud_data2 + '/' + item.stud_data3 + '/' + item.stud_data4 + '/' + belt_group + '/' + item.day_time + '/not_swat';
   res.redirect(redir_link);
 })
 
 router.post('/level1_signup', (req, res) => {
   const item = {
     stud_data: req.sanitize('result').trim(),
+    stud_data2: req.sanitize('result2').trim(),
+    stud_data3: req.sanitize('result3').trim(),
+    stud_data4: req.sanitize('result4').trim(),
     day_time: req.sanitize('day_time')
+  }
+  if (item.stud_data == ''){
+    item.stud_data = ' ';
+  }
+  if (item.stud_data2 == ''){
+    item.stud_data2 = ' ';
+  }
+  if (item.stud_data3 == ''){
+    item.stud_data3 = ' ';
+  }
+  if (item.stud_data4 == ''){
+    item.stud_data4 = ' ';
   }
   belt_group = 'Level 1';
   const stud_info = parseStudentInfo(item.stud_data);
-  const redir_link = 'process_classes/' + stud_info[0] + '/' + stud_info[1] + '/' + belt_group + '/' + item.day_time + '/not_swat';
+  const redir_link = 'process_classes/' + item.stud_data + '/' + item.stud_data2 + '/' + item.stud_data3 + '/' + item.stud_data4 + '/' + belt_group + '/' + item.day_time + '/not_swat';
   res.redirect(redir_link);
 })
 
 router.post('/level2_signup', (req, res) => {
   const item = {
     stud_data: req.sanitize('result').trim(),
+    stud_data2: req.sanitize('result2').trim(),
+    stud_data3: req.sanitize('result3').trim(),
+    stud_data4: req.sanitize('result4').trim(),
     day_time: req.sanitize('day_time')
+  }
+  if (item.stud_data == ''){
+    item.stud_data = ' ';
+  }
+  if (item.stud_data2 == ''){
+    item.stud_data2 = ' ';
+  }
+  if (item.stud_data3 == ''){
+    item.stud_data3 = ' ';
+  }
+  if (item.stud_data4 == ''){
+    item.stud_data4 = ' ';
   }
   belt_group = 'Level 2';
   const stud_info = parseStudentInfo(item.stud_data);
-  const redir_link = 'process_classes/' + stud_info[0] + '/' + stud_info[1] + '/' + belt_group + '/' + item.day_time + '/not_swat';
+  const redir_link = 'process_classes/' + item.stud_data + '/' + item.stud_data2 + '/' + item.stud_data3 + '/' + item.stud_data4 + '/' + belt_group + '/' + item.day_time + '/not_swat';
   res.redirect(redir_link);
 })
 
 router.post('/level3_signup', (req, res) => {
   const item = {
     stud_data: req.sanitize('result').trim(),
+    stud_data2: req.sanitize('result2').trim(),
+    stud_data3: req.sanitize('result3').trim(),
+    stud_data4: req.sanitize('result4').trim(),
     day_time: req.sanitize('day_time')
+  }
+  if (item.stud_data == ''){
+    item.stud_data = ' ';
+  }
+  if (item.stud_data2 == ''){
+    item.stud_data2 = ' ';
+  }
+  if (item.stud_data3 == ''){
+    item.stud_data3 = ' ';
+  }
+  if (item.stud_data4 == ''){
+    item.stud_data4 = ' ';
   }
   belt_group = 'Level 3';
   const stud_info = parseStudentInfo(item.stud_data);
-  const redir_link = 'process_classes/' + stud_info[0] + '/' + stud_info[1] + '/' + belt_group + '/' + item.day_time + '/not_swat';
+  const redir_link = 'process_classes/' + item.stud_data + '/' + item.stud_data2 + '/' + item.stud_data3 + '/' + item.stud_data4 + '/' + belt_group + '/' + item.day_time + '/not_swat';
   res.redirect(redir_link);
 })
 
@@ -2562,6 +2637,7 @@ router.post('/bb_signup', (req, res) => {
     stud_data: req.sanitize('result').trim(),
     stud_data2: req.sanitize('result2').trim(),
     stud_data3: req.sanitize('result3').trim(),
+    stud_data4: req.sanitize('result4').trim(),
     day_time: req.sanitize('day_time')
   }
   belt_group = 'Black Belt';
@@ -2577,19 +2653,37 @@ router.post('/bb_signup', (req, res) => {
   if (item.stud_data3 == ''){
     item.stud_data3 = ' ';
   }
+  if (item.stud_data4 == ''){
+    item.stud_data4 = ' ';
+  }
   //const stud_info = parseStudentInfo(item.stud_data);
-  const redir_link = 'process_classes/' + item.stud_data + '/' + item.stud_data2 + '/' + item.stud_data3 + '/' + belt_group + '/' + item.day_time + '/not_swat';
+  const redir_link = 'process_classes/' + item.stud_data + '/' + item.stud_data2 + '/' + item.stud_data3 + '/' + item.stud_data4 + '/' + belt_group + '/' + item.day_time + '/not_swat';
   res.redirect(redir_link);
 })
 
 router.post('/swat_signup', (req, res) => {
   const item = {
     stud_data: req.sanitize('result').trim(),
+    stud_data2: req.sanitize('result2').trim(),
+    stud_data3: req.sanitize('result3').trim(),
+    stud_data4: req.sanitize('result4').trim(),
     day_time: req.sanitize('day_time')
+  }
+  if (item.stud_data == ''){
+    item.stud_data = ' ';
+  }
+  if (item.stud_data2 == ''){
+    item.stud_data2 = ' ';
+  }
+  if (item.stud_data3 == ''){
+    item.stud_data3 = ' ';
+  }
+  if (item.stud_data4 == ''){
+    item.stud_data4 = ' ';
   }
   belt_group = 'Swat';
   const stud_info = parseStudentInfo(item.stud_data);
-  const redir_link = 'process_classes/' + stud_info[0] + '/' + stud_info[1] + '/' + belt_group + '/' + item.day_time + '/is_swat';
+  const redir_link = 'process_classes/' + item.stud_data + '/' + item.stud_data2 + '/' + item.stud_data3 + '/' + item.stud_data4 + '/' + belt_group + '/' + item.day_time + '/is_swat';
   res.redirect(redir_link);
 })
 
@@ -2608,8 +2702,21 @@ function parseID(id_set) {
   return set_id;
 }
 
-router.get('/process_classes/(:stud_info)/(:stud_info2)/(:stud_info3)/(:belt_group)/(:id_set)/(:swat)', (req, res) => {
+router.get('/process_classes/(:stud_info)/(:stud_info2)/(:stud_info3)/(:stud_info4)/(:belt_group)/(:id_set)/(:swat)', (req, res) => {
   if (req.params.swat == 'is_swat'){
+    var student_info = []
+    if (req.params.stud_info != ' '){
+      student_info.push(parseStudentInfo(req.params.stud_info));
+    }
+    if (req.params.stud_info2 != ' '){
+      student_info.push(parseStudentInfo(req.params.stud_info2));
+    }
+    if (req.params.stud_info3 != ' '){
+      student_info.push(parseStudentInfo(req.params.stud_info3));
+    }
+    if (req.params.stud_info4 != ' '){
+      student_info.push(parseStudentInfo(req.params.stud_info4));
+    }
     const query_classes = "insert into class_signups (student_name, email, class_session_id, class_check, barcode, is_swat) values ($1, (select lower(email) from student_list where barcode = $2), $3, $4, $5, true) on conflict (class_check) do nothing;";
     const email_info = "select email from student_list where barcode = $1;"
     var id_set = parseID(req.params.id_set);
@@ -2630,17 +2737,52 @@ router.get('/process_classes/(:stud_info)/(:stud_info2)/(:stud_info3)/(:belt_gro
           console.log('Could not update swat_count');
         })
     });
+    student_info.forEach(student => {
+      var temp_class_check = student[0].toLowerCase().split(" ").join("") + element.toString();
+      db.none(swat_count, [element])
+        .then(row => {
+          db.none(query_classes, [student[0], student[1], element, temp_class_check, student[1]])
+            .then(rows => {
+              console.log('Added swat class with element ' + element);
+            })
+            .catch(err => {
+              console.log('Err: with swat element ' + element + '. Err: ' + err);
+              console.log('Err: with student ' + student + '. Err: ' + err);
+            })
+        })
+        .catch(err => {
+          console.log('Could not update swat_count');
+        })
+    })
+    var name_list = '';
+    switch (student_info.length) {
+      case 1:
+        name_list = student_info[0][0];
+        break;
+      case 2:
+        name_list = student_info[0][0] + ', ' + student_info[1][0];
+        break;
+      case 3:
+        name_list = student_info[0][0] + ', ' + student_info[1][0] + ', ' + student_info[2][0];
+        break;
+      case 3:
+        name_list = student_info[0][0] + ', ' + student_info[1][0] + ', ' + student_info[2][0] + ', ' + student_info[3][0];
+        break;
+      default:
+        name_list = 'Error finding names'
+        break;
+    }
     switch (id_set.length) {
       case 1:
         var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH24') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH24') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id = $1;"
-        db.any(email_info, [req.params.barcode])
+        db.any(email_info, [student_info[0][1]])
           .then(email => {
             db.any(end_query, [id_set[0]])
               .then(rows => {
                 res.render('class_confirmed', {
                   classes: rows,
                   email: email,
-                  student_name: req.params.student_name,
+                  student_name: name_list,
                   belt_group: req.params.belt_color,
                   class_type: 'swat',
                   num_events: 1
@@ -2664,14 +2806,14 @@ router.get('/process_classes/(:stud_info)/(:stud_info2)/(:stud_info3)/(:belt_gro
         break;
       case 2:
         var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH24') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH24') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id in ($1, $2);"
-        db.any(email_info, [req.params.barcode])
+        db.any(email_info, [student_info[0][1]])
           .then(email => {
             db.any(end_query, [id_set[0], id_set[1]])
               .then(rows => {
                 res.render('class_confirmed', {
                   classes: rows,
                   email: email,
-                  student_name: req.params.student_name,
+                  student_name: name_list,
                   belt_group: req.params.belt_color,
                   class_type: 'swat',
                   num_events: 2
@@ -2695,14 +2837,14 @@ router.get('/process_classes/(:stud_info)/(:stud_info2)/(:stud_info3)/(:belt_gro
         break;
       case 3:
         var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH24') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH24') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id in ($1, $2, $3);"
-        db.any(email_info, [req.params.barcode])
+        db.any(email_info, [student_info[0][1]])
           .then(email => {
             db.any(end_query, [id_set[0], id_set[1], id_set[2]])
               .then(rows => {
                 res.render('class_confirmed', {
                   classes: rows,
                   email: email,
-                  student_name: req.params.student_name,
+                  student_name: name_list,
                   belt_group: req.params.belt_color,
                   class_type: 'swat',
                   num_events: 3
@@ -2726,14 +2868,14 @@ router.get('/process_classes/(:stud_info)/(:stud_info2)/(:stud_info3)/(:belt_gro
         break;
       case 4:
         var end_query = "select distinct on (class_id) to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, to_char(starts_at, 'MM') as month_num, to_char(starts_at, 'DD') as day_num, to_char(starts_at, 'HH24') as hour_num, to_char(starts_at, 'MI') as min_num, to_char(ends_at, 'HH24') as end_hour, to_char(ends_at, 'MI') as end_min from classes where class_id in ($1, $2, $3, $4);"
-        db.any(email_info, [req.params.barcode])
+        db.any(email_info, [student_info[0][1]])
           .then(email => {
             db.any(end_query, [id_set[0], id_set[1], id_set[2], id_set[3]])
               .then(rows => {
                 res.render('class_confirmed', {
                   classes: rows,
                   email: email,
-                  student_name: req.params.student_name,
+                  student_name: name_list,
                   belt_group: req.params.belt_color,
                   class_type: 'swat',
                   num_events: 4
@@ -2764,7 +2906,7 @@ router.get('/process_classes/(:stud_info)/(:stud_info2)/(:stud_info3)/(:belt_gro
         break;
     };
   } else {
-    student_info = []
+    var student_info = []
     if (req.params.stud_info != ' '){
       student_info.push(parseStudentInfo(req.params.stud_info));
     }
@@ -2773,6 +2915,9 @@ router.get('/process_classes/(:stud_info)/(:stud_info2)/(:stud_info3)/(:belt_gro
     }
     if (req.params.stud_info3 != ' '){
       student_info.push(parseStudentInfo(req.params.stud_info3));
+    }
+    if (req.params.stud_info4 != ' '){
+      student_info.push(parseStudentInfo(req.params.stud_info4));
     }
     const query_classes = "insert into class_signups (student_name, email, class_session_id, class_check, barcode) values ($1, (select lower(email) from student_list where barcode = $2), $3, $4, $5) on conflict (class_check) do nothing;";
     const email_info = "select email from student_list where barcode = $1;"
@@ -2812,6 +2957,9 @@ router.get('/process_classes/(:stud_info)/(:stud_info2)/(:stud_info3)/(:belt_gro
         break;
       case 3:
         name_list = student_info[0][0] + ', ' + student_info[1][0] + ', ' + student_info[2][0];
+        break;
+      case 3:
+        name_list = student_info[0][0] + ', ' + student_info[1][0] + ', ' + student_info[2][0] + ', ' + student_info[3][0];
         break;
       default:
         name_list = 'Error finding names'

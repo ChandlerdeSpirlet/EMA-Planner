@@ -102,8 +102,8 @@
     .autocomplete {
       /*the container must be positioned relative:*/
       position: relative;
-      padding-left: 20%;
-      padding-right: 20%;
+      padding-left: 15%;
+      padding-right: 15%;
       /*display: inline-block;*/
     }
     .autocomplete-items {
@@ -144,7 +144,19 @@
   <body>
     <form onsubmit="return ValidateForm()" autocomplete="off" name="Form" action="/swat_signup" method="POST">
       <div class="autocomplete">
-        <input id="result" name="result" type="text" placeholder="Student's First Name" value="{{ result }}">
+        <label>Student #1 </label><input id="result" name="result" type="text" placeholder="Student's First Name (required)" value="{{ result }}" required pattern="[A-z- ]*[A-z]{2,} [A-z-]{2,} - [0-9]{5}" oninput="InvalidMsg(this);" oninvalid="InvalidMsg(this);">
+      </div>
+      <br>
+      <div class="autocomplete">
+        <label>Student #2 </label><input id="result2" name="result2" type="text" placeholder="Student's First Name #2 (optional)" value="{{ result }}" pattern="[A-z- ]*[A-z]{2,} [A-z-]{2,} - [0-9]{5}" oninput="InvalidMsg(this);" oninvalid="InvalidMsg(this);">
+      </div>
+      <br>
+      <div class="autocomplete">
+        <label for="result3">Student #3 </label><input id="result3" name="result3" type="text" placeholder="Student's First Name #3 (optional)" value="{{ result }}" pattern="[A-z- ]*[A-z]{2,} [A-z-]{2,} - [0-9]{5}" oninput="InvalidMsg(this);" oninvalid="InvalidMsg(this);">
+      </div>
+      <br>
+      <div class="autocomplete">
+        <label for="result4">Student #4 </label><input id="result3" name="result3" type="text" placeholder="Student's First Name #3 (optional)" value="{{ result }}" pattern="[A-z- ]*[A-z]{2,} [A-z-]{2,} - [0-9]{5}" oninput="InvalidMsg(this);" oninvalid="InvalidMsg(this);">
       </div>
       <br>
       <label>Class Days and Times: </label>
@@ -228,8 +240,8 @@
         var name = document.getElementById('result');
         var choice = document.getElementsByClassName('day_time');
         if (name == null || name == ""){
-            alert("Student name is required and must contain at least two letters.");
-            return false;
+          alert("Student name is required and must contain their name and barcode.");
+          return false;
         }
         if (choice == null || choice == ""){
             alert("Please select a day and time.");
@@ -360,4 +372,7 @@
   </script>
   <script>
       autocomplete(document.getElementById("result"), names);
+      autocomplete(document.getElementById("result2"), names);
+      autocomplete(document.getElementById("result3"), names);
+      autocomplete(document.getElementById("result4"), names);
   </script>
