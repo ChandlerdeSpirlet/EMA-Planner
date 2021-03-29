@@ -2721,6 +2721,7 @@ router.get('/process_classes/(:stud_info)/(:stud_info2)/(:stud_info3)/(:stud_inf
     const email_info = "select email from student_list where barcode = $1;"
     var id_set = parseID(req.params.id_set);
     const swat_count = "update classes set swat_count = swat_count + 1 where class_id = $1;";
+    /*
     id_set.forEach(element => {
       var temp_class_check = req.params.student_name.toLowerCase().split(" ").join("") + element.toString();
       db.none(swat_count, [element])
@@ -2737,6 +2738,7 @@ router.get('/process_classes/(:stud_info)/(:stud_info2)/(:stud_info3)/(:stud_inf
           console.log('Could not update swat_count');
         })
     });
+    */
     student_info.forEach(student => {
       var temp_class_check = student[0].toLowerCase().split(" ").join("") + element.toString();
       db.none(swat_count, [element])
