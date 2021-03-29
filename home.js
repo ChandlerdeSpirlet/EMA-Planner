@@ -2740,21 +2740,23 @@ router.get('/process_classes/(:stud_info)/(:stud_info2)/(:stud_info3)/(:stud_inf
     });
     */
     student_info.forEach(student => {
-      var temp_class_check = student[0].toLowerCase().split(" ").join("") + element.toString();
-      db.none(swat_count, [element])
-        .then(row => {
-          db.none(query_classes, [student[0], student[1], element, temp_class_check, student[1]])
-            .then(rows => {
-              console.log('Added swat class with element ' + element);
-            })
-            .catch(err => {
-              console.log('Err: with swat element ' + element + '. Err: ' + err);
-              console.log('Err: with student ' + student + '. Err: ' + err);
-            })
-        })
-        .catch(err => {
-          console.log('Could not update swat_count');
-        })
+      id_set.forEach(element => {
+        var temp_class_check = student[0].toLowerCase().split(" ").join("") + element.toString();
+        db.none(swat_count, [element])
+          .then(row => {
+            db.none(query_classes, [student[0], student[1], element, temp_class_check, student[1]])
+              .then(rows => {
+                console.log('Added swat class with element ' + element);
+              })
+              .catch(err => {
+                console.log('Err: with swat element ' + element + '. Err: ' + err);
+                console.log('Err: with student ' + student + '. Err: ' + err);
+              })
+          })
+          .catch(err => {
+            console.log('Could not update swat_count');
+          })
+      })
     })
     var name_list = '';
     switch (student_info.length) {
