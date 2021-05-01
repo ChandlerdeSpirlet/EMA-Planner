@@ -1135,7 +1135,7 @@ router.post('/student_lookup', (req, res) => {
     student_info: req.sanitize('result').trim()
   }
   const stud_info = parseStudentInfo(items.student_info);
-  const studentInfoQuery = "select barcode, first_name, last_name, email, belt_size, belt_color, to_char(last_visit, 'Month DD, YYYY') as last_visit from student_list where barcode = $1 and first_name || ' ' || last_name = $2;";
+  const studentInfoQuery = "select barcode, first_name, last_name, email, belt_size, belt_color, to_char(last_visit, 'Month DD, YYYY') as last_visit, reg_class, spar_class from student_list where barcode = $1 and first_name || ' ' || last_name = $2;";
   console.log('items.student_info is ' + items.student_info);
   console.log('stud_info: ' + stud_info);
   db.any(studentInfoQuery, [stud_info[1], stud_info[0]])

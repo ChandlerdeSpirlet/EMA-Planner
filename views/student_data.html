@@ -143,6 +143,10 @@
   {% else %}
     <h3 style="text-align: center;">Last Visit &mdash; {{ data[0].last_visit }}</h3>
   {% endif %}
+  {% if data[0].belt_color == 'Prep' || if data[0].belt_color == 'Conditional' || if data[0].belt_color == 'Black Belt' %}
+    <h4>Regular Classes &mdash; {{ data[0].reg_class }}</h4>
+    <h4>Sparring Classes &mdash; {{ data[0].spar_class }}</h4>
+  {% endif %}
 </head>
 
 <body>
