@@ -146,7 +146,7 @@
             background-color: blue !important; 
             color: black; 
         }
-        td, th {
+        tr, th {
             border: 1px solid black;
             padding: 8px;
             background-color: transparent;
@@ -155,6 +155,8 @@
         table {
             width: 90%;
             align-content: center;
+            margin-left: auto;
+            margin-right: auto
         }
         a:visited, a:link {
             text-decoration: none;
@@ -176,7 +178,7 @@
             {% if class_data %}
                 {% for class in class_data %}
                     <tr>
-                        <td>class.student_name</td>
+                        <td>{{ class.student_name }}</td>
                         {% if class.is_swat == 'true' %}
                             <td>SWAT</td>
                         {% else %}
@@ -190,9 +192,9 @@
                         {% endif %}
                         <td>{% if class.level == -1 %} Little Dragons {% elif class.level == 0 %} Basic {% elif class.level == 0.5 %} Basic (Floor 2) {% elif class.level == 1 %} Level 1 {% elif class.level == 1.5 %} Level 1 (Floor 2) {% elif class.level == 2 %} Level 2 {% elif class.level == 3 %} Level 3 {% elif class.level == 4 %} Prep Belt {% elif class.level == 5 %} Black Belt {% elif class.level == 6 %} Open Mat {% elif class.level == 7 %} Weapons {% else %} Unknown {% endif %}</td>
                         <td>{{ class.starts_at }}</td>
-                        {% if class.checked_in == 'true' %}
+                        {% if class.checked_in == true %}
                             <td>Yes</td>
-                        {% elif class.checked_in == 'false' %}
+                        {% elif class.checked_in == false %}
                             <td>No</td>
                         {% else %}
                             <td>Unknown</td>
