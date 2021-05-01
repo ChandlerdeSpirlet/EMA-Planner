@@ -143,13 +143,13 @@
   }
 </style>
 <head>
-  <h1>Student Portal &mdash; {{ email }}</h1>
+  <h1>Student Portal</h1>
   {% for student in stud_info %}
     {% if student.belt_order | int >= 4 %}
       {% set is_bb = 'true' %}
     {% endif %}
     <label>Student's Name: </label>{{ student.first_name }} {{ student.last_name }}<br>
-    <label>Student's Email: </label>{{ student.email }}<br>
+    <label>Student's Email: </label>{{ student.email }} {% set email_addr = student.email %}<br>
     <label>Student's Belt Color and Size: </label>{{ student.belt_color }} - {{ student.belt_size }}<br>
     <label>Last Visit: </label>{{ student.last_visit }}<br>
     {% if is_bb == 'true' %}
@@ -174,7 +174,7 @@
             <tr>
               <td>{{ class.student_name }}</td>
               <td>{{ class.class_instance }}</td>
-              <td><a href="/delete_instance/{{ class.class_session_id }}/{{ class.class_check }}/{{ email }}/class">Drop This Class</a></td>
+              <td><a href="/delete_instance/{{ barcode }}/{{ class.class_session_id }}/{{ class.class_check }}/{{ email_addr }}/class">Drop This Class</a></td>
             </tr>
           {% endif %}
         {% endfor %}
@@ -201,7 +201,7 @@
             <tr>
               <td>{{ test.student_name }}</td>
               <td>{{ test.test_instance }}</td>
-              <td><a href="/delete_instance/{{ test.test_id }}/{{ test.session_id }}/{{ email }}/test">Drop This Test</a></td>
+              <td><a href="/delete_instance/{{ test.test_id }}/{{ test.session_id }}/{{ email_addr }}/test">Drop This Test</a></td>
             </tr>
           {% endfor %}
         {% endif %}
@@ -229,7 +229,7 @@
               <tr>
                 <td>{{ class.student_name }}</td>
                 <td>{{ class.class_instance }}</td>
-                <td><a href="/delete_instance/{{ class.class_session_id }}/{{ class.class_check }}/{{ email }}/swat">Drop This Class</a></td>
+                <td><a href="/delete_instance/{{ class.class_session_id }}/{{ class.class_check }}/{{ email_addr }}/swat">Drop This Class</a></td>
               </tr>
             {% endif %}
           {% endfor %}

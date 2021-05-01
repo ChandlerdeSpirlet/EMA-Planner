@@ -1278,9 +1278,20 @@ router.get('/student_portal_login', (req, res) => {
   if (req.headers['x-forwarded-proto'] != 'https') {
     res.redirect('https://ema-planner.herokuapp.com/student_portal_login');
   } else {
-    res.render('student_portal_login', {
-      email: '',
-      alert_message: ''
+    const portal_query = "select * from get_all_names()"
+    db.any(name_query)
+    .then(function (rows) {
+      res.render('student_portal_login', {
+        data: rows,
+        alert_message: ''
+      })
+    })
+    .catch(function (err) {
+      console.log('Could not find students: ' + err)
+      res.render('student_portal_login', {
+        data: '',
+        alert_message: 'Unable to find student. Please refresh the page and try agin.'
+      })
     })
   }
 })
@@ -1295,79 +1306,79 @@ router.post('/email_lookup', (req, res) => {
 
 router.post('/student_portal_login', (req, res) => {
   const item = {
-    email: req.sanitize('email')
+    student_info: req.sanitize('result').trim()
   }
-  const email = String(item.email).toLowerCase();
-  res.redirect('student_portal/' + email);
+  const stud_info = parseStudentInfo(items.student_info); //name, barcode
+  res.redirect('student_portal/' + stud_info[1]);
 })
 
-router.get('/student_portal/(:email)', (req, res) => {
-  const stud_info = "select first_name, last_name, email, belt_order, belt_color, belt_size, to_char(last_visit, 'Month DD, YYYY')as last_visit, reg_class, spar_class from student_list where email = $1";
-  const test_query = "select s.student_name, s.session_id, s.test_id, s.email, to_char(i.test_date, 'Month') || ' ' || to_char(i.test_date, 'DD') || ' at ' || to_char(i.test_time, 'HH:MI PM') as test_instance from test_signups s, test_instance i where s.email = $1 and i.id = s.test_id order by i.test_date;";
-  const class_query = "select s.student_name, s.email, s.class_check, s.class_session_id, s.is_swat, to_char(c.starts_at, 'Month') || ' ' || to_char(c.starts_at, 'DD') || ' at ' || to_char(c.starts_at, 'HH:MI PM') as class_instance, c.starts_at, c.class_id from classes c, class_signups s where s.email = $1 and s.class_session_id = c.class_id and s.is_swat = false and c.starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by s.student_name, c.starts_at;";
-  const swat_query = "select s.student_name, s.email, s.class_check, s.is_swat, s.class_session_id, to_char(c.starts_at, 'Month') || ' ' || to_char(c.starts_at, 'DD') || ' at ' || to_char(c.starts_at, 'HH:MI PM') as class_instance, c.starts_at, c.class_id from classes c, class_signups s where s.email = $1 and s.class_session_id = c.class_id and c.starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date and s.is_swat = true order by c.starts_at;";
-  db.any(stud_info, [req.params.email])
+router.get('/student_portal/(:barcode)', (req, res) => {
+  const stud_info = "select first_name, last_name, email, belt_order, belt_color, belt_size, to_char(last_visit, 'Month DD, YYYY') as last_visit, reg_class, spar_class from student_list where barcode = $1;";
+  const test_query = "select s.student_name, s.session_id, s.test_id, s.email, to_char(i.test_date, 'Month') || ' ' || to_char(i.test_date, 'DD') || ' at ' || to_char(i.test_time, 'HH:MI PM') as test_instance from test_signups s, test_instance i where s.barcode = $1 and i.id = s.test_id order by i.test_date;";
+  const class_query = "select s.student_name, s.email, s.class_check, s.class_session_id, s.is_swat, to_char(c.starts_at, 'Month') || ' ' || to_char(c.starts_at, 'DD') || ' at ' || to_char(c.starts_at, 'HH:MI PM') as class_instance, c.starts_at, c.class_id from classes c, class_signups s where s.barcode = $1 and s.class_session_id = c.class_id and s.is_swat = false and c.starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by s.student_name, c.starts_at;";
+  const swat_query = "select s.student_name, s.email, s.class_check, s.is_swat, s.class_session_id, to_char(c.starts_at, 'Month') || ' ' || to_char(c.starts_at, 'DD') || ' at ' || to_char(c.starts_at, 'HH:MI PM') as class_instance, c.starts_at, c.class_id from classes c, class_signups s where s.barcode = $1 and s.class_session_id = c.class_id and c.starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date and s.is_swat = true order by c.starts_at;";
+  db.any(stud_info, [req.params.barcode])
     .then(info => {
-      db.any(class_query, [req.params.email])
+      db.any(class_query, [req.params.barcode])
         .then(classes => {
-          db.any(test_query, [req.params.email])
+          db.any(test_query, [req.params.barcode])
             .then(tests => {
-              db.any(swat_query, [req.params.email])
+              db.any(swat_query, [req.params.barcode])
                 .then(swats => {
                   res.render('student_portal', {
                     stud_info: info,
                     class_info: classes,
                     test_info: tests,
                     swat_info: swats,
-                    email: req.params.email,
+                    barcode: req.params.barcode,
                     alert_message: ''
                   })
                 })
                 .catch(err => {
-                  console.log('Could not get student swats with email. Error: ' + err);
+                  console.log('Could not get student swats with barcode. Error: ' + err);
                   res.render('student_portal', {
                     stud_info: '',
                     class_info: '',
                     test_info: '',
                     swat_info: '',
-                    email: req.params.email,
-                    alert_message: "Could not find student swats with the email: " + req.params.email + "\n Please see an instructor to correct this."
+                    barcode: req.params.barcode,
+                    alert_message: "Could not find student swats with the barcode: " + req.params.barcode + "\n Please see an instructor to correct this."
                   })
                 })
             })
             .catch(err => {
-              console.log('Could not get student tests with email. Error: ' + err);
+              console.log('Could not get student tests with barcode. Error: ' + err);
               res.render('student_portal', {
                 stud_info: '',
                 class_info: '',
                 test_info: '',
                 swat_info: '',
-                email: req.params.email,
-                alert_message: "Could not find student tests with the email: " + req.params.email + "\n Please see an instructor to correct this."
+                barcode: req.params.barcode,
+                alert_message: "Could not find student tests with the barcode: " + req.params.barcode + "\n Please see an instructor to correct this."
               })
             })
         })
         .catch(err => {
-          console.log('Could not get student classes with email. Error: ' + err);
+          console.log('Could not get student classes with barcode. Error: ' + err);
           res.render('student_portal', {
             stud_info: '',
             class_info: '',
             test_info: '',
             swat_info: '',
-            email: req.params.email,
-            alert_message: "Could not find student classes with the email: " + req.params.email + "\n Please see an instructor to correct this."
+            barcode: req.params.barcode,
+            alert_message: "Could not find student classes with the email: " + req.params.barcode + "\n Please see an instructor to correct this."
       })
         })
     })
     .catch(err => {
-      console.log('Could not get student info with email. Error: ' + err);
+      console.log('Could not get student info with barcode. Error: ' + err);
       res.render('student_portal', {
         stud_info: '',
         class_info: '',
         test_info: '',
         swat_info: '',
-        email: req.params.email,
-        alert_message: "Could not find a student with the email: " + req.params.email + "\n Please see an instructor to correct this."
+        barcode: req.params.barcode,
+        alert_message: "Could not find a student with the barcode: " + req.params.barcode + "\n Please see an instructor to correct this."
       })
     })
 })
@@ -1466,13 +1477,13 @@ router.get('/classes_email/(:email)', (req, res) => {
     })
 })
 
-app.get('/delete_instance/(:item_id)/(:id)/(:email)/(:type)', (req, res) => {
+app.get('/delete_instance/(:barcode)/(:item_id)/(:id)/(:email)/(:type)', (req, res) => {
   switch (req.params.type) { //allows for addition of swat class
     case 'test':
       const drop_test = "delete from test_signups where session_id = $1 and email = $2;";
       db.none(drop_test, [req.params.id, req.params.email])
         .then(rows => {
-          res.redirect('https://ema-planner.herokuapp.com/student_portal/' + req.params.email);
+          res.redirect('https://ema-planner.herokuapp.com/student_portal/' + req.params.barcode);
         })
         .catch(err => {
           console.log('Unable to delete test. ERR: ' + err);
@@ -1488,7 +1499,7 @@ app.get('/delete_instance/(:item_id)/(:id)/(:email)/(:type)', (req, res) => {
       const dropt_class = "delete from class_signups where class_check = $1 and email = $2;";
       db.none(dropt_class, [req.params.id, req.params.email])
         .then(rows => {
-          res.redirect('https://ema-planner.herokuapp.com/student_portal/' + req.params.email);
+          res.redirect('https://ema-planner.herokuapp.com/student_portal/' + req.params.barcode);
         })
         .catch(err => {
           console.log('Unable to delete class. ERR: ' + err);
@@ -1507,7 +1518,7 @@ app.get('/delete_instance/(:item_id)/(:id)/(:email)/(:type)', (req, res) => {
         .then(row => {
           db.none(drop_class, [req.params.id, req.params.email])
             .then(rows => {
-              res.redirect('https://ema-planner.herokuapp.com/student_portal/' + req.params.email);
+              res.redirect('https://ema-planner.herokuapp.com/student_portal/' + req.params.barcode);
             })
             .catch(err => {
               console.log('Unable to delete swat. ERR: ' + err);
@@ -1531,7 +1542,7 @@ app.get('/delete_instance/(:item_id)/(:id)/(:email)/(:type)', (req, res) => {
       break;
     default:
       console.log('Unknown delete type.');
-      res.redirect('https://ema-planner.herokuapp.com/student_portal/' + req.params.email);
+      res.redirect('https://ema-planner.herokuapp.com/student_portal/' + req.params.barcode);
       break;
   }
 })
