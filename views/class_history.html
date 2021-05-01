@@ -156,6 +156,10 @@
             width: 90%;
             align-content: center;
         }
+        a:visited, a:link {
+            text-decoration: none;
+            color: black;
+        }
     </style>
     <head>
         <h1>Student Class History Tool</h1>
@@ -192,7 +196,7 @@
                             <td>No</td>
                         {% else %}
                             <td>Unknown</td>
-                        {% else %}
+                        {% endif %}
                     </tr>
                 {% endfor %}
             {% elif class_data.length == 0 %}
