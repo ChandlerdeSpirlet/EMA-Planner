@@ -65,7 +65,7 @@ app.get('/', (req, res) => {
   if (req.headers['x-forwarded-proto'] != 'https') {
     res.redirect('https://ema-planner.herokuapp.com/')
   } else {
-    var d = new Date();
+    var d = date.toLocaleString("en-US", {timeZone: "America/Denver"});
     var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     month = months[d.getMonth()];
     day = d.getDate();
