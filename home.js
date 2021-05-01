@@ -65,13 +65,11 @@ app.get('/', (req, res) => {
   if (req.headers['x-forwarded-proto'] != 'https') {
     res.redirect('https://ema-planner.herokuapp.com/')
   } else {
-    var date = new Date();
-    var d = date.toLocaleString("en-US", {timeZone: "America/Denver"});
-    var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    month = months[d.getMonth()];
-    day = d.getDate();
-    console.log("date is " + d);
-    console.log("date format is " + month + ' ' + day);
+    const event = new Date(Date.UTC(2012, 11, 20, 3, 0, 0));
+    const options_1 = { month: 'long' };
+    const options_2 = { day: 'numeric' };
+    month = event.toLocaleDateString('us-MT', options_1);
+    day = event.toLocaleDateString('us-MT', options_2);
     const student_query = 'select level_name, count(level_name) from student_list group by level_name, belt_order order by belt_order;'
     db.any(student_query)
       .then(function (rows) {
