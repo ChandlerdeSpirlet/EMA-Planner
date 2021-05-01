@@ -220,6 +220,7 @@
       <input type="submit" name="Submit" value="Save">
     </div>
   </form>
+  <a href="/class_history/{{ data[0].barcode }}"><button>Class History</button></a>
   <button onclick="delete_student({{ data[0].barcode }})">Delete Student</button>
   {% endif %}
 </body>

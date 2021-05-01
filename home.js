@@ -905,6 +905,26 @@ router.get('/class_lookup', (req, res) => {
   })
 })
 
+router.get('/class_history/(:barcode)', (req, res) => {
+  barcode = req.params.barcode;
+  const history_query = "select c.student_name, c.checked_in, c.is_swat, x.level, x.class_type, to_char(x.starts_at, 'Month DD, YYYY HH12:MI') as \"starts_at\" from class_signups c, classes x where c.barcode = $1 AND c.class_session_id = x.class_id order by x.starts_at;"
+  db.any(history_query, [barcode])
+    .then(rows => {
+      res.render('class_history', {
+        alert_message: '',
+        class_data: rows
+      })
+    })
+    .catch(err => {
+      console.log("Issue with pulling class data with barcode " + barcode);
+      console.log("Issue: " + err);
+      res.render('class_history', {
+        alert_message: "Ugh oh, something went wrong. It's probably an issue with pulling the class data from this profile. Error: " + err,
+        class_data: ''
+      })
+    })
+})
+
 router.get('/test_lookup', (req, res) => {
   res.render('test_lookup', {
 

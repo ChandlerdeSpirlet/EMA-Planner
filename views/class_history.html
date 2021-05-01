@@ -1,0 +1,206 @@
+<html>
+    <title>Student Class History</title>
+    {% set local = 'Students' %}
+    {% extends 'nav_bar.html' %}
+    {% block content %}
+    {% if alert_message != '' %}
+        <script>alert('{{ alert_message }}')</script>
+    {% endif %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="https://ema-planner.herokuapp.com/views/ema.png">
+    <style>
+        html {
+            background-image: linear-gradient(#0095ff, #9ed7ff);
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+        }
+        * {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            box-sizing: border-box;
+        }
+        form > div {
+            margin-bottom: 20px;
+        }
+        button, label, input {
+            display: block;
+            font-size: 100%;
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            width: 100%;
+            padding: 5px;
+            height: 60px;
+            align-content: center;
+            background-color: transparent;
+            border: 1px solid black;
+        }
+        
+        select {
+            -webkit-appearance: none;
+            appearance: none;
+            display: block;
+            font-size: 100%;
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            width: 100%;
+            padding: 5px;
+            height: 60px;
+        }
+        .select-wrapper {
+            position: relative;
+        }
+        .select-wrapper::after {
+            content: "▼";
+            font-size: 1rem;
+            top: 24px;
+            right: 10px;
+            position: absolute;
+        }
+        select {
+            box-shadow: inset 1px 1px 3px #ccc;
+            border-radius: 5px;
+            background-color: transparent;
+        }
+        label {
+            margin-bottom: 5px;
+        }
+        button {
+            width: 60%;
+            margin: 0 auto;
+        }
+        label{
+            font-weight: bold;
+        }
+        p {
+            font-size: 16px;
+        }
+        h1, h3 {
+            text-align: center;
+        }
+        .column1 {
+            float: left;
+            width: 50%;
+            height: 100%;
+            padding-left: 10px;
+            padding-right: 5px;
+        }
+        .column2 {
+            float: right;
+            width: 50%;
+            height: 100%;
+            padding-right: 10px;
+            padding-left: 5px;
+        }
+        #page-container {
+            min-height: 90vh;
+            min-width: 95%;
+            vertical-align: middle;
+        }
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+        .row {
+            height: 10%;
+            min-width: 90%;
+            padding-top: 60px;
+        }
+        .end {
+            max-width: 95%;
+            padding-left: 10px;
+            padding-right: 10px;
+            vertical-align: middle;
+        }
+        .autocomplete {
+            /*the container must be positioned relative:*/
+            position: relative;
+            display: inline-block;
+        }
+        .autocomplete-items {
+            position: absolute;
+            border: 1px solid black;
+            border-bottom: none;
+            border-top: none;
+            z-index: 99;
+            /*position the autocomplete items to be the same width as the container:*/
+            top: 100%;
+            left: 0;
+            right: 0;
+        }
+        .autocomplete-items div {
+            padding: 10px;
+            cursor: pointer;
+            background-color: lightblue; 
+            border-bottom: 1px solid #d4d4d4; 
+        }
+        .autocomplete-items div:hover {
+            /*when hovering an item:*/
+            background-color: darkcyan; 
+        }
+        .autocomplete-active {
+            /*when navigating through the items using the arrow keys:*/
+            background-color: blue !important; 
+            color: black; 
+        }
+        td, th {
+            border: 1px solid black;
+            padding: 8px;
+            background-color: transparent;
+            text-align: center;
+        }
+        table {
+            width: 90%;
+            align-content: center;
+        }
+    </style>
+    <head>
+        <h1>Student Class History Tool</h1>
+    </head>
+    <body>
+        <table>
+            <tr>
+                <th>Student Name</th>
+                <th>Class Type</th>
+                <th>Level</th>
+                <th>Date</th>
+                <th>Checked In</th>
+            </tr>
+            {% if class_data %}
+                {% for class in class_data %}
+                    <tr>
+                        <td>class.student_name</td>
+                        {% if class.is_swat == 'true' %}
+                            <td>SWAT</td>
+                        {% else %}
+                            {% if class.class_type == 'reg' %}
+                                <td>Regular</td>
+                            {% elif class.class_type == 'spar' %}
+                                <td>Sparring</td>
+                            {% else %}
+                                <td>Unknown</td>
+                            {% endif %}
+                        {% endif %}
+                        <td>{% if class.level == -1 %} Little Dragons {% elif class.level == 0 %} Basic {% elif class.level == 0.5 %} Basic (Floor 2) {% elif class.level == 1 %} Level 1 {% elif class.level == 1.5 %} Level 1 (Floor 2) {% elif class.level == 2 %} Level 2 {% elif class.level == 3 %} Level 3 {% elif class.level == 4 %} Prep Belt {% elif class.level == 5 %} Black Belt {% elif class.level == 6 %} Open Mat {% elif class.level == 7 %} Weapons {% else %} Unknown {% endif %}</td>
+                        <td>{{ class.starts_at }}</td>
+                        {% if class.checked_in == 'true' %}
+                            <td>Yes</td>
+                        {% elif class.checked_in == 'false' %}
+                            <td>No</td>
+                        {% else %}
+                            <td>Unknown</td>
+                        {% else %}
+                    </tr>
+                {% endfor %}
+            {% elif class_data.length == 0 %}
+                <h3>No class history to display</h3>
+            {% else %}
+                <h3>An error occured</h3>
+            {% endif %}
+        </table>
+    </body>
+</html>
+{% endblock %}
