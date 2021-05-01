@@ -65,9 +65,9 @@ app.get('/', (req, res) => {
   if (req.headers['x-forwarded-proto'] != 'https') {
     res.redirect('https://ema-planner.herokuapp.com/')
   } else {
-    const event = new Date(Date.UTC(2012, 11, 20, 3, 0, 0));
-    const options_1 = { month: 'long' };
-    const options_2 = { day: 'numeric' };
+    var event = new Date();
+    var options_1 = { month: 'long' };
+    var options_2 = { day: 'numeric' };
     month = event.toLocaleDateString('us-MT', options_1);
     day = event.toLocaleDateString('us-MT', options_2);
     const student_query = 'select level_name, count(level_name) from student_list group by level_name, belt_order order by belt_order;'
@@ -894,8 +894,14 @@ router.get('/payment_resolved/(:id)', (req, res) => {
 })
 
 router.get('/class_lookup', (req, res) => {
+  var event = new Date();
+  var options_1 = { month: 'long' };
+  var options_2 = { day: 'numeric' };
+  month = event.toLocaleDateString('us-MT', options_1);
+  day = event.toLocaleDateString('us-MT', options_2);
   res.render('class_lookup', {
-
+    month: month,
+    day: day
   })
 })
 
