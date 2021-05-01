@@ -146,11 +146,12 @@
             background-color: blue !important; 
             color: black; 
         }
-        tr, th {
+        td, th {
             border: 1px solid black;
             padding: 8px;
             background-color: transparent;
             text-align: center;
+            padding: 8px;
         }
         table {
             width: 90%;
@@ -179,7 +180,7 @@
                 {% for class in class_data %}
                     <tr>
                         <td>{{ class.student_name }}</td>
-                        {% if class.is_swat == 'true' %}
+                        {% if class.is_swat == true %}
                             <td>SWAT</td>
                         {% else %}
                             {% if class.class_type == 'reg' %}
