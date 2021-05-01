@@ -1279,7 +1279,7 @@ router.get('/student_portal_login', (req, res) => {
     res.redirect('https://ema-planner.herokuapp.com/student_portal_login');
   } else {
     const portal_query = "select * from get_all_names()"
-    db.any(name_query)
+    db.any(portal_query)
     .then(function (rows) {
       res.render('student_portal_login', {
         data: rows,
