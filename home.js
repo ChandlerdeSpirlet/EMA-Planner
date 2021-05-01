@@ -61,11 +61,14 @@ function convertToMoney(amount) {
 }
 
 
-
 app.get('/', (req, res) => {
   if (req.headers['x-forwarded-proto'] != 'https') {
     res.redirect('https://ema-planner.herokuapp.com/')
   } else {
+    var d = new Date();
+    var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    month = months[d.getMonth()];
+    day = d.getDate();
     const student_query = 'select level_name, count(level_name) from student_list group by level_name, belt_order order by belt_order;'
     db.any(student_query)
       .then(function (rows) {
@@ -87,7 +90,9 @@ app.get('/', (req, res) => {
                           checked_today: days,
                           checked_week: checked_week,
                           student_data: rows,
-                          failure_num: row
+                          failure_num: row,
+                          month: month,
+                          day: day
                         })
                       })
                       .catch(err => {
