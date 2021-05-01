@@ -69,6 +69,8 @@ app.get('/', (req, res) => {
     var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     month = months[d.getMonth()];
     day = d.getDate();
+    console.log("date is " + d);
+    console.log("date format is " + month + ' ' + day);
     const student_query = 'select level_name, count(level_name) from student_list group by level_name, belt_order order by belt_order;'
     db.any(student_query)
       .then(function (rows) {
