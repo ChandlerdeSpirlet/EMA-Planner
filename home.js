@@ -1308,7 +1308,7 @@ router.post('/student_portal_login', (req, res) => {
   const item = {
     student_info: req.sanitize('result').trim()
   }
-  const stud_info = parseStudentInfo(items.student_info); //name, barcode
+  const stud_info = parseStudentInfo(item.student_info); //name, barcode
   res.redirect('student_portal/' + stud_info[1]);
 })
 
