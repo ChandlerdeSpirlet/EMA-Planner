@@ -150,7 +150,7 @@
     <form name="counts" action="/count_update" method="POST">
       <input type="hidden" name="barcode" value="{{ barcode}}">
       <div>
-        <label>Regular Classes &mdash; </label><input type="number" inputmode="numeric" name="reg_class" class="count_num" pattern="^[0-3]?[0-9]$" value="{{ data[0].spar_class }}">
+        <label>Regular Classes &mdash; </label><input type="number" inputmode="numeric" name="reg_class" class="count_num" pattern="^[0-3]?[0-9]$" value="{{ data[0].reg_class }}">
       </div>
       <div>
         <label>Sparring Classes &mdash; </label><input type="number" inputmode="numeric" name="spar_class" class="count_num" pattern="^[0-3]?[0-9]$" value="{{ data[0].spar_class }}">
