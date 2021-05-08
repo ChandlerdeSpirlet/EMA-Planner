@@ -134,6 +134,9 @@
     text-decoration: none;
     color: black;
   }
+  .count_num {
+    width: 10%;
+  }
 </style>
 
 <head>
@@ -144,8 +147,12 @@
     <h3 style="text-align: center;">Last Visit &mdash; {{ data[0].last_visit }}</h3>
   {% endif %}
   {% if data[0].belt_color == 'Prep' or data[0].belt_color == 'Conditional' or data[0].belt_color == 'Black Belt' %}
-    <h4>Regular Classes &mdash; {{ data[0].reg_class }}</h4>
-    <h4>Sparring Classes &mdash; {{ data[0].spar_class }}</h4>
+    <form name="counts" action="/count_update" method="POST">
+      <input type="hidden" name="barcode" value="{{ barcode}}">
+      <h4>Regular Classes &mdash; </h4><input type="number" inputmode="numeric" name="reg_class" placeholder="{{ data[0].reg_class }}" class="count_num">
+      <h4>Sparring Classes &mdash; </h4><input type="number" inputmode="numeric" name="spar_class" placeholder="{{ data[0].spar_class }}" class="count_num">
+      <input type="submit" name="Submit" value="Update Class Count">
+    </form>
   {% endif %}
 </head>
 

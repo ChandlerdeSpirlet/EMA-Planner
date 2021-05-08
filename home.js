@@ -1155,6 +1155,40 @@ router.post('/student_lookup', (req, res) => {
     })
 })
 
+router.post('/count_update', (req, res) => {
+  var items = {
+    barcode: req.sanitize('barcode').trim(),
+    reg_class: req.sanitize('reg_class').trim(),
+    spar_class: req.sanitize('spar_class').trim()
+  }
+  const count_update = 'update student_list set reg_class = $1, spar_class = $2 where barcode = $3';
+  db.any(count_update, [items.reg_class, items.spar_class, items.barcode])
+    .then(rows => {
+      const name_query = "select * from get_all_names()"
+      db.any(name_query)
+        .then(names => {
+          res.render('student_lookup', {
+            data: names,
+            alert_message: "Student has been updated with \nregular classes = " + items.reg_class + "\nsparring classes = " + items.spar_class
+          })
+        })
+        .catch(err => {
+          console.log('Could not find students: ' + err)
+          res.render('student_lookup', {
+            data: '',
+            alert_message: 'Could not find any students. Please refresh the page and try again.'
+          })
+        })
+    })
+    .catch(err => {
+      console.log('Could not update student counts');
+      res.render('student_lookup', {
+        data: '',
+        alert_message: 'Could not update the counts. Please refresh page and try again.'
+      })
+    })
+})
+
 router.post('/student_data', (req, res) => {
   var items = {
     barcode: req.sanitize('barcode').trim(),
