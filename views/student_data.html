@@ -149,7 +149,7 @@
   {% if data[0].belt_color == 'Prep' or data[0].belt_color == 'Conditional' or data[0].belt_color == 'Black Belt' %}
     <form name="counts" action="/count_update" method="POST">
       <input type="hidden" name="barcode" value="{{ barcode}}">
-      <h4>Regular Classes &mdash; <input type="number" inputmode="numeric" name="reg_class" placeholder="{{ data[0].reg_class }}" class="count_num"></h4>
+      <h4 style="float: left;">Regular Classes &mdash; </h4><input type="number" inputmode="numeric" name="reg_class" placeholder="{{ data[0].reg_class }}" class="count_num">
       <h4>Sparring Classes &mdash; </h4><input type="number" inputmode="numeric" name="spar_class" placeholder="{{ data[0].spar_class }}" class="count_num">
       <input type="submit" name="Submit" value="Update Class Count">
     </form>
