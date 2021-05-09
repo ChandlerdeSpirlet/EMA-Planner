@@ -40,6 +40,7 @@ app.use('/', router)
 
 const db = require('./database')
 const { proc } = require('./database')
+const { get } = require('http')
 
 app.use(session({
   secret: 'ema-Planner',
@@ -689,7 +690,7 @@ router.get('/class_selector', (req, res) => {
 
 router.get('/class_selector_force/(:month)/(:day)', (req, res) => {
   const date_conversion = req.params.month + ' ' + req.params.day
-  const query = "select x.class_id, (select count(class_session_id) from class_signups where class_session_id = x.class_id and checked_in = FALSE) as signed_up, (select count(class_session_id) from class_signups where class_session_id = x.class_id and checked_in = TRUE) as checked_in, to_char(x.starts_at, 'Month') as class_month, to_char(x.starts_at, 'DD') as class_day, to_char(x.starts_at, 'HH:MI PM') as class_time, to_char(x.ends_at, 'HH:MI PM') as end_time, x.level, x.class_type from classes x where to_char(x.starts_at, 'Month DD') = to_char(to_date($1, 'Month DD'), 'Month DD') order by x.starts_at;"
+  const query = "select x.class_id, (select count(class_session_id) from class_signups where class_session_id = x.class_id and checked_in = FALSE) as signed_up, (select count(class_session_id) from class_signups where class_session_id = x.class_id and checked_in = TRUE) as checked_in, to_char(x.starts_at, 'Month') as class_month, to_char(x.starts_at, 'DD') as class_day, to_char(x.starts_at, 'HH:MI PM') as class_time, to_char(x.ends_at, 'HH:MI PM') as end_time, x.level, x.class_type, x.can_view from classes x where to_char(x.starts_at, 'Month DD') = to_char(to_date($1, 'Month DD'), 'Month DD') order by x.starts_at;"
   db.any(query, [date_conversion])
     .then(function (rows) {
       res.render('class_selector', {
@@ -702,7 +703,7 @@ router.get('/class_selector_force/(:month)/(:day)', (req, res) => {
     })
 })
 
-router.get('/class_remove/(:barcode)/(:class_id)/(:class_level)/(:class_time)/(:class_type)', (req, res) => {
+router.get('/class_remove/(:barcode)/(:class_id)/(:class_level)/(:class_time)/(:class_type)/(:can_view)', (req, res) => {
   const remove_query = 'delete from class_signups where class_session_id = $1 and barcode = $2;'
   if (req.params.class_type == 'reg'){
     var update_count = "update student_list set reg_class = reg_class - 1 where barcode = $1";
@@ -716,7 +717,7 @@ router.get('/class_remove/(:barcode)/(:class_id)/(:class_level)/(:class_time)/(:
     .then(update => {
       db.any(remove_query, [req.params.class_id, req.params.barcode])
         .then(function (rows) {
-          res.redirect('https://ema-planner.herokuapp.com/class_checkin/' + req.params.class_id + '/' + req.params.class_level + '/' + req.params.class_time + '/' + req.params.class_type);
+          res.redirect('https://ema-planner.herokuapp.com/class_checkin/' + req.params.class_id + '/' + req.params.class_level + '/' + req.params.class_time + '/' + req.params.class_type + '/' + req.params.can_view);
         })
         .catch(function (err) {
           console.log('Could not remove person from class with class_id and barcode ' + req.params.class_id + ', ' + req.params.barcode + '. Err: ' + err)
@@ -729,7 +730,7 @@ router.get('/class_remove/(:barcode)/(:class_id)/(:class_level)/(:class_time)/(:
     })
 })
 
-router.get('/update_checkin/(:barcode)/(:class_id)/(:class_level)/(:class_time)/(:class_check)/(:class_type)', (req, res) => {
+router.get('/update_checkin/(:barcode)/(:class_id)/(:class_level)/(:class_time)/(:class_check)/(:class_type)/(:can_view)', (req, res) => {
   const update_status = 'update class_signups set checked_in = true where class_check = $1;';
   const update_visit = "update student_list set last_visit = (select to_char(starts_at, 'Month DD, YYYY')::date as visit from classes where class_id = $1) where barcode = $2 and (last_visit < (select to_char(starts_at, 'Month DD, YYYY')::date as visit from classes where class_id = $3) or last_visit is null);"
   if (req.params.class_type == 'reg'){
@@ -746,25 +747,25 @@ router.get('/update_checkin/(:barcode)/(:class_id)/(:class_level)/(:class_time)/
         .then(rows => {
           db.none(update_visit, [req.params.class_id, req.params.barcode, req.params.class_id])
             .then(row => {
-              res.redirect('https://ema-planner.herokuapp.com/class_checkin/' + req.params.class_id + '/' + req.params.class_level + '/' + req.params.class_time + '/' + req.params.class_type);
+              res.redirect('https://ema-planner.herokuapp.com/class_checkin/' + req.params.class_id + '/' + req.params.class_level + '/' + req.params.class_time + '/' + req.params.class_type + '/' + req.params.can_view);
             })
             .catch(err => {
               console.log('Could not update last_visit status of ' + req.params.class_session_id + '>  ' + err);
-              res.redirect('https://ema-planner.herokuapp.com/class_checkin/' + req.params.class_id + '/' + req.params.class_level + '/' + req.params.class_time + '/' + req.params.class_type);
+              res.redirect('https://ema-planner.herokuapp.com/class_checkin/' + req.params.class_id + '/' + req.params.class_level + '/' + req.params.class_time + '/' + req.params.class_type + '/' + req.params.can_view);
             })
         })
         .catch(err => {
           console.log('Could not update checked_in status of ' + req.params.class_session_id);
-          res.redirect('https://ema-planner.herokuapp.com/class_checkin/' + req.params.class_id + '/' + req.params.class_level + '/' + req.params.class_time + '/' + req.params.class_type);
+          res.redirect('https://ema-planner.herokuapp.com/class_checkin/' + req.params.class_id + '/' + req.params.class_level + '/' + req.params.class_time + '/' + req.params.class_type + '/' + req.params.can_view);
         })
     })
     .catch(err => {
       console.log('Could not update count of ' + req.params.barcode);
-      res.redirect('https://ema-planner.herokuapp.com/class_checkin/' + req.params.class_id + '/' + req.params.class_level + '/' + req.params.class_time + '/' + req.params.class_type);
+      res.redirect('https://ema-planner.herokuapp.com/class_checkin/' + req.params.class_id + '/' + req.params.class_level + '/' + req.params.class_time + '/' + req.params.class_type + '/' + req.params.can_view);
     })
 })
 
-router.get('/class_checkin/(:class_id)/(:class_level)/(:class_time)/(:class_type)', (req, res) => {
+router.get('/class_checkin/(:class_id)/(:class_level)/(:class_time)/(:class_type)/(:can_view)', (req, res) => {
   console.log('req.params.class_id = ' + req.params.class_id);
   const query = "select * from get_class_names($1);";
   const checked_in = "select student_name, barcode, class_check from class_signups where class_session_id = $1 and checked_in = true;";
@@ -783,6 +784,7 @@ router.get('/class_checkin/(:class_id)/(:class_level)/(:class_time)/(:class_type
                 time: req.params.class_time,
                 class_id: req.params.class_id,
                 class_type: req.params.class_type,
+                can_view: req.params.can_view,
                 alert_message: ''
               })
             })
@@ -808,7 +810,8 @@ router.post('/class_checkin', (req, res) => {
     stud_data: req.sanitize('result').trim(),
     level: req.sanitize('level').trim(),
     time: req.sanitize('time').trim(),
-    class_type: req.sanitize('class_type').trim()
+    class_type: req.sanitize('class_type').trim(),
+    can_view: req.sanitize('can_view').trim()
   }
   const update_visit = "update student_list set last_visit = (select to_char(starts_at, 'Month DD, YYYY')::date as visit from classes where class_id = $1) where barcode = $2 and (last_visit < (select to_char(starts_at, 'Month DD, YYYY')::date as visit from classes where class_id = $3) or last_visit is null);"
   if (item.class_type == 'reg'){
@@ -829,7 +832,7 @@ router.post('/class_checkin', (req, res) => {
         .then(update => {
           db.any(query, [stud_info[0], stud_info[1], item.class_id, stud_info[1], temp_class_check])
             .then(function (rows1) {
-              res.redirect('class_checkin/' + item.class_id + '/' + item.level + '/' + item.time + '/' + item.class_type)
+              res.redirect('class_checkin/' + item.class_id + '/' + item.level + '/' + item.time + '/' + item.class_type + '/' + item.can_view)
             })
             .catch(function (err) {
               res.redirect('home')
@@ -2207,15 +2210,27 @@ router.get('/refresh_belts', (req, res) => {
     })
 })
 //END TEST SIGNUP SECTION
+
+function convertTZ(date, tzString) {
+  return new Date((typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {timeZone: tzString}));   
+}
+var getMonth = convertTZ(new Date(), "America/Denver").getMonth() + 2;
+var getYear = convertTZ(new Date(), "America/Denver").getFullYear();
+if (getMonth > 12){
+  getYear = getYear + 1;
+  getMonth = getMonth - 12;
+}
+
 router.get('/dragons_signup', (req, res) => {
+  var date_calculation = String(convertTZ(new Date(), "America/Denver").getMonth() + 2) + " 07, " + String(convertTZ(new Date(), "America/Denver").getFullYear());
   if (req.headers['x-forwarded-proto'] != 'https') {
     res.redirect('https://ema-planner.herokuapp.com/dragons_signup');
   } else {
-    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, level from classes where level = -1 and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
+    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, level from classes where level = -1 and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date and can_view = TRUE and starts_at < (to_date($1, 'MM DD, YYYY')) and can_view = TRUE order by starts_at;";
     const get_names = "select * from signup_names(-1);";
     db.any(get_names)
       .then(names => {
-        db.any(class_query)
+        db.any(class_query, date_calculation)
           .then(rows => {
             if (rows.length == 0) {
               res.render('temp_classes', {
@@ -2262,14 +2277,15 @@ router.get('/dragons_signup', (req, res) => {
 })
 
 router.get('/basic_signup', (req, res) => {
+  var date_calculation = String(convertTZ(new Date(), "America/Denver").getMonth() + 2) + " 07, " + String(convertTZ(new Date(), "America/Denver").getFullYear());
   if (req.headers['x-forwarded-proto'] != 'https') {
     res.redirect('https://ema-planner.herokuapp.com/basic_signup');
   } else {
-    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, level from classes where level in (0, 0.5) and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
+    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, level from classes where level in (0, 0.5) and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date and can_view = TRUE and starts_at < (to_date($1, 'MM DD, YYYY')) and can_view = TRUE order by starts_at;";
     const get_names = "select * from signup_names(0);";
     db.any(get_names)
       .then(names => {
-        db.any(class_query)
+        db.any(class_query, [date_calculation])
           .then(rows => {
             if (rows.length == 0) {
               res.render('temp_classes', {
@@ -2316,14 +2332,15 @@ router.get('/basic_signup', (req, res) => {
 })
 
 router.get('/level1_signup', (req, res) => {
+  var date_calculation = String(convertTZ(new Date(), "America/Denver").getMonth() + 2) + " 07, " + String(convertTZ(new Date(), "America/Denver").getFullYear());
   if (req.headers['x-forwarded-proto'] != 'https') {
     res.redirect('https://ema-planner.herokuapp.com/level1_signup');
   } else {
-    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, level from classes where level in (1, 1.5) and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
+    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, level from classes where level in (1, 1.5) and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date and can_view = TRUE and starts_at < (to_date($1, 'MM DD, YYYY')) and can_view = TRUE order by starts_at;";
     const get_names = "select * from signup_names(1);";
     db.any(get_names)
       .then(names => {
-        db.any(class_query)
+        db.any(class_query, [date_calculation])
           .then(rows => {
             if (rows.length == 0) {
               res.render('temp_classes', {
@@ -2370,14 +2387,15 @@ router.get('/level1_signup', (req, res) => {
 })
 
 router.get('/level2_signup', (req, res) => {
+  var date_calculation = String(convertTZ(new Date(), "America/Denver").getMonth() + 2) + " 07, " + String(convertTZ(new Date(), "America/Denver").getFullYear());
   if (req.headers['x-forwarded-proto'] != 'https') {
     res.redirect('https://ema-planner.herokuapp.com/level2_signup');
   } else {
-    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, level from classes where level = 2 and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
+    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, level from classes where level = 2 and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date and can_view = TRUE and starts_at < (to_date($1, 'MM DD, YYYY')) and can_view = TRUE order by starts_at;";
     const get_names = "select * from signup_names(2);";
     db.any(get_names)
       .then(names => {
-        db.any(class_query)
+        db.any(class_query, [date_calculation])
           .then(rows => {
             if (rows.length == 0) {
               res.render('temp_classes', {
@@ -2424,14 +2442,15 @@ router.get('/level2_signup', (req, res) => {
 })
 
 router.get('/level3_signup', (req, res) => {
+  var date_calculation = String(convertTZ(new Date(), "America/Denver").getMonth() + 2) + " 07, " + String(convertTZ(new Date(), "America/Denver").getFullYear());
   if (req.headers['x-forwarded-proto'] != 'https') {
     res.redirect('https://ema-planner.herokuapp.com/level3_signup');
   } else {
-    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, level from classes where level = 3 and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
+    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, level from classes where level = 3 and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date and can_view = TRUE and starts_at < (to_date($1, 'MM DD, YYYY')) and can_view = TRUE order by starts_at;";
     const get_names = "select * from signup_names(3);";
     db.any(get_names)
       .then(names => {
-        db.any(class_query)
+        db.any(class_query, [date_calculation])
           .then(rows => {
             if (rows.length == 0) {
               res.render('temp_classes', {
@@ -2478,14 +2497,15 @@ router.get('/level3_signup', (req, res) => {
 })
 
 router.get('/bb_signup', (req, res) => {
+  var date_calculation = String(convertTZ(new Date(), "America/Denver").getMonth() + 2) + " 07, " + String(convertTZ(new Date(), "America/Denver").getFullYear());
   if (req.headers['x-forwarded-proto'] != 'https') {
     res.redirect('https://ema-planner.herokuapp.com/bb_signup');
   } else {
-    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, level from classes where level = 5 and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date order by starts_at;";
+    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, level from classes where level = 5 and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date and can_view = TRUE and starts_at < (to_date($1, 'MM DD, YYYY')) and can_view = TRUE order by starts_at;";
     const get_names = "select * from signup_names(5);";
     db.any(get_names)
       .then(names => {
-        db.any(class_query)
+        db.any(class_query, [date_calculation])
           .then(rows => {
             if (rows.length == 0) {
               res.render('temp_classes', {
@@ -2532,14 +2552,15 @@ router.get('/bb_signup', (req, res) => {
 })
 
 router.get('/swat_signup', (req, res) => {
+  var date_calculation = String(convertTZ(new Date(), "America/Denver").getMonth() + 2) + " 07, " + String(convertTZ(new Date(), "America/Denver").getFullYear());
   if (req.headers['x-forwarded-proto'] != 'https') {
     res.redirect('https://ema-planner.herokuapp.com/swat_signup');
   } else {
-    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, level, swat_count from classes where level in (7, 0.5, 2, 3, 1.5, 0, 1, -1) and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date and swat_count < 3 order by starts_at;";
+    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, level, swat_count from classes where level in (7, 0.5, 2, 3, 1.5, 0, 1, -1) and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date and swat_count < 3 and can_view = TRUE and starts_at < (to_date($1, 'MM DD, YYYY')) and can_view = TRUE order by starts_at;";
     const get_names = "select * from signup_names(5);";
     db.any(get_names)
       .then(names => {
-        db.any(class_query)
+        db.any(class_query, [date_calculation])
           .then(rows => {
             if (rows.length == 0) {
               res.render('temp_classes', {

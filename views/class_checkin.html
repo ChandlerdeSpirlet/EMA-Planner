@@ -147,6 +147,10 @@
     <head>
         <h1>{% if level == -1 %} Little Dragons {% elif level == 0 %} Basic {% elif level == 0.5 %} Basic (Floor 2) {% elif level == 1 %} Level 1 {% elif level == 1.5 %} Level 1 (Floor 2) {% elif level == 2 %} Level 2 {% elif level == 3 %} Level 3 {% elif level == 4 %} Prep Belt {% elif level == 5 %} Black Belt {% elif level == 6 %} Open Mat {% elif level == 7 %} Weapons {% else %} Unknown {% endif %}</h1>
         <h3>{{ time }}</h3>
+        <h4 style="text-align: center;">Class Type: {% if class_type == 'reg' %}Regular {% elif class_type == 'spar' %}Spar {% else %}Unrecognized Class Type {% endif %}</h4>
+        {% if can_view == 'false' %}
+            <h4 style="text-align: center;"><u>Note: You can check students in for this class, but they cannot sign up for it</u></h4>
+        {% endif %}
     </head>
     <body>
         <meta name="name_data" content="{% for student in name_data %} {{ student.student_name }} - {{ student.barcode }} {% endfor %}"/>
@@ -158,6 +162,7 @@
                         <input type="hidden" value="{{ level }}" name="level"/>
                         <input type="hidden" value="{{ time }}" name="time"/>
                         <input type="hidden" value="{{ class_type }}" name="class_type"/>
+                        <input type="hidden" value="{{ can_view }}" name="can_view"/>
                         <label for="result">Student's Name</label>
                         <div class="autocomplete">
                             <input id="result" name="result" type="text" placeholder="Student First Name" value="{{ result }}">
@@ -174,7 +179,7 @@
                         {% for student in checkedIn %}
                         <div class="chip">
                             {{ student.student_name }}
-                            <a href ="/class_remove/{{ student.barcode }}/{{ class_id }}/{{ level }}/{{ time }}/{{ class_type }}"><span class="closebtn">&times;</span></a>
+                            <a href ="/class_remove/{{ student.barcode }}/{{ class_id }}/{{ level }}/{{ time }}/{{ class_type }}/{{ can_view }}"><span class="closebtn">&times;</span></a>
                         </div>
                         {% endfor %}
                     </div>
@@ -186,7 +191,7 @@
                             {% if person.is_swat == false %}
                                 <div class="chip2">
                                     {{ person.student_name}}
-                                    <a href="/update_checkin/{{ person.barcode }}/{{ class_id }}/{{ level }}/{{ time }}/{{ person.class_check }}/{{ class_type }}"><span class="closebtn2">&#x2713;</span></a>
+                                    <a href="/update_checkin/{{ person.barcode }}/{{ class_id }}/{{ level }}/{{ time }}/{{ person.class_check }}/{{ class_type }}/{{ can_view }}"><span class="closebtn2">&#x2713;</span></a>
                                 </div>
                             {% endif %}
                         {% endfor %}
