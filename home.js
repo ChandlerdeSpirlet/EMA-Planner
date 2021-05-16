@@ -668,6 +668,23 @@ router.post('/processPayment', (req, res) => {
   })
 })
 
+router.get('/class_history_student/(:barcode)', (req, res) => {
+  const class_history_query = "select x.barcode, x.is_swat, to_char(y.starts_at,'Month DD, YYYY HH12:MI') as starts_at, x.checked_in, y.class_type from class_signups x classes y where x.class_session_id = y.class_id and x.barcode = 30142 and (checked_in = true or is_swat = true) order by starts_at;"
+  db.any(class_history_query, [req.params.barcode])
+    .then(rows => {
+      res.render('class_history_student', {
+        alert_message: '',
+        class_data: rows
+      })
+    })
+    .catch(err => {
+      res.render('class_history_student', {
+        alert_message: 'Unable to find classes with barcode ' + req.params.barcode + '. Error: ' + err,
+        class_data: ''
+      })
+    })
+})
+
 router.get('/class_selector', (req, res) => {
   const query = "select x.class_id, (select count(class_session_id) from class_signups where class_session_id = x.class_id and checked_in = FALSE) as signed_up, (select count(class_session_id) from class_signups where class_session_id = x.class_id and checked_in = TRUE) as checked_in, to_char(x.starts_at, 'Month') as class_month, to_char(x.starts_at, 'DD') as class_day, to_char(x.starts_at, 'HH:MI PM') as class_time, to_char(x.ends_at, 'HH:MI PM') as end_time, x.level, x.class_type from classes x where to_char(x.starts_at, 'Month DD') = to_char(to_date($1, 'Month DD'), 'Month DD') order by x.starts_at;"
   var d = new Date();
