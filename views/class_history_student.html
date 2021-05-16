@@ -167,12 +167,12 @@
     </head>
     <body>
         <table>
+            {% if class_data %}
             <tr>
                 <th>Date</th>
                 <th>Class Type</th>
                 <th>Checked In</th>
             </tr>
-            {% if class_data %}
                 {% for class in class_data %}
                     <tr>
                         <td>{{ class.starts_at }}</td>

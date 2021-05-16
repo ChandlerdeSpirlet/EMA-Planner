@@ -669,7 +669,7 @@ router.post('/processPayment', (req, res) => {
 })
 
 router.get('/class_history_student/(:barcode)', (req, res) => {
-  const class_history_query = "select x.barcode, x.is_swat, to_char(y.starts_at,'Month DD, YYYY HH12:MI') as starts_at, x.checked_in, y.class_type from class_signups x classes y where x.class_session_id = y.class_id and x.barcode = 30142 and (checked_in = true or is_swat = true) order by starts_at;"
+  const class_history_query = "select x.barcode, x.is_swat, to_char(y.starts_at,'Month DD, YYYY HH12:MI') as starts_at, x.checked_in, y.class_type from class_signups x, classes y where x.class_session_id = y.class_id and x.barcode = 30142 and (checked_in = true or is_swat = true) order by starts_at;"
   db.any(class_history_query, [req.params.barcode])
     .then(rows => {
       res.render('class_history_student', {

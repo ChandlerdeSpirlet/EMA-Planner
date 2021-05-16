@@ -169,6 +169,7 @@
     </head>
     <body>
         <table>
+            {% if class_data %}
             <tr>
                 <th>Student Name</th>
                 <th>Class Type</th>
@@ -176,7 +177,6 @@
                 <th>Date</th>
                 <th>Checked In</th>
             </tr>
-            {% if class_data %}
                 {% for class in class_data %}
                     <tr>
                         <td>{{ class.student_name }}</td>
@@ -202,7 +202,7 @@
                         {% endif %}
                     </tr>
                 {% endfor %}
-            {% elif class_data.length == 0 %}
+            {% elif class_data.length == 0 or class_data == '' %}
                 <h3>No class history to display</h3>
             {% else %}
                 <h3>An error occured</h3>
