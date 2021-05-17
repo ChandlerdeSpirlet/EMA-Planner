@@ -172,59 +172,129 @@
             font-size: 17px;
             width: calc(100% / 6);
         }
-
-            .tablink:hover {
+        .tablink:hover {
             background-color: #777;
-            }
-
-            /* Style the tab content (and add height:100% for full page content) */
-            .tabcontent {
+        }
+        /* Style the tab content (and add height:100% for full page content) */
+        .tabcontent {
             color: white;
             display: none;
             padding: 100px 20px;
             height: 100%;
-            }
+        }
     </style>
     <head>
         <h1>Student Class History Tool</h1>
     </head>
     <body>
-        <table>
-            {% if class_data %}
-            <tr>
-                <th>Date</th>
-                <th>Class Type</th>
-                <th>Checked In</th>
-            </tr>
-                {% for class in class_data %}
+        <button class="tablink" onclick="openPage('SWAT', this, 'orange')">SWAT Classes</button>
+        <button class="tablink" onclick="openPage('REG', this, 'green')" id="defaultOpen">Regular Classes</button>
+        <button class="tablink" onclick="openPage('SPAR', this, 'blue')">Sparring Classes</button>
+        <div id="SWAT" class="tabcontent">
+            <h2>SWAT Classes</h2>
+            <table>
+                {% if class_data %}
                     <tr>
-                        <td>{{ class.starts_at }}</td>
-                        {% if class.is_swat == true %}
-                            <td>SWAT</td>
-                        {% else %}
+                        <th>Date</th>
+                        <th>Class Type</th>
+                        <th>Checked In</th>
+                    </tr>
+                    {% for class in class_data %}
+                        <tr>
+                            {% if class.is_swat == true %}
+                                <td>{{ class.starts_at }}</td>
+                                <td>SWAT</td>
+                                <td>Yes</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                {% elif class_data.length == 0 or class_data == ''%}
+                    <h3>No class history to display</h3>
+                {% else %}
+                    <h3>An error occured</h3>
+                {% endif %}
+            </table>
+        </div>
+        <div id="REG" class="tabcontent">
+            <h2>Regular Classes</h2>
+            <table>
+                {% if class_data %}
+                    <tr>
+                        <th>Date</th>
+                        <th>Class Type</th>
+                        <th>Checked In</th>
+                    </tr>
+                    {% for class in class_data %}
+                        <tr>
+                            <td>{{ class.starts_at }}</td>
                             {% if class.class_type == 'reg' %}
                                 <td>Regular</td>
-                            {% elif class.class_type == 'spar' %}
-                                <td>Sparring</td>
-                            {% else %}
-                                <td>Unknown</td>
-                            {% endif %}
-                        {% endif %}
-                        {% if class.checked_in == true %}
-                            <td>Yes</td>
-                        {% elif class.checked_in == false %}
-                            <td>No</td>
-                        {% else %}
-                            <td>Unknown</td>
-                        {% endif %}
+                                {% if class.checked_in == true %}
+                                <td>Yes</td>
+                                {% elif class.checked_in == false %}
+                                    <td>No</td>
+                                {% else %}
+                                    <td>Unknown</td>
+                                {% endif %}                               
+                            {% endif %}             
+                        </tr>
+                    {% endfor %}
+                {% elif class_data.length == 0 or class_data == ''%}
+                    <h3>No class history to display</h3>
+                {% else %}
+                    <h3>An error occured</h3>
+                {% endif %}
+            </table>
+        </div>
+        <div id="SPAR" class="tabcontent">
+            <h2>Sparring Classes</h2>
+            <table>
+                {% if class_data %}
+                    <tr>
+                        <th>Date</th>
+                        <th>Class Type</th>
+                        <th>Checked In</th>
                     </tr>
-                {% endfor %}
-            {% elif class_data.length == 0 or class_data == ''%}
-                <h3>No class history to display</h3>
-            {% else %}
-                <h3>An error occured</h3>
-            {% endif %}
-        </table>
+                    {% for class in class_data %}
+                        <tr>
+                            <td>{{ class.starts_at }}</td>
+                            {% if class.class_type == 'spar' %}
+                                <td>Sparring</td>
+                                {% if class.checked_in == true %}
+                                <td>Yes</td>
+                                {% elif class.checked_in == false %}
+                                    <td>No</td>
+                                {% else %}
+                                    <td>Unknown</td>
+                                {% endif %}                               
+                            {% endif %}             
+                        </tr>
+                    {% endfor %}
+                {% elif class_data.length == 0 or class_data == ''%}
+                    <h3>No class history to display</h3>
+                {% else %}
+                    <h3>An error occured</h3>
+                {% endif %}
+            </table>
+        </div>
+        <script>
+            function openPage(pageName,elmnt,color) {
+              var i, tabcontent, tablinks;
+              tabcontent = document.getElementsByClassName("tabcontent");
+              for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+              }
+              tablinks = document.getElementsByClassName("tablink");
+              for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].style.backgroundColor = "";
+              }
+              document.getElementById(pageName).style.display = "block";
+              elmnt.style.backgroundColor = color;
+            }
+            
+            // Get the element with id="defaultOpen" and click on it
+            document.getElementById("defaultOpen").click();
+            </script>
     </body>
 </html>
 {% endblock %}
