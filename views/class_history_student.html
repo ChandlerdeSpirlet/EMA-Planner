@@ -235,9 +235,9 @@
         </div>
         <div id="REG" class="tabcontent">
             <h2>Regular Classes</h2>
-            <table>
-                {% if class_data %}
-                    <h4>Checked In</h4>
+            {% if class_data %}
+                <h4>Checked In</h4>
+                <table>
                     <tr>
                         <th>Date</th>
                         <th>Class Type</th>
@@ -254,8 +254,10 @@
                             {% endif %}             
                         </tr>
                     {% endfor %}
-                    <br>
-                    <h4>Not Checked In</h4>
+                </table>
+                <br>
+                <h4>Not Checked In</h4>
+                <table>
                     <tr>
                         <th>Date</th>
                         <th>Class Type</th>
@@ -266,64 +268,66 @@
                             {% if class.class_type == 'reg' and (class.checked_in == false or class.checked_in != true) %}
                                 <td>{{ class.class_time }}</td>
                                 <td>Regular</td>
-                                {% if class.checked_in == true %}
+                                {% if class.checked_in == false %}
                                     <td>No</td>
                                 {% endif %}                               
                             {% endif %}             
                         </tr>
                     {% endfor %}
-                {% elif class_data.length == 0 or class_data == ''%}
-                    <h3>No class history to display</h3>
-                {% else %}
-                    <h3>An error occured</h3>
-                {% endif %}
-        </table>
+                </table>
+            {% elif class_data.length == 0 or class_data == ''%}
+                <h3>No class history to display</h3>
+            {% else %}
+                <h3>An error occured</h3>
+            {% endif %}
         </div>
         <div id="SPAR" class="tabcontent">
             <h2>Sparring Classes</h2>
-            <table>
                 {% if class_data %}
                 <h4>Checked In</h4>
-                <tr>
-                    <th>Date</th>
-                    <th>Class Type</th>
-                    <th>Checked In</th>
-                </tr>
-                {% for class in class_data %}
+                <table>
                     <tr>
-                        {% if class.class_type == 'spar' and class.checked_in == true %}
-                            <td>{{ class.class_time }}</td>
-                            <td>Sparring</td>
-                            {% if class.checked_in == true %}
-                                <td>Yes</td>
-                            {% endif %}                               
-                        {% endif %}             
+                        <th>Date</th>
+                        <th>Class Type</th>
+                        <th>Checked In</th>
                     </tr>
-                {% endfor %}
-                <br>
+                    {% for class in class_data %}
+                        <tr>
+                            {% if class.class_type == 'spar' and class.checked_in == true %}
+                                <td>{{ class.class_time }}</td>
+                                <td>Sparring</td>
+                                {% if class.checked_in == true %}
+                                    <td>Yes</td>
+                                {% endif %}                               
+                            {% endif %}             
+                        </tr>
+                    {% endfor %}
+                </table>
+                    <br>
                 <h4>Not Checked In</h4>
-                <tr>
-                    <th>Date</th>
-                    <th>Class Type</th>
-                    <th>Checked In</th>
-                </tr>
-                {% for class in class_data %}
+                <table>
                     <tr>
-                        {% if class.class_type == 'spar' and (class.checked_in == false or class.checked_in != true) %}
-                            <td>{{ class.class_time }}</td>
-                            <td>Sparring</td>
-                            {% if class.checked_in == true %}
-                                <td>No</td>
-                            {% endif %}                               
-                        {% endif %}             
+                        <th>Date</th>
+                        <th>Class Type</th>
+                        <th>Checked In</th>
                     </tr>
-                {% endfor %}
+                    {% for class in class_data %}
+                        <tr>
+                            {% if class.class_type == 'spar' and (class.checked_in == false or class.checked_in != true) %}
+                                <td>{{ class.class_time }}</td>
+                                <td>Sparring</td>
+                                {% if class.checked_in == false %}
+                                    <td>No</td>
+                                {% endif %}                               
+                            {% endif %}             
+                        </tr>
+                    {% endfor %}
+                </table>
                 {% elif class_data.length == 0 or class_data == ''%}
                     <h3>No class history to display</h3>
                 {% else %}
                     <h3>An error occured</h3>
                 {% endif %}
-            </table>
         </div>
         <script>
             function openPage(pageName,elmnt,color) {

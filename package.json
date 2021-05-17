@@ -1,6 +1,6 @@
 {
   "name": "EMA_Planner",
-  "version": "5.3.7",
+  "version": "5.3.8",
   "description": "Attendance and belt testing manager for Exclusive Martial Arts",
   "main": "home.js",
   "scripts": {
