@@ -2513,6 +2513,61 @@ router.get('/level3_signup', (req, res) => {
   }
 })
 
+router.get('/wfc_signup', (req, res) => {
+  var date_calculation = String(convertTZ(new Date(), "America/Denver").getMonth() + 2) + " 07, " + String(convertTZ(new Date(), "America/Denver").getFullYear());
+  if (req.headers['x-forwarded-proto'] != 'https') {
+    res.redirect('https://ema-planner.herokuapp.com/wfc_signup');
+  } else {
+    const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, level from classes where level = 8 and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date and can_view = TRUE and starts_at < (to_date($1, 'MM DD, YYYY')) and can_view = TRUE order by starts_at;";
+    const get_names = "select * from signup_names();";
+    db.any(get_names)
+      .then(names => {
+        db.any(class_query, [date_calculation])
+          .then(rows => {
+            if (rows.length == 0) {
+              res.render('temp_classes', {
+                level: "Women's Fight Club"
+              })
+            } else {
+              res.render('wfc_signup', {
+                alert_message: '',
+                fname: '',
+                lname: '',
+                level: '',
+                email: '',
+                classes: rows,
+                names: names
+              })
+            }
+          })
+          .catch(err => {
+            console.log('Could not render womens fight club classes. ERROR: ' + err);
+            res.render('wfc_signup', {
+              alert_message: 'Could not find womens fight club classes.',
+              fname: '',
+              lname: '',
+              level: '',
+              email: '',
+              classes: 'Unable to show classes.',
+              names: ''
+            })
+          })
+      })
+      .catch(err => {
+        console.log('Could not render names. ERROR: ' + err);
+        res.render('wfc_signup', {
+          alert_message: 'Could not find names to display.',
+          fname: '',
+          lname: '',
+          level: '',
+          email: '',
+          classes: 'Unable to show classes.',
+          names: ''
+        })
+      })
+  }
+})
+
 router.get('/bb_signup', (req, res) => {
   var date_calculation = String(convertTZ(new Date(), "America/Denver").getMonth() + 2) + " 07, " + String(convertTZ(new Date(), "America/Denver").getFullYear());
   if (req.headers['x-forwarded-proto'] != 'https') {
@@ -2762,6 +2817,35 @@ router.post('/bb_signup', (req, res) => {
     day_time: req.sanitize('day_time')
   }
   belt_group = 'Black Belt';
+  console.log('1: ' + item.stud_data);
+  console.log('2: ' + item.stud_data2);
+  console.log('3: ' + item.stud_data3);
+  if (item.stud_data == ''){
+    item.stud_data = ' ';
+  }
+  if (item.stud_data2 == ''){
+    item.stud_data2 = ' ';
+  }
+  if (item.stud_data3 == ''){
+    item.stud_data3 = ' ';
+  }
+  if (item.stud_data4 == ''){
+    item.stud_data4 = ' ';
+  }
+  //const stud_info = parseStudentInfo(item.stud_data);
+  const redir_link = 'process_classes/' + item.stud_data + '/' + item.stud_data2 + '/' + item.stud_data3 + '/' + item.stud_data4 + '/' + belt_group + '/' + item.day_time + '/not_swat';
+  res.redirect(redir_link);
+})
+
+router.post('/wfc_signup', (req, res) => {
+  const item = {
+    stud_data: req.sanitize('result').trim(),
+    stud_data2: req.sanitize('result2').trim(),
+    stud_data3: req.sanitize('result3').trim(),
+    stud_data4: req.sanitize('result4').trim(),
+    day_time: req.sanitize('day_time')
+  }
+  belt_group = 'Womans Fight Club';
   console.log('1: ' + item.stud_data);
   console.log('2: ' + item.stud_data2);
   console.log('3: ' + item.stud_data3);
