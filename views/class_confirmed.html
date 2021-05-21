@@ -63,6 +63,7 @@
       <p style="text-emphasis: large;">If you need to take your name off of the list for any particular class, please use the tool on the app under the in-person class signup tab. You can lookup all of your classes using the email: <strong>{{ email[0].email }}</strong></p>
     </div>
     <a href="https://ema-planner.herokuapp.com/student_classes"><button type="button">All Done</button></a><br>
+    <a href="https://ema-planner.herokuapp.com/student_portal_login"><button type="button">Student Portal</button></a><br>
     <form name="Form" action="/build_ics" method="POST">
       <input type="hidden" name="class_type" value="{{ class_type }}"/>
       {% if num_events == '1' or num_events == 1 %}
