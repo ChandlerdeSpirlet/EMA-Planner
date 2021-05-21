@@ -2519,7 +2519,7 @@ router.get('/wfc_signup', (req, res) => {
     res.redirect('https://ema-planner.herokuapp.com/wfc_signup');
   } else {
     const class_query = "select class_id, to_char(starts_at, 'Month') || ' ' || to_char(starts_at, 'DD') || ' at ' || to_char(starts_at, 'HH:MI PM') as class_instance, level from classes where level = 8 and starts_at >= (CURRENT_DATE - INTERVAL '7 hour')::date and can_view = TRUE and starts_at < (to_date($1, 'MM DD, YYYY')) and can_view = TRUE order by starts_at;";
-    const get_names = "select * from signup_names();";
+    const get_names = "select * from signup_names(0);";
     db.any(get_names)
       .then(names => {
         db.any(class_query, [date_calculation])
