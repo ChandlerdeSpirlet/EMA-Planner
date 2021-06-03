@@ -13,7 +13,7 @@ const request = require('request');
 const crypto = require('crypto');
 
 const settings = {
-  apiv4url: https://sandbox-api.paysimple.com/v4,
+  apiv4url: 'https://sandbox-api.paysimple.com/v4',
   username: 'APIUser99999',
   apikey: 'blah'
 }
