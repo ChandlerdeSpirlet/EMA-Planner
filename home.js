@@ -12,6 +12,21 @@ const nodemailer = require("nodemailer");
 const request = require('request');
 const crypto = require('crypto');
 
+var redis = require('redis');
+var client = redis.createClient(process.env.HEROKU_REDIS_JADE_URL);
+var RedisStore = require('connect-redis')(session);
+app.use(
+  session({
+      store: new RedisStore({ 
+          client: client,
+          ttl: 30 * 60
+      }),
+  secret: process.env.secret_key,
+  resave: false,
+  saveUninitialized: true
+  })
+);
+
 const settings = {
   apiv4url: 'https://sandbox-api.paysimple.com/v4',
   username: 'APIUser99999',
