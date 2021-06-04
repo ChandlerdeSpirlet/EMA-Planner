@@ -13,7 +13,7 @@ const request = require('request');
 const crypto = require('crypto');
 
 var redis = require('redis');
-var client = redis.createClient(process.env.REDIS);
+var client = redis.createClient(process.env.REDIS_URL);
 var RedisStore = require('connect-redis')(session);
 
 
