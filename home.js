@@ -15,17 +15,7 @@ const crypto = require('crypto');
 var redis = require('redis');
 var client = redis.createClient(process.env.REDIS);
 var RedisStore = require('connect-redis')(session);
-app.use(
-  session({
-      store: new RedisStore({ 
-          client: client,
-          ttl: 30 * 60
-      }),
-  secret: process.env.secret_key,
-  resave: false,
-  saveUninitialized: true
-  })
-);
+
 
 const settings = {
   apiv4url: 'https://sandbox-api.paysimple.com/v4',
@@ -40,13 +30,18 @@ function getAuthHeader(){
 }
 
 const app = express()
-app.use(flash());
-app.use(session({
-  cookie: { maxAge: 60000 },
-  secret: 'secret_key',
+app.use(
+  session({
+      store: new RedisStore({ 
+          client: client,
+          ttl: 30 * 60
+      }),
+  secret: process.env.secret_key,
   resave: false,
-  saveUninitialized: false
-}));
+  saveUninitialized: true
+  })
+);
+app.use(flash());
 const port = process.env.PORT
 // const port = 5000;
 const router = express.Router()
