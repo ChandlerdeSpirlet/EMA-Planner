@@ -8,15 +8,40 @@ const ics = require('ics')
 const { writeFileSync } = require('fs')
 const { readFileSync } = require('fs')
 const nodemailer = require("nodemailer");
+'use strict';
+const request = require('request');
+const crypto = require('crypto');
+
+var redis = require('redis');
+var client = redis.createClient(process.env.REDIS_URL);
+var RedisStore = require('connect-redis')(session);
+
+
+const settings = {
+  apiv4url: 'https://sandbox-api.paysimple.com/v4',
+  username: 'APIUser99999',
+  apikey: 'blah'
+}
+
+function getAuthHeader(){
+  let time = (new Date()).toISOString();
+  let hash = crypto.createHmac('SHA256', settings.apikey).update(time).digest('base64');
+  return 'PSSERVER ' + "accessid=" + settings.username + "; timestamp=" + time + "; signature=" + hash;
+}
 
 const app = express()
-app.use(flash());
-app.use(session({
-  cookie: { maxAge: 60000 },
-  secret: 'secret_key',
+app.use(
+  session({
+      store: new RedisStore({ 
+          client: client,
+          ttl: 30 * 60
+      }),
+  secret: process.env.secret_key,
   resave: false,
-  saveUninitialized: false
-}));
+  saveUninitialized: true
+  })
+);
+app.use(flash());
 const port = process.env.PORT
 // const port = 5000;
 const router = express.Router()
@@ -60,6 +85,27 @@ function convertToMoney(amount) {
   })
   return formatter.format(amount / 100)
 }
+
+app.get('/token', (req, res) => {
+  let options = {
+    method: "POST",
+    uri: settings.apiv4url + '/checkouttoken',
+    headers: {
+      Authorization: getAuthHeader()
+    },
+    body: {},
+    json: true,
+  };
+
+  request(options, function(error, response, body) {
+    if (!error && response && res.statusCode < 300) {
+      res.json(body.Response);
+      return;
+    }
+    res.status((response && response.statusCode) || 500).send(error);
+  });
+});
+
 
 
 app.get('/', (req, res) => {
