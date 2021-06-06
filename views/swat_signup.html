@@ -139,12 +139,11 @@
     <p>One person per signup please.</p>
     <p>Swat class times are available at the school at the times below.</p>
     <p>*Swat classes must be done in person.</p>
-    <p><strong>BLACK BELT CLASS TIMES</strong></p>
   </head>
   <body>
     <form onsubmit="return ValidateForm()" autocomplete="off" name="Form" action="/swat_signup" method="POST">
       <div class="autocomplete">
-        <label>Student #1 </label><input id="result" name="result" type="text" placeholder="Student's First Name (required)" value="{{ result }}" required pattern="[A-z- ]*[A-z]{2,} [A-z-]{2,} - [0-9]{5}" oninput="InvalidMsg(this);" oninvalid="InvalidMsg(this);">
+        <label>Student #1 </label><input id="result" name="result" type="text" placeholder="Student's First Name (required)" value="{{ result }}" required pattern="[A-z- ]*[A-z]{2,} [A-z-]{2,} - [0-9]{5}[ ]{0,}" oninput="InvalidMsg(this);" oninvalid="InvalidMsg(this);">
       </div>
       <br>
       <div class="autocomplete">
