@@ -19,8 +19,8 @@ var RedisStore = require('connect-redis')(session);
 
 const settings = {
   apiv4url: 'https://sandbox-api.paysimple.com/v4',
-  username: 'APIUser99999',
-  apikey: 'blah'
+  username: 'APIUser156358',
+  apikey: process.env.ps_api
 }
 
 function getAuthHeader(){
