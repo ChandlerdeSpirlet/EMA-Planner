@@ -87,9 +87,9 @@ function convertToMoney(amount) {
   return formatter.format(amount / 100)
 }
 
-router.get('ps_payment', (req, res) => {
+router.get('/ps_payment', (req, res) => {
   res.render('ps_payment', {
-    
+
   })
 })
 
