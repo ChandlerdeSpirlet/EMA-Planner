@@ -1,34 +1,34 @@
 <html>
     <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-      p {
-        font-family: Arial, sans-serif;
-        font-weight: bold;
-        margin: 0 0 10px;
-        padding: 0;
-      }
-      .merchant-form {
-        border: blue solid 1px;
-        margin: 15px 0;
-        padding: 10px;
-      }
-      .psjs {
-        background-color: #f9f9f9;
-        border: red solid 1px;
-        margin: 15px 0;
-        padding: 10px;
-      }
-      .form-field {
-        margin: 10px 0;
-      }
-      .form-field label {
-        display: block;
-      }
-      .form-field input {
-        display: block;
-      }
-    </style>
+        <style>
+            p {
+     font-family: Arial, sans-serif;
+     font-weight: bold;
+     margin: 0 0 10px;
+     padding: 0;
+}
+ .merchant-form {
+     border: blue solid 1px;
+     margin: 15px 0;
+     padding: 10px;
+}
+ .psjs {
+     background-color: #f9f9f9;
+     border: red solid 1px;
+     margin: 15px 0;
+     padding: 10px;
+}
+ .form-field {
+     margin: 10px 0;
+}
+ .form-field label {
+     display: block;
+}
+ .form-field input {
+     display: block;
+}
+        </style>
+    <meta charset="utf-8">
     <title>PaySimpleJS</title>
     </head>
     <body>
@@ -64,9 +64,8 @@
     </form>
 
 <script src="https://api.paysimple.com/paysimplejs/v1/scripts/client.js"></script>
-    </body>
-    <script>
-      function loadPaysimpleJs(auth) {
+<script>
+    function loadPaysimpleJs(auth) {
     // Initialize the PaySimpleJS SDK with the checkout token and styles
     // where auth = { token: <Checkout Token from your server> }
     var paysimplejs = window.paysimpleJs({
@@ -174,8 +173,6 @@ function getAuth(callback) {
     xhr.onload = function(e) {
         if (xhr.status < 300) {
             var data = JSON.parse(this.response);
-            console.log('data: ' + data);
-            console.log('token: ' + data.JwtToken);
             callback.call(null, {
                 token: data.JwtToken
             });
@@ -186,5 +183,6 @@ function getAuth(callback) {
     xhr.send();
 }
 getAuth(loadPaysimpleJs);
-    </script>
+</script>
+    </body>
 </html>
