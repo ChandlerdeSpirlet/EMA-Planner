@@ -87,6 +87,12 @@ function convertToMoney(amount) {
   return formatter.format(amount / 100)
 }
 
+router.get('ps_payment', (req, res) => {
+  res.render('ps_payment', {
+    
+  })
+})
+
 app.get('/token', (req, res) => {
   let options = {
     method: "POST",
