@@ -16,8 +16,9 @@ var redis = require('redis');
 var client = redis.createClient(process.env.REDIS_URL);
 var RedisStore = require('connect-redis')(session);
 
-
+console.log('ps_api' + process.env.ps_api);
 const settings = {
+  port: 8080,
   apiv4url: 'https://sandbox-api.paysimple.com/v4',
   username: 'APIUser156358',
   apikey: process.env.ps_api
