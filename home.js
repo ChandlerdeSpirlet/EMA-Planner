@@ -87,12 +87,6 @@ function convertToMoney(amount) {
   return formatter.format(amount / 100)
 }
 
-app.get('/ps_payment', (req, res) => {
-  res.render('ps_payment', {
-
-  })
-})
-
 app.get('/token', (req, res) => {
   let options = {
     method: "POST",
@@ -3959,6 +3953,30 @@ router.get('/belt_inventory', (req, res) => {
         alert_message: 'ERROR. Could not get any belt data. Error: ' + err
       })
     })
+})
+
+
+app.post('/ps/webhook/subscription', (req, res) => {
+  let options = {
+    method: "POST",
+    headers: {
+      Authorization: getAuthHeader()
+    },
+    body: {
+      "url": "https://ema-planner.herokuapp.com/ps_api",
+      "event_types": ["customer_created", "customer_updated", "customer_deleted", "payment_failed"],
+      "is_active": true
+    },
+    json: true,
+  };
+  request(options, function(error, response, body) {
+    if (!error && response && res.statusCode < 300) {
+      res.json(body.Response);
+      console.log(body.Response);
+      return;
+    }
+    res.status((response && response.statusCode) || 500).send(error);
+  });
 })
 
 app.post('/webook_ps', (req, res) => {
