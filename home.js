@@ -3960,9 +3960,9 @@ JSON.safeStringify = (obj, indent = 2) => {
 
 request.post({
   uri: 'https://api.paysimple.com/ps/webhook/subscription',
-  url: 'https://ema-planner.herokuapp.com/ps_webhook',
-  event_types: ['payment_failed', 'customer_created', 'customer_updated', 'customer_deleted'],
-  is_active: 'true',
+  "url": 'https://ema-planner.herokuapp.com/ps_webhook',
+  "event_types": ['payment_failed', 'customer_created', 'customer_updated', 'customer_deleted'],
+  "is_active": 'true',
   headers: {
     'Authorization': 'basic APIUser156358:' + process.env.ps_api
   },
