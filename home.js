@@ -3971,7 +3971,7 @@ request.post({
   //body: new Uint8Array(3)
 }, function(e,r,b){
   //console.log('Webhook error: ' + e);
-  //console.log('Webhook response: ' + r);
+  console.log('Webhook response (post): ' + JSON.safeStringify(r));
   //console.log('Webhook response ' + JSON.safeStringify(b));
   console.log('Webhook Body ' + b.data);
 });
