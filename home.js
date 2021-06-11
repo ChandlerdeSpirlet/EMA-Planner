@@ -12,10 +12,6 @@ const nodemailer = require("nodemailer");
 const request = require('request');
 const crypto = require('crypto');
 
-var redis = require('redis');
-var client = redis.createClient(process.env.REDIS_URL);
-var RedisStore = require('connect-redis')(session);
-
 console.log('ps_api' + process.env.ps_api);
 const settings = {
   port: 8080,
@@ -31,17 +27,7 @@ function getAuthHeader(){
 }
 
 const app = express()
-app.use(
-  session({
-      store: new RedisStore({ 
-          client: client,
-          ttl: 30 * 60
-      }),
-  secret: process.env.secret_key,
-  resave: false,
-  saveUninitialized: true
-  })
-);
+
 app.use(flash());
 const port = process.env.PORT
 // const port = 5000;
