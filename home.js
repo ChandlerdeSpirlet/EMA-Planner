@@ -3965,7 +3965,7 @@ request.post({
     'is_active': 'true'
   },
   headers: {
-    'Authorization': getAuthHeader()
+    'Authorization': 'basic APIUser156358:' + process.env.ps_api
   },
   encoding: null, //  if you expect binary data
   responseType: 'buffer',
