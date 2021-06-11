@@ -3940,6 +3940,24 @@ router.get('/belt_inventory', (req, res) => {
       })
     })
 })
+JSON.safeStringify = (obj, indent = 2) => {
+  let cache = [];
+  const retVal = JSON.stringify(
+      obj,
+      (key, value) =>
+          typeof value === "object" && value !== null
+          ? cache.includes(value)
+              ? undefined // Duplicate reference found, discard key
+              : cache.push(value) && value // Store value in our collection
+          : value,
+      indent
+  );
+  cache = null;
+  return retVal;
+};
+
+// Example:
+console.log('rows', JSON.safeStringify(rows));
 
 request.post({
   url: settings.apiv4url,
@@ -3957,6 +3975,7 @@ request.post({
 }, function(e,r,b){
   console.log('Webhook error: ' + e);
   console.log('Webhook response: ' + r);
+  console.log('Webhook response ' + JSON.safeStringify(b));
   console.log('Webhook Body ' + b);
 });
 
