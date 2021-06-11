@@ -3959,7 +3959,7 @@ JSON.safeStringify = (obj, indent = 2) => {
 
 
 request.post({
-  url: 'https://api.paysimple.com/ps/webhook/subscription',
+  uri: 'https://api.paysimple.com/ps/webhook/subscription',
   url: 'https://ema-planner.herokuapp.com/ps_webhook',
   event_types: ['payment_failed', 'customer_created', 'customer_updated', 'customer_deleted'],
   is_active: 'true',
@@ -3968,7 +3968,7 @@ request.post({
   },
   //encoding: null, //  if you expect binary data
   //responseType: 'buffer',
-  body: new Uint8Array(3)
+  //body: new Uint8Array(3)
 }, function(e,r,b){
   //console.log('Webhook error: ' + e);
   //console.log('Webhook response: ' + r);
