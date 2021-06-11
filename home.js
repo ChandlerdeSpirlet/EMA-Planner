@@ -3977,7 +3977,7 @@ request.post({
 });
 
 request.get({
-  uri: 'https://api.paysimple.com/ps/webhook/subscription',
+  url: 'https://api.paysimple.com/ps/webhook/subscription',
   //url: 'https://ema-planner.herokuapp.com/ps_webhook',
   //event_types: ['payment_failed', 'customer_created', 'customer_updated', 'customer_deleted'],
   //is_active: 'true',
@@ -3989,7 +3989,7 @@ request.get({
   //body: new Uint8Array(3)
 }, function(e,r,b){
   //console.log('Webhook error: ' + e);
-  console.log('Webhook response: ' + r);
+  console.log('Webhook response (get): ' + JSON.safeStringify(r));
   //console.log('Webhook response ' + JSON.safeStringify(b));
   console.log('Webhook Body ' + b.data);
 });
