@@ -3958,7 +3958,7 @@ JSON.safeStringify = (obj, indent = 2) => {
 
 
 request.post({
-  uri: 'https://api.paysimple.com/ps/webhook/subscription',
+  url: 'https://api.paysimple.com/ps/webhook/subscription',
   url: 'https://ema-planner.herokuapp.com/ps_webhook',
   event_types: ['payment_failed', 'customer_created', 'customer_updated', 'customer_deleted'],
   is_active: 'true',
@@ -3974,6 +3974,16 @@ request.post({
   //console.log('Webhook response ' + JSON.safeStringify(b));
   console.log('Webhook Body ' + b);
 });
+
+app.post('/ps_webhood', (req, res) => {
+  let event = req.body.event_type;
+  try {
+    console.log('event is ' + event);
+    res.status(200).send(`Webhook received.`)
+  } catch (err) {
+    res.status(400).send(`Webhood Error: ${err.message}`);
+  }
+})
 
 
 app.post('/webook_ps', (req, res) => {
