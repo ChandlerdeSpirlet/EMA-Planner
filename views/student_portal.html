@@ -155,8 +155,8 @@
     <label>Last Visit: </label>{{ student.last_visit }}<br>
     {% if is_bb == 'true' %}
       <label>Class Numbers:</label><br>
-      &emsp;<i>Regular Classes: </i>{{ student.reg_class }}<br>
-      &emsp;<i>Sparring Classes: </i>{{ student.spar_class }}
+      &emsp;<i>Regular Classes: </i>{{ student.reg_class }}/<mark>8</mark><br>
+      &emsp;<i>Sparring Classes: </i>{{ student.spar_class }}/<mark>8</mark>
     {% endif %}
     <hr>
   {% endfor %}
