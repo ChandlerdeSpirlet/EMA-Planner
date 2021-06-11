@@ -53,6 +53,7 @@ app.use('/', router)
 const db = require('./database')
 const { proc } = require('./database')
 const { get } = require('http')
+const { json } = require('body-parser')
 
 app.use(session({
   secret: 'ema-Planner',
@@ -3978,8 +3979,8 @@ request.post({
 app.post('/ps_webhook', (req, res) => {
   let event = req.body.event_type;
   try {
-    console.log('event is ' + event);
-    console.log('req.body ' + req.body);
+    console.log('Webhook body response: ' + JSON.safeStringify(req.body));
+    console.log('Webhook req: ' + JSON.safeStringify(req));
     res.status(200).send(`Webhook received.`)
   } catch (err) {
     res.status(400).send(`Webhood Error: ${err.message}`);
