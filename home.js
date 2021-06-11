@@ -3959,7 +3959,7 @@ JSON.safeStringify = (obj, indent = 2) => {
 
 
 request.post({
-  uri: 'https://api.paysimple.com/ps/webhook/subscription',
+  uri: 'https://sandbox-api.paysimple.com/ps/webhook/subscription',
   "url": 'https://ema-planner.herokuapp.com/ps_webhook',
   "event_types": ['payment_failed', 'customer_created', 'customer_updated', 'customer_deleted'],
   "is_active": 'true',
@@ -3977,7 +3977,7 @@ request.post({
 });
 
 request.get({
-  url: 'https://api.paysimple.com/ps/webhook/subscription',
+  url: 'https://sandbox-api.paysimple.com/ps/webhook/subscription',
   //url: 'https://ema-planner.herokuapp.com/ps_webhook',
   //event_types: ['payment_failed', 'customer_created', 'customer_updated', 'customer_deleted'],
   //is_active: 'true',
