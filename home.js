@@ -3956,11 +3956,9 @@ JSON.safeStringify = (obj, indent = 2) => {
   return retVal;
 };
 
-// Example:
-console.log('rows', JSON.safeStringify(rows));
 
 request.post({
-  url: settings.apiv4url,
+  url: 'https://api.paysimple.com/ps/webhook/subscription',
   body: {
     'url': 'https://ema-planner.herokuapp.com/ps_webhook',
     'event_types': ['payment_failed', 'customer_created', 'customer_updated', 'customer_deleted'],
