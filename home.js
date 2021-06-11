@@ -3945,6 +3945,7 @@ router.get('/belt_inventory', (req, res) => {
 app.post('/ps/webhook/subscription', (req, res) => {
   let options = {
     method: "POST",
+    uri: settings.apiv4url,
     headers: {
       Authorization: getAuthHeader()
     },
@@ -3963,7 +3964,8 @@ app.post('/ps/webhook/subscription', (req, res) => {
     }
     res.status((response && response.statusCode) || 500).send(error);
   });
-})
+});
+
 
 app.post('/webook_ps', (req, res) => {
   let event = req.body.event_type;
