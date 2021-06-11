@@ -3977,7 +3977,7 @@ request.post({
 });
 
 request.get({
-  uri: 'https://sandbox-api.paysimple.com/ps/webhook/subscription',
+  uri: 'https://sandbox-api.paysimple.com/ps/webhook/subscriptions/',
   //"url": 'https://ema-planner.herokuapp.com/ps_webhook',
   //"event_types": ['payment_failed', 'customer_created', 'customer_updated', 'customer_deleted'],
   //"is_active": 'true',
