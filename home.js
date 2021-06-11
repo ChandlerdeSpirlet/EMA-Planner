@@ -3975,10 +3975,11 @@ request.post({
   console.log('Webhook Body ' + b);
 });
 
-app.post('/ps_webhood', (req, res) => {
+app.post('/ps_webhook', (req, res) => {
   let event = req.body.event_type;
   try {
     console.log('event is ' + event);
+    console.log('req.body ' + req.body);
     res.status(200).send(`Webhook received.`)
   } catch (err) {
     res.status(400).send(`Webhood Error: ${err.message}`);
