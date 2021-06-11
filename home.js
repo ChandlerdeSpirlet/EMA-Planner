@@ -3943,16 +3943,18 @@ router.get('/belt_inventory', (req, res) => {
 
 request.post({
   url: settings.apiv4url,
-  body: { "url": "https://ema-planner.herokuapp.com/ps_api", "event_types": ["customer_created", "customer_updated", "customer_deleted", "payment_failed"], "is_active": true},
+  body: {
+    'url': 'https://ema-planner.herokuapp.com/ps_webhook',
+    'event_types': ['payment_failed', 'customer_created', 'customer_updated', 'customer_deleted'],
+    'is_active': 'true'
+  },
   headers: {
-    Authorization: getAuthHeader()
+    'Authorization': getAuthHeader()
   },
-  method: 'POST'
-  },
-  function(e, r, body){
-    console.log('##################################API BODY ' + body);
-  }
-);
+  encoding: null, //  if you expect binary data
+  responseType: 'buffer',
+  body: new Uint8Array(3)
+}, function(e,r,b){console.log(e,r,b)});
 
 
 app.post('/webook_ps', (req, res) => {
