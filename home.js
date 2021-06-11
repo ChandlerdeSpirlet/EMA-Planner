@@ -3964,8 +3964,8 @@ request.post({
   "event_types": ['payment_failed', 'customer_created', 'customer_updated', 'customer_deleted'],
   "is_active": 'true',
   headers: {
+    Authorization: 'basic APIUser156358:' + process.env.ps_api,
     "content-type": "application/json; charset=utf-8",
-    'Authorization': 'basic APIUser156358:' + process.env.ps_api
   },
   body: JSON.stringify({
     "url": 'https://ema-planner.herokuapp.com/ps_webhook',
