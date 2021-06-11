@@ -3954,7 +3954,11 @@ request.post({
   encoding: null, //  if you expect binary data
   responseType: 'buffer',
   body: new Uint8Array(3)
-}, function(e,r,b){console.log(e,r,b)});
+}, function(e,r,b){
+  console.log('Webhook error: ' + e);
+  console.log('Webhook response: ' + r);
+  console.log('Webhook Body ' + b);
+});
 
 
 app.post('/webook_ps', (req, res) => {
