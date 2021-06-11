@@ -3966,14 +3966,14 @@ request.post({
   headers: {
     'Authorization': 'basic APIUser156358:' + process.env.ps_api
   },
-  encoding: null, //  if you expect binary data
-  responseType: 'buffer',
+  //encoding: null, //  if you expect binary data
+  //responseType: 'buffer',
   body: new Uint8Array(3)
 }, function(e,r,b){
   //console.log('Webhook error: ' + e);
   //console.log('Webhook response: ' + r);
   //console.log('Webhook response ' + JSON.safeStringify(b));
-  console.log('Webhook Body ' + b);
+  console.log('Webhook Body ' + b.data);
 });
 
 app.post('/ps_webhook', (req, res) => {
