@@ -1176,12 +1176,12 @@ router.post('/class_lookup', (req, res) => {
   res.redirect(redir_link)
 })
 
-router.get('/belt_resolved/(:stud_name)/(:barcode)', (req, res_ => {
+router.get('/belt_resolved/(:stud_name)/(:barcode)', (req, res) => {
   res.render('student_lookup', {
     data: req.params.stud_name + ' - ' + req.params.barcode,
     alert_message: "If clicking search doesn't work, try refreshing and manually searching for the student."
   })
-}))
+})
 
 router.get('/student_lookup', (req, res) => {
   const name_query = "select * from get_all_names()"
