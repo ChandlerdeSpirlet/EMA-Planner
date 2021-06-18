@@ -4033,12 +4033,8 @@ app.post('/ps_webhook', (req, res) => {
   }
   switch (event) {
     case 'customer_created':
-      const fname = req.body.data.first_name;
-      const lname = req.body.data.last_name;
-      const email = req.body.data.email;
-      const barcode = req.body.data.customer_id;
       console.log('Customer created info: ' + fname + ' ' + lname + ' ' + email + ' ' + barcode);
-      const add_query = 'insert into student_list (barcode, first_name, last_name, belt_color, belt_size, email, level_name, belt_order) value ($1, $2, $3, $4, $5, $6, $7, $8) on conflict (barcode) do nothing;';
+      const add_query = 'insert into student_list (barcode, first_name, last_name, belt_color, belt_size, email, level_name, belt_order) values ($1, $2, $3, $4, $5, $6, $7, $8) on conflict (barcode) do nothing;';
       db.none(add_query, [barcode, fname, lname, 'White', -1, email, 'Basic', 0])
         .then(row => {
           console.log('Added a new student');
