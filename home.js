@@ -4050,7 +4050,7 @@ app.post('/ps_webhook', (req, res) => {
       break;
     case 'customer_deleted':
       const removeCode = req.body.data.customer_id;
-      const del_query = 'delete from student_list where barcode = $1 on conflict (barcode) do nothing';
+      const del_query = 'delete from student_list where barcode = $1';
       db.none(del_query, [removeCode])
         .then(row => {
           console.log('Deleted student with barcode: ' + removeCode);
