@@ -123,17 +123,16 @@ app.get('/', (req, res) => {
                         const belt_count = "select count(belt_size) as belt_count from student_list where belt_size = -1;"
                         db.any(belt_count)
                           .then(belt_row => {
-                            console.log('belt count: ' + JSON.safeStringify(belt_row))
                             res.render('home.html', {
                               balance_available: convertToMoney(balance.available[0].amount),
                               balance_pending: convertToMoney(balance.pending[0].amount),
                               checked_today: days,
+                              belt_counts: belt_row,
                               checked_week: checked_week,
                               student_data: rows,
                               failure_num: row,
                               month: month,
-                              day: day,
-                              belt_counts: belt_row
+                              day: day
                             })
                           })
                           .catch(err => {
@@ -4034,7 +4033,10 @@ app.post('/ps_webhook', (req, res) => {
   }
   switch (event) {
     case 'customer_created':
-      console.log('Customer created info: ' + fname + ' ' + lname + ' ' + email + ' ' + barcode);
+      const fname = req.body.data.first_name;
+      const lname = req.body.data.last_name;
+      const email = req.body.data.email;
+      const barcode = req.body.data.customer_id;
       const add_query = 'insert into student_list (barcode, first_name, last_name, belt_color, belt_size, email, level_name, belt_order) values ($1, $2, $3, $4, $5, $6, $7, $8) on conflict (barcode) do nothing;';
       db.none(add_query, [barcode, fname, lname, 'White', -1, email, 'Basic', 0])
         .then(row => {
