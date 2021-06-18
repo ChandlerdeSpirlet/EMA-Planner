@@ -4053,7 +4053,7 @@ app.post('/ps_webhook', (req, res) => {
       const del_query = 'delete from student_list where barcode = $1 on conflict (barcode) do nothing';
       db.none(del_query, [removeCode])
         .then(row => {
-          console.log('Deleted student with barcode: ' = removeCode);
+          console.log('Deleted student with barcode: ' + removeCode);
           res.status(200).send();
         })
         .catch(err => {
