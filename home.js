@@ -123,6 +123,7 @@ app.get('/', (req, res) => {
                         const belt_count = "select count(belt_size) as belt_count from student_list where belt_size = -1;"
                         db.any(belt_count)
                           .then(belt_row => {
+                            console.log('belt count: ' + JSON.safeStringify(belt_row))
                             res.render('home.html', {
                               balance_available: convertToMoney(balance.available[0].amount),
                               balance_pending: convertToMoney(balance.pending[0].amount),
