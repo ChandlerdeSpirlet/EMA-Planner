@@ -120,16 +120,25 @@ app.get('/', (req, res) => {
                     const day_query = "select count(class_session_id) as day_count from class_signups where class_session_id in (select class_id from classes where starts_at >= (now() - interval '7 hours') - interval '24 hours' and starts_at < (now() - interval '7 hours'));"
                     db.any(day_query)
                       .then(days => {
-                        res.render('home.html', {
-                          balance_available: convertToMoney(balance.available[0].amount),
-                          balance_pending: convertToMoney(balance.pending[0].amount),
-                          checked_today: days,
-                          checked_week: checked_week,
-                          student_data: rows,
-                          failure_num: row,
-                          month: month,
-                          day: day
-                        })
+                        const belt_count = "select count(belt_size) as belt_count from student_list where belt_size = -1;"
+                        db.any(belt_count)
+                          .then(belt_row => {
+                            res.render('home.html', {
+                              balance_available: convertToMoney(balance.available[0].amount),
+                              balance_pending: convertToMoney(balance.pending[0].amount),
+                              checked_today: days,
+                              checked_week: checked_week,
+                              student_data: rows,
+                              failure_num: row,
+                              month: month,
+                              day: day,
+                              belt_count: belt_row
+                            })
+                          })
+                          .catch(err => {
+                            console.log('Could not get belt count nums ' + err);
+                            res.render('home.html');
+                          })
                       })
                       .catch(err => {
                         console.log('Could not get checked in day numbers ' + err);
@@ -901,6 +910,22 @@ router.post('/class_checkin', (req, res) => {
     })
 })
 
+router.get('/need_belts', (req, res) => {
+  const belt_query = 'select first_name, last_name, barcode from student_list where belt_size = -1;';
+  db.any(belt_query)
+    .then(belts => {
+      res.render('need_belts', {
+        belts: belts
+      })
+    })
+    .catch(err => {
+      console.log('Could not retrieve belts ' + err);
+      res.render('need_belts', {
+        belts: ''
+      })
+    })
+})
+
 router.get('/failed_charges', (req, res) => {
   const query = 'select * from failed_payments'
   db.any(query)
@@ -1150,6 +1175,13 @@ router.post('/class_lookup', (req, res) => {
   const redir_link = 'class_selector_force/' + item.month + '/' + item.day
   res.redirect(redir_link)
 })
+
+router.get('/belt_resolved/(:stud_name)/(:barcode)', (req, res_ => {
+  res.render('student_lookup', {
+    data: req.params.stud_name + ' - ' + req.params.barcode,
+    alert_message: "If clicking search doesn't work, try refreshing and manually searching for the student."
+  })
+}))
 
 router.get('/student_lookup', (req, res) => {
   const name_query = "select * from get_all_names()"
@@ -3994,13 +4026,62 @@ request.get({
 
 app.post('/ps_webhook', (req, res) => {
   let event = req.body.event_type;
-  console.log('req.body: ' + JSON.stringify(req.body));
-  res.status(200).send(`Webhook received.`);
-  //try {
-    //res.status(200).send(`Webhook received.`)
-  //} catch (err) {
-    //res.status(400).send(`Webhood Error: ${err.message}`);
-  //}
+  try {
+    console.log('webhook received.');
+  } catch (err) {
+    res.status(400).send();
+  }
+  switch (event) {
+    case 'customer_created':
+      const fname = req.body.data.first_name;
+      const lname = req.body.data.last_name;
+      const email = req.body.data.email;
+      const barcode = req.body.data.customer_id;
+      const add_query = 'insert into student_list (barcode, first_name, last_name, belt_color, belt_size, email, level_name, belt_order) value ($1, $2, $3, $4, $5, $6, $7, $8) on conflict (barcode) do nothing;';
+      db.none(add_query, [barcode, fname, lname, 'White', -1, email, 'Basic', 0])
+        .then(row => {
+          console.log('Added a new student');
+          res.status(200).send();
+        })
+        .catch(err => {
+          console.log('Could not add a new student - webhook error: ' + err);
+          res.status(400).send();
+        })
+      break;
+    case 'customer_deleted':
+      const removeCode = req.body.data.customer_id;
+      const del_query = 'delete from student_list where barcode = $1 on conflict (barcode) do nothing';
+      db.none(del_query, [removeCode])
+        .then(row => {
+          console.log('Deleted student with barcode: ' = removeCode);
+          res.status(200).send();
+        })
+        .catch(err => {
+          console.log('Unable to delete student - webhook error: ' + err);
+          res.status(400).send();
+        })
+      break;
+    case 'payment_failed':
+      const amount = req.body.data.amount;
+      const customer = req.body.data.customer_id;
+      const reason = req.body.data.failure_reason;
+      const payment_id = req.body.data.payment_id;
+      const failed_query = 'insert into failed_payments (customer, amount, reason, email, id_failed) values ($1, $2, $3, (select email from student_list where barcode = $4), $5) on conflict (id_failed) do nothing;'
+      db.any(failed_query, [customer, amount, reason, customer, payment_id])
+        .then(function (row) {
+          console.log('Added a charge.failed webhook')
+          res.status(200).send();
+        })
+        .catch(function (err) {
+          console.log('charge.failed ended with err ' + err)
+          res.status(400).send();
+        })
+      break;
+    default:
+      res.status(400).send();
+      break;
+  }
+  res.status(200).send();
 })
 
 

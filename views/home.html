@@ -144,9 +144,8 @@
             </div>
             <div class="row">
                 <div class="column">
-                    <a href="/add_student"><button disabled>Enroll a Student</button></a><br>
-                    <button disabled>Add a Prospect</button><br>
-                    <a href="https://dashboard.stripe.com/test/customers" target="_blank"><button disabled>Modify Billing Subscription</button></a><br>
+                    <a href="https://payments.paysimple.com/Customer/List"><button>Enroll a Student</button></a><br>
+                    <a href="https://payments.paysimple.com/Customer/List" target="_blank"><button>Modify Billing Subscription</button></a><br>
                     <a href="/failed_charges"><button>Failed charges &mdash; {{ failure_num.failed_num }}</button></a>
                 </div>
                 <div class="column">
@@ -158,7 +157,8 @@
                 <div class="column">
                     <a href="/create_test"><button>Create a Test</button></a><br>
                     <a href="/test_lookup"><button>View a Test</button></a><br>
-                    <a href="/belt_inventory"><button>Belt Inventory</button></a>
+                    <a href="/belt_inventory"><button>Belt Inventory</button></a><br>
+                    <a href="/need_belts"><button>Fix Belt Sizes &mdash; {{ belt_count.belt_count }}</button></a>
                 </div>
             </div>
         </div>

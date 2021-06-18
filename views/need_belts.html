@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    {% set local = 'Tests' %}
+    {% extends 'nav_bar.html' %}
+    {% block content %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="https://ema-planner.herokuapp.com/views/ema.png">
+    <title>Need Belt Sizes</title>
+    <style>
+        * {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
+        }
+        head {
+            padding-bottom: 25px;
+        }
+        html {
+            min-height: 100%;
+            background-image: linear-gradient(#0095ff, #9ed7ff);
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+        }
+        h1, h3 {
+            text-align: center;
+        }
+        .wrapper {
+            text-align: center;
+        }
+
+        button {
+            color: black;
+            border: 4px solid black;
+        }
+        
+        .button{
+            width: 60%;
+            align-self: center;
+            background-color: transparent;
+        }
+
+        button:hover {
+            background-color: #555555;
+            color: white;
+        }
+        .column {
+            float: left;
+            width: calc(100% / 2);
+            height: 100%;
+            padding: 10px;
+        }
+    </style>
+    <head>
+        <h1>Students Still Needing Belt Sizes</h1>
+        <h3>Update a student's belt to their actual size to remove them from this list.</h3>
+    </head>
+    <body>
+        <div class="wrapper">
+        {% if belts %}
+            {% for item in belts %}
+                <button class="button">
+                    <div class="column">
+                        <p><strong>Student: </strong>{{ item.first_name }} {{ item.last_name }}</p>
+                    </div>
+                    <div class="column">
+                        <a href="/belt_resolved/{{ item.first_name }} {{ item.last_name }}/{{ item.barcode }}">Fix Belt Size</a>
+                    </div>
+                    </button>
+                </button></a><br>
+            {% endfor %}
+        {% elif (belts.length == 0) %}
+            There are no students who need belt sizes. All students are current.
+        {% endif %}
+        </div>
+    </body>
+</html>
+{% endblock %}
