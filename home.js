@@ -3991,14 +3991,14 @@ request.get({
     //"is_active": 'true',
   //})
 }, function(e,r,b){
-  console.log('Webhook response (get): ' + JSON.safeStringify(r));
-  console.log('Webhook Body is ' + JSON.safeStringify(b));
-  console.log('Webhook Body ID is' + b.id);
+
 });
 
 
-app.get('/ps_webhook', (req, res) => {
+app.post('/ps_webhook', (req, res) => {
   let event = req.body.event_type;
+  console.log('req.body: ' + JSON.safeStringify(req.body));
+  res.status(200).send(`Webhook received.`);
   //try {
     //res.status(200).send(`Webhook received.`)
   //} catch (err) {
