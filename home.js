@@ -132,7 +132,7 @@ app.get('/', (req, res) => {
                               failure_num: row,
                               month: month,
                               day: day,
-                              belt_count: belt_row
+                              belt_counts: belt_row
                             })
                           })
                           .catch(err => {
