@@ -3994,9 +3994,8 @@ request.get({
 
 app.post('/ps_webhook', (req, res) => {
   let event = req.body.event_type;
-  console.log('req.body: ' + JSON.safeStringify(req.body));
+  console.log('req.body: ' + JSON.stringify(req.body));
   res.status(200).send(`Webhook received.`);
-  res.json({ received: true })
   //try {
     //res.status(200).send(`Webhook received.`)
   //} catch (err) {
