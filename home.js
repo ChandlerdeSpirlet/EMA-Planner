@@ -3972,8 +3972,6 @@ request.post({
     "is_active": 'true',
   })
 }, function(e,r,b){
-  console.log('Webhook response (post): ' + JSON.safeStringify(r));
-  console.log('Webhook Body ID is' + b.id);
 });
 
 request.get({
@@ -3991,7 +3989,6 @@ request.get({
     //"is_active": 'true',
   //})
 }, function(e,r,b){
-
 });
 
 
@@ -3999,6 +3996,7 @@ app.post('/ps_webhook', (req, res) => {
   let event = req.body.event_type;
   console.log('req.body: ' + JSON.safeStringify(req.body));
   res.status(200).send(`Webhook received.`);
+  res.json({ received: true })
   //try {
     //res.status(200).send(`Webhook received.`)
   //} catch (err) {
